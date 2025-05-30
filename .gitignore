@@ -1,0 +1,2 @@
+# Ignore LDAP settings file but keep the template
+farmacia/PHP/ldap_settings.php 
