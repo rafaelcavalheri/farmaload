@@ -189,6 +189,9 @@ try {
     <div class="page-header">
         <h1><i class="fas fa-users"></i> Usuários</h1>
         <div class="actions">
+            <a href="ldap_config.php" class="btn-secondary">
+                <i class="fas fa-server"></i> Configurar LDAP
+            </a>
             <a href="#" onclick="document.getElementById('formNovoUsuario').style.display = 'block'" class="btn-secondary">
                 <i class="fas fa-user-plus"></i> Novo Usuário
             </a>
