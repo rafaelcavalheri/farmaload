@@ -3538,3 +3538,5 @@
 [30-May-2025 13:57:13 UTC] Conexão com o banco de dados estabelecida com sucesso
 [30-May-2025 13:57:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
 [30-May-2025 13:57:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:57:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 13:57:36 UTC] Conexão com o banco de dados estabelecida com sucesso
