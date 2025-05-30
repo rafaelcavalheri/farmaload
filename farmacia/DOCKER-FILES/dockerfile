@@ -1,0 +1,95 @@
+FROM php:8.2-apache
+
+
+# Configuração básica do sistema
+
+ENV TZ=America/Sao_Paulo
+
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+
+# Instalação de dependências
+
+RUN apt-get update && apt-get install -y \
+    libzip-dev \
+    zip \
+    unzip \
+    default-mysql-client \
+    libxslt1-dev \
+    zlib1g-dev \
+    libxml2-dev \
+    libfreetype6-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    ldap-utils \
+    libldap2-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install -j$(nproc) gd \
+    && docker-php-ext-install pdo_mysql zip mysqli xml xsl ldap \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Instalar Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Configurar diretório para Composer e criar composer.json
+WORKDIR /var/www/html
+RUN mkdir -p /var/www/html/vendor && \
+    chown -R www-data:www-data /var/www/html/vendor && \
+    echo '{"require": {}}' > composer.json && \
+    chown www-data:www-data composer.json
+
+# Instalar PHPSpreadsheet como www-data
+USER www-data
+RUN composer require phpoffice/phpspreadsheet
+USER root
+
+# Configuração do Apache
+RUN a2enmod rewrite headers && \
+    sed -i 's/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf && \
+    echo "ServerName localhost" >> /etc/apache2/apache2.conf
+
+# Configuração segura do PHP
+RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
+    sed -i 's/;session.cookie_secure/session.cookie_secure/' $PHP_INI_DIR/php.ini && \
+    sed -i 's/;session.cookie_httponly/session.cookie_httponly/' $PHP_INI_DIR/php.ini && \
+    mkdir -p /var/lib/php/sessions && \
+    chown -R www-data:www-data /var/lib/php/sessions
+
+# Copiar configurações
+COPY CONFIG/php.ini $PHP_INI_DIR/conf.d/custom.ini
+COPY CONFIG/farmacia.conf /etc/apache2/sites-available/000-default.conf
+
+# Copiar aplicação
+COPY PHP/ /var/www/html/
+
+# Configurar diretório de logs e permissões
+RUN mkdir -p /var/www/html/LOG && \
+    mkdir -p /var/www/html/logs && \
+    mkdir -p /var/www/html/images && \
+    mkdir -p /var/www/html/css && \
+    mkdir -p /var/www/html/templates && \
+    chown -R www-data:www-data /var/www/html && \
+    find /var/www/html -type d -exec chmod 755 {} \; && \
+    find /var/www/html -type f -exec chmod 644 {} \; && \
+    chmod -R 775 /var/www/html/LOG && \
+    chmod -R 775 /var/www/html/logs && \
+    chmod -R 775 /var/www/html/images && \
+    chmod -R 775 /var/www/html/css && \
+    chmod -R 775 /var/www/html/vendor
+
+# Script de saúde
+HEALTHCHECK --interval=30s --timeout=3s \
+    CMD curl -f http://localhost/ || exit 1
+
+# Copiar script de inicialização
+COPY DOCKER-FILES/start.sh /usr/local/bin/
+COPY DOCKER-FILES/fix-permissions.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start.sh && \
+    chmod +x /usr/local/bin/fix-permissions.sh
+
+# Executar script de permissões durante a construção
+RUN /usr/local/bin/fix-permissions.sh
+
+CMD ["/usr/local/bin/start.sh"]
+
+EXPOSE 80
