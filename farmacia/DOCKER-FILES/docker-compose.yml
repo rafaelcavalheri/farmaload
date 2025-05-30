@@ -1,0 +1,119 @@
+version: '3.8'
+
+
+services:
+
+  web:
+
+    build:
+      context: ..
+      dockerfile: DOCKER-FILES/dockerfile
+
+    image: farmacia-web:latest
+
+    container_name: farmacia-web
+
+    ports:
+
+      - "9010:80"
+
+    volumes:
+
+      - ../PHP:/var/www/html
+      - ../CSS:/var/www/html/css
+      - ../LOG:/var/www/html/logs
+      - ../images:/var/www/html/images
+      - vendor-data:/var/www/html/vendor
+      - php-sessions:/var/lib/php/sessions
+      - apache-logs:/var/log/apache2
+
+    environment:
+
+      - DB_HOST=db
+
+      - DB_NAME=farmacia
+
+      - DB_USER=admin
+
+      - DB_PASSWORD=HakETodLEfRe
+
+      - TZ=America/Sao_Paulo
+
+    depends_on:
+
+      db:
+
+        condition: service_healthy
+
+    networks:
+
+      - farmacia-network
+
+    restart: unless-stopped
+
+
+  db:
+
+    image: mysql:8.0
+
+    container_name: farmacia-db
+
+    volumes:
+
+      - db_data:/var/lib/mysql
+
+      - ../DOCKER-FILES/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    environment:
+
+      - MYSQL_ROOT_PASSWORD=HakETodLEfRe
+
+      - MYSQL_DATABASE=farmacia
+
+      - MYSQL_USER=admin
+
+      - MYSQL_PASSWORD=HakETodLEfRe
+
+      - TZ=America/Sao_Paulo
+
+      - LANG=pt_BR.UTF-8
+
+    healthcheck:
+
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-pHakETodLEfRe"]
+
+      interval: 10s
+
+      timeout: 20s
+
+      retries: 10
+
+    networks:
+
+      - farmacia-network
+
+    restart: unless-stopped
+
+
+volumes:
+
+  db_data:
+
+    driver: local
+
+  vendor-data:
+
+    driver: local
+
+  php-sessions:
+
+  apache-logs:
+
+
+networks:
+
+  farmacia-network:
+
+    driver: bridge
+
+    attachable: true
