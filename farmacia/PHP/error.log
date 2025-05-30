@@ -6621,3 +6621,1418 @@
 [30-May-2025 14:24:01 UTC] Conexão com o banco de dados estabelecida com sucesso
 [30-May-2025 14:24:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
 [30-May-2025 14:24:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:24:46 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:24:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:25:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:25:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:25:46 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:25:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:26:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:26:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:26:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:26:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:27:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:27:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:27:43 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:27:43 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:27:43 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:27:43 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 11:27:43 America/Sao_Paulo] PHP Warning:  Undefined array key "ldap_service_user" in /var/www/html/login.php on line 16
+[30-May-2025 11:27:43 America/Sao_Paulo] PHP Warning:  Undefined array key "ldap_service_password" in /var/www/html/login.php on line 17
+[30-May-2025 14:27:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:27:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:27:51 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:27:51 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 11:27:51 America/Sao_Paulo] PHP Warning:  Undefined array key "ldap_service_user" in /var/www/html/login.php on line 16
+[30-May-2025 11:27:51 America/Sao_Paulo] PHP Warning:  Undefined array key "ldap_service_password" in /var/www/html/login.php on line 17
+[30-May-2025 14:27:51 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:27:51 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:27:53 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:27:53 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:27:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:27:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:28:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:28:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:28:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:28:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:29:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:29:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:29:43 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:29:44 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:29:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:29:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:29:57 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:29:57 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:30:04 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:30:04 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:30:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:30:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:30:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:30:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:30:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:30:58 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:31:00 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:31:00 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:31:02 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:31:02 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:31:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:31:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:31:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:31:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:31:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:31:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:32:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:32:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:32:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:32:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:33:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:33:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:33:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:33:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:34:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:34:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:34:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:34:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:34:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:34:58 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:34:59 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:34:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:35:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:35:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:35:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:35:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:35:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:35:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:36:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:36:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:36:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:36:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:36:52 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:36:52 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:36:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:36:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:36:57 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:36:57 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 11:36:58 America/Sao_Paulo] PHP Warning:  ldap_search(): Partial search results returned: Sizelimit exceeded in /var/www/html/ldap_config.php on line 87
+[30-May-2025 14:37:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:37:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:37:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:37:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:38:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:38:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:38:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:38:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:38:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:38:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:38:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:38:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:38:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:38:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:39:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:39:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:40:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:40:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:40:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:40:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:40:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:40:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:40:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:40:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:40:11 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:40:11 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:40:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:40:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:40:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:40:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:40:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:40:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:41:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:41:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:41:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:41:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:42:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:42:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:42:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:42:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:42:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:42:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:42:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:42:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:42:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:42:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:43:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:43:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:43:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:43:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:43:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:43:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:43:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:43:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 11:43:18 America/Sao_Paulo] PHP Warning:  Undefined variable $bindSuccess in /var/www/html/ldap_config.php on line 88
+[30-May-2025 11:43:18 America/Sao_Paulo] PHP Warning:  Undefined variable $bindSuccess in /var/www/html/ldap_config.php on line 115
+[30-May-2025 14:43:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:43:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:43:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:43:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:43:41 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:43:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:43:43 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:43:43 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:44:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:44:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:44:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:44:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:44:23 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:44:23 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:44:24 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:44:24 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:44:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:44:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:44:51 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:44:51 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:45:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:45:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:45:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:45:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:45:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:45:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:45:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:45:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:45:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:45:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:45:52 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:45:52 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:46:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:46:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:46:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:46:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:46:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:46:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:46:55 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:46:55 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:46:57 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:46:57 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:46:59 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:46:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:47:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:47:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:47:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:47:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:47:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:47:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:47:29 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:47:29 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:47:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:47:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:48:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:48:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:48:26 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:48:26 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:48:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:48:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:49:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:49:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:49:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:49:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:50:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:50:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:50:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:50:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:51:01 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:51:01 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:51:03 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:51:03 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:51:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:51:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 11:51:06 America/Sao_Paulo] PHP Warning:  Undefined variable $userFound in /var/www/html/ldap_config.php on line 147
+[30-May-2025 11:51:06 America/Sao_Paulo] PHP Warning:  Undefined variable $userFound in /var/www/html/ldap_config.php on line 216
+[30-May-2025 14:51:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:51:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:51:30 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:51:30 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:51:31 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:51:31 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:51:33 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:51:33 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:51:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:51:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:52:08 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:52:08 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:52:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:52:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:53:08 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:53:08 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:53:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:53:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:54:08 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:54:08 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:54:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:54:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:54:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:54:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:54:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:54:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:54:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:54:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:55:03 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:55:03 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:55:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:55:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:55:08 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:55:08 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:55:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:55:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:56:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:56:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:56:39 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:56:39 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:57:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:57:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:57:39 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:57:39 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:58:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:58:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:58:39 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:58:39 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:59:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:59:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:59:39 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 14:59:39 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:00:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:00:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:00:39 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:00:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:01:10 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:01:10 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:01:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:01:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:02:10 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:02:10 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:02:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:02:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:03:10 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:03:10 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:03:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:03:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:04:10 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:04:10 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:04:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:04:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:05:10 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:05:10 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:05:41 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:05:41 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:06:11 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:06:11 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:06:41 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:06:41 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:07:11 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:07:11 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:07:41 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:07:41 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:08:11 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:08:11 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:08:41 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:08:41 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:09:11 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:09:11 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:09:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:09:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:10:12 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:10:12 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:10:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:10:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:11:12 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:11:12 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:11:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:11:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:12:12 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:12:12 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:12:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:12:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:13:12 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:13:12 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:13:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:13:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:14:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:14:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:14:43 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:14:43 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:15:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:15:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:15:43 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:15:43 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:16:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:16:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:16:43 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:16:43 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:17:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:17:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:17:43 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:17:43 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:18:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:18:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:18:44 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:18:44 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:19:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:19:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:19:44 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:19:44 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:20:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:20:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:20:44 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:20:44 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:21:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:21:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:21:44 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:21:44 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:22:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:22:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:22:44 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:22:44 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:23:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:23:15 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:23:45 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:23:45 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:24:15 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:24:15 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:24:45 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:24:45 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:25:15 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:25:15 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:25:45 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:25:45 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:26:15 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:26:15 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:26:45 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:26:45 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:27:15 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:27:15 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:27:45 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:27:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:28:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:28:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:28:46 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:28:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:29:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:29:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:29:46 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:29:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:30:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:30:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:30:46 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:30:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:31:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:31:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:31:46 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:31:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:32:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:32:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:32:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:32:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:33:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:33:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:33:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:33:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:34:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:34:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:34:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:34:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:35:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:35:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:35:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:35:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:36:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:36:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:36:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:36:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:37:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:37:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:37:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:37:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:38:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:38:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:38:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:38:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:39:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:39:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:39:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:39:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:40:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:40:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:40:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:40:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:41:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:41:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:41:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:41:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:42:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:42:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:42:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:42:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:43:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:43:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:43:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:43:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:44:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:44:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:44:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:44:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:45:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:45:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:45:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:45:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:46:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:46:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:46:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:46:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:47:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:47:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:47:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:47:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:48:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:48:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:48:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:48:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:49:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:49:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:49:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:49:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:50:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:50:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:50:51 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:50:51 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:51:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:51:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:51:51 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:51:51 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:52:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:52:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:52:51 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:52:51 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:53:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:53:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:53:51 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:53:51 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:54:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:54:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:54:52 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:54:52 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:55:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:55:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:55:52 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:55:52 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:56:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:56:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:56:52 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:56:52 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:57:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:57:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:57:52 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:57:52 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:58:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:58:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:58:52 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:58:53 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:59:23 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:59:23 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 15:59:53 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 15:59:53 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:00:23 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:00:23 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:00:53 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:00:53 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:01:23 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:01:23 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:01:53 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:01:53 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:02:23 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:02:23 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:02:53 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:02:53 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:03:23 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:03:23 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:03:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:03:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:04:24 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:04:24 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:04:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:04:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:05:24 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:05:24 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:05:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:05:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:06:24 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:06:24 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:06:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:06:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:07:24 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:07:24 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:07:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:07:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:08:24 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:08:24 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:08:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:08:55 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:09:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:09:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:09:55 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:09:55 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:10:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:10:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:10:55 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:10:55 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:11:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:11:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:11:55 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:11:55 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:12:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:12:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:12:55 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:12:55 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:13:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:13:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:13:55 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:13:55 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:14:26 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:14:26 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:14:56 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:14:56 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:15:26 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:15:26 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:15:56 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:15:56 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:16:26 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:16:26 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:16:56 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:16:56 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:17:26 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:17:26 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:17:56 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:17:56 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:18:26 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:18:26 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:18:56 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:18:56 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:19:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:19:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:19:57 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:19:57 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:20:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:20:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:20:57 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:20:57 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:21:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:21:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:21:57 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:21:57 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:22:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:22:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:22:57 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:22:57 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:23:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:23:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:23:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:23:58 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:24:28 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:24:28 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:24:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:24:58 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:25:28 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:25:28 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:25:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:25:58 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:26:28 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:26:28 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:26:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:26:58 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:27:28 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:27:28 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:27:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:27:58 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:28:29 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:28:29 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:28:59 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:28:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:29:29 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:29:29 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:29:59 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:29:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:30:29 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:30:29 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:30:59 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:30:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:31:29 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:31:29 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:31:59 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:31:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:32:29 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:32:29 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:33:00 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:33:00 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:33:30 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:33:30 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:34:00 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:34:00 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:34:30 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:34:30 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:35:00 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:35:00 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:35:30 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:35:30 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:36:00 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:36:00 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:36:17 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:36:17 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:36:30 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:36:30 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:36:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:36:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:37:00 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:37:00 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:37:31 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:37:31 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:37:43 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:37:43 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:37:45 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:37:45 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:37:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:37:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:38:01 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:38:01 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:38:31 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:38:31 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:38:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:38:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:38:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:38:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:38:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:38:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:39:01 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:39:01 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:39:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:39:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:39:31 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:39:31 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:39:57 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:39:57 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:39:59 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:39:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:40:01 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:40:01 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:40:01 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:40:01 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:40:24 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:40:24 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:40:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:40:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:40:31 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:40:31 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:01 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:01 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:26 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:26 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:28 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:28 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:30 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:30 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:31 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:31 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:33 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:34 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:58 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:41:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:41:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:42:01 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:01 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:42:01 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:01 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:42:01 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:01 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:42:04 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:04 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:42:04 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:42:04 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:42:04 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:42:04 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:42:05 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:42:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:42:18 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:42:18 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:42:18 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:42:18 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:42:18 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:42:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:42:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:42:26 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:26 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:42:28 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:28 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:42:32 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:32 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:42:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:42:56 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:42:56 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:43:02 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:43:02 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:43:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:43:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:43:28 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:43:28 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:43:32 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:43:32 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:43:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:43:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:43:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:43:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:44:02 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:44:02 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:44:32 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:44:32 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:44:53 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:44:53 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:44:53 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:44:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:44:57 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:44:57 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:44:57 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:44:57 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:44:57 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:44:57 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:44:57 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:45:02 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:45:02 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:45:08 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:45:08 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:45:08 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:45:08 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:45:08 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:45:08 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:45:08 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:45:32 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:45:32 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:45:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:45:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:45:40 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:45:40 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:45:40 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:45:40 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:45:40 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:46:02 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:46:02 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:46:32 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:46:32 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:46:39 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:46:39 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:46:39 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:46:39 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:46:39 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:46:39 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:46:39 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:46:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:46:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:46:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:46:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:46:46 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:46:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:46:46 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:46:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:46:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:46:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:46:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:46:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:46:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:46:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:46:50 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:46:50 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:46:50 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:46:50 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:46:50 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:47:03 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:47:03 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:47:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:47:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:47:07 America/Sao_Paulo] LDAP: Tentando autenticar usuário: mmirim\rafael.cavalheri@mmirim.local
+[30-May-2025 13:47:07 America/Sao_Paulo] LDAP: sAMAccountName: mmirim\rafael.cavalheri
+[30-May-2025 13:47:07 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:47:07 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:47:07 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:47:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:47:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:47:16 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:47:16 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:47:16 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:47:16 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:47:16 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:47:33 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:47:33 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:00 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:00 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:00 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:00 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:03 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:03 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:03 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:03 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:03 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:03 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:04 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:04 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:32 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:32 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:48:32 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mogimirim.sp.gov.br
+[30-May-2025 13:48:32 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:48:32 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:48:32 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:48:32 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:48:33 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:33 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:48:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:48:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:48:35 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:48:35 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:48:35 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:48:35 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:48:35 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:49:03 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:49:03 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:49:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:49:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:49:14 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:49:14 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:49:14 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:49:14 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:49:14 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:49:33 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:49:33 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:50:03 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:50:03 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:50:33 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:50:33 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:51:03 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:51:04 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:51:34 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:51:34 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:52:04 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:52:04 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:52:34 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:52:34 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:52:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:52:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:52:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:52:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:52:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:52:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:52:59 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:52:59 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:52:59 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:52:59 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:52:59 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:53:04 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:53:04 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:53:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:53:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:53:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:53:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:53:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:53:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:53:34 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:53:34 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:53:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:53:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:53:49 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:53:49 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:54:04 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:54:04 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:54:34 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:54:34 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:55:04 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:55:04 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:55:34 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:55:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:56:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:56:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:56:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:56:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:56:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:56:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:56:30 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:56:30 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:56:30 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:56:30 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:56:30 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:56:30 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:56:30 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:56:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:56:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:56:44 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:56:44 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:56:44 America/Sao_Paulo] LDAP: Tentando autenticar usuário: admin@mmirim.local
+[30-May-2025 13:56:44 America/Sao_Paulo] LDAP: sAMAccountName: admin
+[30-May-2025 13:56:44 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:56:44 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:56:44 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:56:59 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:56:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:56:59 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:56:59 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:56:59 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:56:59 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:56:59 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 16:57:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:57:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:57:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:57:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:57:59 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:57:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:57:59 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:57:59 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:58:01 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:58:01 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:58:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:58:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:58:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:58:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:58:10 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:58:10 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:58:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:58:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:59:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:59:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:59:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:59:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:59:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:59:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 16:59:23 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:59:23 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 13:59:23 America/Sao_Paulo] Tentando autenticação LDAP para usuário: rafael.cavalheri
+[30-May-2025 13:59:23 America/Sao_Paulo] LDAP: Tentando autenticar usuário: rafael.cavalheri@mmirim.local
+[30-May-2025 13:59:23 America/Sao_Paulo] LDAP: sAMAccountName: rafael.cavalheri
+[30-May-2025 13:59:23 America/Sao_Paulo] LDAP: Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 13:59:23 America/Sao_Paulo] LDAP: Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 13:59:23 America/Sao_Paulo] LDAP: Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 13:59:23 America/Sao_Paulo] Falha na autenticação LDAP para: rafael.cavalheri
+[30-May-2025 16:59:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 16:59:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:00:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:00:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:00:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:00:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:00:44 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:00:44 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:00:44 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:00:44 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:00:46 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:00:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:00:46 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:00:46 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:00:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:00:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:00:50 America/Sao_Paulo] Tentando autenticação LDAP para usuário: rafael.cavalheri
+[30-May-2025 14:00:50 America/Sao_Paulo] === Iniciando autenticação LDAP ===
+[30-May-2025 14:00:50 America/Sao_Paulo] Usuário: rafael.cavalheri
+[30-May-2025 14:00:50 America/Sao_Paulo] Servidor: ldap://192.168.10.224
+[30-May-2025 14:00:50 America/Sao_Paulo] Domínio: mmirim.local
+[30-May-2025 14:00:50 America/Sao_Paulo] Base DN: dc=mmirim,dc=local
+[30-May-2025 14:00:50 America/Sao_Paulo] Usuário de Serviço: rafael.cavalheri
+[30-May-2025 14:00:50 America/Sao_Paulo] UserDN: rafael.cavalheri@mmirim.local
+[30-May-2025 14:00:50 America/Sao_Paulo] sAMAccountName: rafael.cavalheri
+[30-May-2025 14:00:50 America/Sao_Paulo] Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 14:00:50 America/Sao_Paulo] Tentando bind com usuário de serviço: rafael.cavalheri
+[30-May-2025 14:00:50 America/Sao_Paulo] Falha no bind do usuário de serviço. Erro: Invalid credentials (Código: 49)
+[30-May-2025 14:00:50 America/Sao_Paulo] Falha na autenticação LDAP para: rafael.cavalheri
+[30-May-2025 17:01:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:01:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:01:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:01:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:02:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:02:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:02:08 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:02:08 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:02:08 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:02:08 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:02:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:02:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:02:11 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:02:11 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:02:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:02:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:03:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:03:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:03:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:03:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:03:10 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:03:10 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:03:10 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:03:10 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:03:12 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:03:12 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:03:12 America/Sao_Paulo] Tentando autenticação LDAP para usuário: rafael.cavalheri
+[30-May-2025 14:03:12 America/Sao_Paulo] === Iniciando autenticação LDAP ===
+[30-May-2025 14:03:12 America/Sao_Paulo] Usuário: rafael.cavalheri
+[30-May-2025 14:03:12 America/Sao_Paulo] Servidor: ldap://192.168.10.224
+[30-May-2025 14:03:13 America/Sao_Paulo] Domínio: mmirim.local
+[30-May-2025 14:03:13 America/Sao_Paulo] Base DN: dc=mmirim,dc=local
+[30-May-2025 14:03:13 America/Sao_Paulo] UserDN: rafael.cavalheri@mmirim.local
+[30-May-2025 14:03:13 America/Sao_Paulo] sAMAccountName: rafael.cavalheri
+[30-May-2025 14:03:13 America/Sao_Paulo] Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 14:03:13 America/Sao_Paulo] Tentando autenticar com: rafael.cavalheri@mmirim.local
+[30-May-2025 14:03:13 America/Sao_Paulo] Autenticação bem-sucedida com: rafael.cavalheri@mmirim.local
+[30-May-2025 14:03:13 America/Sao_Paulo] Usuário encontrado e autenticado com sucesso
+[30-May-2025 14:03:13 America/Sao_Paulo] Autenticação LDAP bem-sucedida para: rafael.cavalheri
+[30-May-2025 14:03:13 America/Sao_Paulo] Usuário encontrado no banco: rafael.cavalheri@mogimirim.sp.gov.br
+[30-May-2025 17:03:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:03:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:03:14 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:03:14 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:03:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:03:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:04:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:04:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:04:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:04:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:04:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:04:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:04:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:04:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:04:22 America/Sao_Paulo] Tentando autenticação LDAP para usuário: rafael.cavalheri
+[30-May-2025 14:04:22 America/Sao_Paulo] === Iniciando autenticação LDAP ===
+[30-May-2025 14:04:22 America/Sao_Paulo] Usuário: rafael.cavalheri
+[30-May-2025 14:04:22 America/Sao_Paulo] Servidor: ldap://192.168.10.224
+[30-May-2025 14:04:22 America/Sao_Paulo] Domínio: mmirim.local
+[30-May-2025 14:04:22 America/Sao_Paulo] Base DN: dc=mmirim,dc=local
+[30-May-2025 14:04:22 America/Sao_Paulo] UserDN: rafael.cavalheri@mmirim.local
+[30-May-2025 14:04:22 America/Sao_Paulo] sAMAccountName: rafael.cavalheri
+[30-May-2025 14:04:22 America/Sao_Paulo] Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 14:04:22 America/Sao_Paulo] Tentando autenticar com: rafael.cavalheri@mmirim.local
+[30-May-2025 14:04:22 America/Sao_Paulo] Autenticação bem-sucedida com: rafael.cavalheri@mmirim.local
+[30-May-2025 14:04:22 America/Sao_Paulo] Usuário encontrado e autenticado com sucesso
+[30-May-2025 14:04:22 America/Sao_Paulo] Autenticação LDAP bem-sucedida para: rafael.cavalheri
+[30-May-2025 14:04:22 America/Sao_Paulo] Usuário encontrado no banco: rafael.cavalheri@mogimirim.sp.gov.br
+[30-May-2025 17:04:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:04:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:04:24 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:04:24 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:04:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:04:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:04:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:04:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:05:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:05:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:05:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:05:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:05:23 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:05:23 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:05:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:05:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:05:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:05:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:06:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:06:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:06:33 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:06:34 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:06:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:06:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:06:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:06:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:15 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:15 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:28 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:28 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:28 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:28 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:30 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:30 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:07:30 America/Sao_Paulo] Tentando autenticação LDAP para usuário: rafael.cavalheri
+[30-May-2025 14:07:30 America/Sao_Paulo] === Iniciando autenticação LDAP ===
+[30-May-2025 14:07:30 America/Sao_Paulo] Usuário: rafael.cavalheri
+[30-May-2025 14:07:30 America/Sao_Paulo] Servidor: ldap://192.168.10.224:389
+[30-May-2025 14:07:30 America/Sao_Paulo] Domínio: mmirim.local
+[30-May-2025 14:07:30 America/Sao_Paulo] Base DN: dc=mmirim,dc=local
+[30-May-2025 14:07:30 America/Sao_Paulo] UserDN: rafael.cavalheri@mmirim.local
+[30-May-2025 14:07:30 America/Sao_Paulo] sAMAccountName: rafael.cavalheri
+[30-May-2025 14:07:30 America/Sao_Paulo] Conexão estabelecida com ldap://192.168.10.224:389
+[30-May-2025 14:07:30 America/Sao_Paulo] Tentando autenticar com: rafael.cavalheri@mmirim.local
+[30-May-2025 14:07:30 America/Sao_Paulo] Autenticação bem-sucedida com: rafael.cavalheri@mmirim.local
+[30-May-2025 14:07:30 America/Sao_Paulo] Usuário encontrado e autenticado com sucesso
+[30-May-2025 14:07:30 America/Sao_Paulo] Autenticação LDAP bem-sucedida para: rafael.cavalheri
+[30-May-2025 14:07:30 America/Sao_Paulo] Usuário encontrado no banco: rafael.cavalheri@mogimirim.sp.gov.br
+[30-May-2025 17:07:30 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:30 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:32 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:32 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:34 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:34 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:54 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:07:57 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:07:57 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:00 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:00 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:02 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:02 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:13 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:13 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:26 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:26 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:30 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:30 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:32 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:32 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:41 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:48 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:48 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:56 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:56 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:08:58 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:08:58 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:08 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:08 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:15 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:15 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:16 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:16 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:24 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:24 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:26 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:26 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:09:38 America/Sao_Paulo] Tentando autenticação LDAP para usuário: rafael.cavalheri
+[30-May-2025 14:09:38 America/Sao_Paulo] === Iniciando autenticação LDAP ===
+[30-May-2025 14:09:38 America/Sao_Paulo] Usuário: rafael.cavalheri
+[30-May-2025 14:09:38 America/Sao_Paulo] Servidor: ldap://192.168.10.224:389
+[30-May-2025 14:09:38 America/Sao_Paulo] Domínio: mmirim.local
+[30-May-2025 14:09:38 America/Sao_Paulo] Base DN: dc=mmirim,dc=local
+[30-May-2025 14:09:38 America/Sao_Paulo] UserDN: rafael.cavalheri@mmirim.local
+[30-May-2025 14:09:38 America/Sao_Paulo] sAMAccountName: rafael.cavalheri
+[30-May-2025 14:09:38 America/Sao_Paulo] Conexão estabelecida com ldap://192.168.10.224:389
+[30-May-2025 14:09:38 America/Sao_Paulo] Tentando autenticar com: rafael.cavalheri@mmirim.local
+[30-May-2025 14:09:38 America/Sao_Paulo] Autenticação bem-sucedida com: rafael.cavalheri@mmirim.local
+[30-May-2025 14:09:38 America/Sao_Paulo] Usuário encontrado e autenticado com sucesso
+[30-May-2025 14:09:38 America/Sao_Paulo] Autenticação LDAP bem-sucedida para: rafael.cavalheri
+[30-May-2025 14:09:38 America/Sao_Paulo] Usuário encontrado no banco: rafael.cavalheri@mogimirim.sp.gov.br
+[30-May-2025 17:09:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:09:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:09:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:11:02 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:11:02 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:11:02 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:11:02 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:11:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:11:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:11:07 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:11:07 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:11:09 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:11:09 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:11:10 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:11:10 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:11:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:11:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:11:24 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:11:24 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:11:54 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:11:55 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:12:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:12:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:12:55 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:12:55 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:13:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:13:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:13:37 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:13:37 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:13:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:13:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:13:40 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:13:40 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:13:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:13:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:13:43 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:13:43 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:14:04 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:14:04 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:14:34 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:14:34 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:14:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:14:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:14:38 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:14:38 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:15:04 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:15:10 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:10 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:15:10 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Configurações LDAP não encontradas. Por favor, configure o LDAP primeiro. in /var/www/html/login.php:16
+Stack trace:
+#0 {main}
+  thrown in /var/www/html/login.php on line 16
+[30-May-2025 17:15:19 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:19 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:15:19 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Configurações LDAP não encontradas. Por favor, configure o LDAP primeiro. in /var/www/html/login.php:16
+Stack trace:
+#0 {main}
+  thrown in /var/www/html/login.php on line 16
+[30-May-2025 17:15:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:15:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:15:20 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Configurações LDAP não encontradas. Por favor, configure o LDAP primeiro. in /var/www/html/login.php:16
+Stack trace:
+#0 {main}
+  thrown in /var/www/html/login.php on line 16
+[30-May-2025 17:15:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:15:21 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:21 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:15:21 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Configurações LDAP não encontradas. Por favor, configure o LDAP primeiro. in /var/www/html/login.php:16
+Stack trace:
+#0 {main}
+  thrown in /var/www/html/login.php on line 16
+[30-May-2025 17:15:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:15:22 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:22 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:15:22 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Configurações LDAP não encontradas. Por favor, configure o LDAP primeiro. in /var/www/html/login.php:16
+Stack trace:
+#0 {main}
+  thrown in /var/www/html/login.php on line 16
+[30-May-2025 17:15:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:15:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:15:25 America/Sao_Paulo] PHP Fatal error:  Uncaught Exception: Configurações LDAP não encontradas. Por favor, configure o LDAP primeiro. in /var/www/html/login.php:16
+Stack trace:
+#0 {main}
+  thrown in /var/www/html/login.php on line 16
+[30-May-2025 17:15:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:15:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:16:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:16:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:16:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:16:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:17:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:17:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:17:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:17:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:18:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:18:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:18:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:18:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:19:05 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:19:05 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:19:35 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:19:35 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:20:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:20:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:20:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:20:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:20:39 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:20:39 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:20:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:20:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:20:42 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:20:42 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:20:44 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:20:44 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:20:45 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:20:45 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:20:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:20:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:20:52 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:20:52 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:06 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:18 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:18 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:20 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:20 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:23 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:23 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:25 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:25 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:27 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:27 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:36 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:36 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:47 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:47 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:50 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:50 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:53 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:53 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 14:21:53 America/Sao_Paulo] Tentando autenticação LDAP para usuário: rafael.cavalheri
+[30-May-2025 14:21:53 America/Sao_Paulo] === Iniciando autenticação LDAP ===
+[30-May-2025 14:21:53 America/Sao_Paulo] Usuário: rafael.cavalheri
+[30-May-2025 14:21:53 America/Sao_Paulo] Servidor: ldap://192.168.10.224
+[30-May-2025 14:21:53 America/Sao_Paulo] Domínio: mmirim.local
+[30-May-2025 14:21:53 America/Sao_Paulo] Base DN: DC=mmirim,DC=local
+[30-May-2025 14:21:53 America/Sao_Paulo] UserDN: rafael.cavalheri@mmirim.local
+[30-May-2025 14:21:53 America/Sao_Paulo] sAMAccountName: rafael.cavalheri
+[30-May-2025 14:21:53 America/Sao_Paulo] Conexão estabelecida com ldap://192.168.10.224
+[30-May-2025 14:21:53 America/Sao_Paulo] Tentando autenticar com: rafael.cavalheri@mmirim.local
+[30-May-2025 14:21:53 America/Sao_Paulo] Autenticação bem-sucedida com: rafael.cavalheri@mmirim.local
+[30-May-2025 14:21:53 America/Sao_Paulo] Usuário encontrado e autenticado com sucesso
+[30-May-2025 14:21:53 America/Sao_Paulo] Autenticação LDAP bem-sucedida para: rafael.cavalheri
+[30-May-2025 14:21:53 America/Sao_Paulo] Usuário encontrado no banco: rafael.cavalheri@mogimirim.sp.gov.br
+[30-May-2025 17:21:53 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:53 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:55 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:55 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:21:56 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:21:56 UTC] Conexão com o banco de dados estabelecida com sucesso
+[30-May-2025 17:22:06 UTC] Tentando conectar ao banco de dados com DSN: mysql:host=db;dbname=farmacia;charset=utf8mb4
+[30-May-2025 17:22:06 UTC] Conexão com o banco de dados estabelecida com sucesso
