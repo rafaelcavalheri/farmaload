@@ -290,6 +290,21 @@ CREATE TABLE IF NOT EXISTS pessoas_autorizadas (
 ) ENGINE=InnoDB;
 
 
+-- Tabela de configurações LDAP
+CREATE TABLE IF NOT EXISTS ldap_config (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ldap_server VARCHAR(255) NOT NULL,
+    ldap_domain VARCHAR(255) NOT NULL,
+    ldap_base_dn VARCHAR(255) NOT NULL,
+    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB;
+
+
+-- Inserir configuração LDAP padrão
+INSERT IGNORE INTO ldap_config (ldap_server, ldap_domain, ldap_base_dn) VALUES
+('ldap://192.168.10.224', 'mmirim.local', 'dc=mmirim,dc=local');
+
+
 -- Dados iniciais ESSENCIAIS
 
 INSERT IGNORE INTO usuarios (nome, email, senha, perfil) VALUES

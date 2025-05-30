@@ -4,10 +4,27 @@ include 'config.php';
 
 $erro = '';
 
-// Configurações do LDAP
-$ldapServer = "ldap://192.168.10.224";
-$ldapDomain = "mmirim.local";
-$ldapBaseDn = "dc=mmirim,dc=local";
+// Carregar configurações LDAP do banco
+try {
+    $stmt = $pdo->query("SELECT * FROM ldap_config ORDER BY id DESC LIMIT 1");
+    $ldapConfig = $stmt->fetch();
+    
+    if ($ldapConfig) {
+        $ldapServer = $ldapConfig['ldap_server'];
+        $ldapDomain = $ldapConfig['ldap_domain'];
+        $ldapBaseDn = $ldapConfig['ldap_base_dn'];
+    } else {
+        // Fallback para configurações padrão caso não exista no banco
+        $ldapServer = "ldap://192.168.10.224";
+        $ldapDomain = "mmirim.local";
+        $ldapBaseDn = "dc=mmirim,dc=local";
+    }
+} catch (PDOException $e) {
+    error_log("Erro ao carregar configurações LDAP: " . $e->getMessage());
+    $ldapServer = "ldap://192.168.10.224";
+    $ldapDomain = "mmirim.local";
+    $ldapBaseDn = "dc=mmirim,dc=local";
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
