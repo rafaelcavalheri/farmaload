@@ -23,6 +23,7 @@ RUN apt-get update && apt-get install -y \
     libpng-dev \
     ldap-utils \
     libldap2-dev \
+    dos2unix \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install -j$(nproc) gd \
     && docker-php-ext-install pdo_mysql zip mysqli xml xsl ldap \
@@ -56,11 +57,11 @@ RUN mv "$PHP_INI_DIR/php.ini-production" "$PHP_INI_DIR/php.ini" && \
     chown -R www-data:www-data /var/lib/php/sessions
 
 # Copiar configurações
-COPY CONFIG/php.ini $PHP_INI_DIR/conf.d/custom.ini
-COPY CONFIG/farmacia.conf /etc/apache2/sites-available/000-default.conf
+COPY ../CONFIG/php.ini $PHP_INI_DIR/conf.d/custom.ini
+COPY ../CONFIG/farmacia.conf /etc/apache2/sites-available/000-default.conf
 
 # Copiar aplicação
-COPY PHP/ /var/www/html/
+COPY ../PHP/ /var/www/html/
 
 # Configurar diretório de logs e permissões
 RUN mkdir -p /var/www/html/LOG && \
@@ -75,7 +76,9 @@ RUN mkdir -p /var/www/html/LOG && \
     chmod -R 775 /var/www/html/logs && \
     chmod -R 775 /var/www/html/images && \
     chmod -R 775 /var/www/html/css && \
-    chmod -R 775 /var/www/html/vendor
+    chmod -R 775 /var/www/html/vendor && \
+    chmod -R 775 /var/www/html/templates && \
+    chmod -R 775 /var/lib/php/sessions
 
 # Script de saúde
 HEALTHCHECK --interval=30s --timeout=3s \
@@ -83,12 +86,8 @@ HEALTHCHECK --interval=30s --timeout=3s \
 
 # Copiar script de inicialização
 COPY DOCKER-FILES/start.sh /usr/local/bin/
-COPY DOCKER-FILES/fix-permissions.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/start.sh && \
-    chmod +x /usr/local/bin/fix-permissions.sh
-
-# Executar script de permissões durante a construção
-RUN /usr/local/bin/fix-permissions.sh
+RUN dos2unix /usr/local/bin/start.sh && \
+    chmod +x /usr/local/bin/start.sh
 
 CMD ["/usr/local/bin/start.sh"]
 
