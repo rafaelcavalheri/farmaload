@@ -36,7 +36,7 @@ if (ENVIRONMENT === 'development') {
 }
 
 $dbConfig = [
-    'host'      => getenv('DB_HOST') ?: 'localhost',
+    'host'      => getenv('DB_HOST') ?: 'db',
     'database'  => getenv('DB_NAME') ?: 'farmacia',
     'user'      => getenv('DB_USER') ?: 'admin',
     'pass'      => getenv('DB_PASSWORD') ?: 'HakETodLEfRe', 

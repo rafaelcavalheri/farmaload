@@ -2,15 +2,25 @@
 require __DIR__ . '/config.php';
 verificarAutenticacao(['admin']);
 
-$erro = '';
-$sucesso = '';
+// Mensagens
+$erro = $_GET['erro'] ?? null;
+$sucesso = $_GET['sucesso'] ?? null;
+$testResult = null;
 
-// Carregar configurações atuais
-try {
-    $stmt = $pdo->query("SELECT * FROM ldap_config ORDER BY id DESC LIMIT 1");
-    $config = $stmt->fetch();
-} catch (PDOException $e) {
-    $erro = "Erro ao carregar configurações: " . $e->getMessage();
+// Configurações LDAP vazias
+$ldapConfig = [
+    'ldap_server' => '',
+    'ldap_domain' => '',
+    'ldap_base_dn' => ''
+];
+
+// Carregar configurações existentes apenas se o arquivo existir
+$configFile = __DIR__ . '/ldap_settings.php';
+if (file_exists($configFile)) {
+    $savedConfig = include $configFile;
+    if (is_array($savedConfig)) {
+        $ldapConfig = $savedConfig;
+    }
 }
 
 // Processar formulário
@@ -19,11 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ldapDomain = trim($_POST['ldap_domain'] ?? '');
     $ldapBaseDn = trim($_POST['ldap_base_dn'] ?? '');
     
+    // Validar campos
     if (empty($ldapServer) || empty($ldapDomain) || empty($ldapBaseDn)) {
         $erro = "Todos os campos são obrigatórios.";
     } else {
         try {
-            // Testar conexão LDAP antes de salvar
+            // Testar conexão LDAP
             $ldapConn = ldap_connect($ldapServer);
             if (!$ldapConn) {
                 throw new Exception("Não foi possível conectar ao servidor LDAP.");
@@ -32,18 +43,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
             ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
             
-            // Salvar configurações
-            $stmt = $pdo->prepare("INSERT INTO ldap_config (ldap_server, ldap_domain, ldap_base_dn) VALUES (?, ?, ?)");
-            $stmt->execute([$ldapServer, $ldapDomain, $ldapBaseDn]);
+            // Tentar conexão anônima para verificar se o servidor está acessível
+            if (!@ldap_bind($ldapConn)) {
+                throw new Exception("Não foi possível conectar ao servidor LDAP. Verifique se o servidor está acessível.");
+            }
             
-            $sucesso = "Configurações LDAP atualizadas com sucesso!";
-            
-            // Recarregar configurações
-            $stmt = $pdo->query("SELECT * FROM ldap_config ORDER BY id DESC LIMIT 1");
-            $config = $stmt->fetch();
+            // Se for apenas um teste de conexão
+            if (isset($_POST['test_connection'])) {
+                $testResult = [
+                    'success' => true,
+                    'message' => "Conexão com o servidor LDAP estabelecida com sucesso!"
+                ];
+                ldap_unbind($ldapConn);
+                $ldapConfig = [
+                    'ldap_server' => $ldapServer,
+                    'ldap_domain' => $ldapDomain,
+                    'ldap_base_dn' => $ldapBaseDn
+                ];
+            } else {
+                // Salvar configurações em um arquivo
+                $config = [
+                    'ldap_server' => $ldapServer,
+                    'ldap_domain' => $ldapDomain,
+                    'ldap_base_dn' => $ldapBaseDn
+                ];
+                
+                $configFile = __DIR__ . '/ldap_settings.php';
+                $configContent = "<?php\nreturn " . var_export($config, true) . ";\n";
+                
+                if (file_put_contents($configFile, $configContent)) {
+                    $sucesso = "Configurações LDAP salvas com sucesso!";
+                    $ldapConfig = $config;
+                } else {
+                    throw new Exception("Não foi possível salvar as configurações.");
+                }
+                
+                ldap_unbind($ldapConn);
+            }
             
         } catch (Exception $e) {
-            $erro = "Erro ao salvar configurações: " . $e->getMessage();
+            if (isset($_POST['test_connection'])) {
+                $testResult = [
+                    'success' => false,
+                    'message' => "Erro: " . $e->getMessage()
+                ];
+            } else {
+                $erro = "Erro: " . $e->getMessage();
+            }
         }
     }
 }
@@ -51,16 +97,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Configurações LDAP</title>
+    <title>Configuração LDAP</title>
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        .test-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 4px;
+        }
+        .test-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .test-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
 <?php include 'header.php'; ?>
 
 <main class="container">
     <div class="page-header">
-        <h1><i class="fas fa-server"></i> Configurações LDAP</h1>
+        <h1><i class="fas fa-server"></i> Configuração LDAP</h1>
         <div class="actions">
             <a href="usuarios.php" class="btn-secondary">
                 <i class="fas fa-arrow-left"></i> Voltar
@@ -76,59 +143,47 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <div class="erro"><?= sanitizar($erro) ?></div>
     <?php endif; ?>
 
+    <?php if ($testResult): ?>
+        <div class="test-result <?= $testResult['success'] ? 'test-success' : 'test-error' ?>">
+            <?= sanitizar($testResult['message']) ?>
+        </div>
+    <?php endif; ?>
+
     <div class="card">
-        <h3>Configurações Atuais</h3>
-        <form method="POST" class="form-config">
+        <h3>Configurações do Servidor LDAP</h3>
+        <form method="POST" action="">
             <div class="form-group">
                 <label for="ldap_server">Servidor LDAP:</label>
                 <input type="text" id="ldap_server" name="ldap_server" 
-                       value="<?= sanitizar($config['ldap_server'] ?? '') ?>" required
-                       placeholder="Ex: ldap://servidor.local">
-                <small class="text-muted">URL do servidor LDAP (ex: ldap://servidor.local)</small>
+                       value="<?= htmlspecialchars($ldapConfig['ldap_server']) ?>" 
+                       placeholder="ldap://servidor:389" required>
+                <small class="text-muted">Exemplo: ldap://servidor:389 ou ldap://192.168.1.100</small>
             </div>
 
             <div class="form-group">
                 <label for="ldap_domain">Domínio:</label>
                 <input type="text" id="ldap_domain" name="ldap_domain" 
-                       value="<?= sanitizar($config['ldap_domain'] ?? '') ?>" required
-                       placeholder="Ex: dominio.local">
-                <small class="text-muted">Domínio do Active Directory (ex: dominio.local)</small>
+                       value="<?= htmlspecialchars($ldapConfig['ldap_domain']) ?>" 
+                       placeholder="dominio.local" required>
+                <small class="text-muted">Exemplo: empresa.local ou dominio.com.br</small>
             </div>
 
             <div class="form-group">
                 <label for="ldap_base_dn">Base DN:</label>
                 <input type="text" id="ldap_base_dn" name="ldap_base_dn" 
-                       value="<?= sanitizar($config['ldap_base_dn'] ?? '') ?>" required
-                       placeholder="Ex: dc=dominio,dc=local">
-                <small class="text-muted">Base DN para busca (ex: dc=dominio,dc=local)</small>
+                       value="<?= htmlspecialchars($ldapConfig['ldap_base_dn']) ?>" 
+                       placeholder="dc=dominio,dc=local" required>
+                <small class="text-muted">Exemplo: dc=empresa,dc=local ou dc=dominio,dc=com,dc=br</small>
             </div>
 
             <div class="form-actions">
+                <button type="submit" name="test_connection" class="btn-secondary">
+                    <i class="fas fa-plug"></i> Testar Conexão
+                </button>
                 <button type="submit" class="btn-primary">Salvar Configurações</button>
             </div>
         </form>
     </div>
 </main>
-
-<style>
-.form-config {
-    max-width: 600px;
-    margin: 0 auto;
-}
-.form-config .form-group {
-    margin-bottom: 1.5rem;
-}
-.form-config input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-}
-.form-config .text-muted {
-    display: block;
-    margin-top: 4px;
-    font-size: 0.9em;
-    color: #666;
-}
-</style>
 </body>
 </html> 
