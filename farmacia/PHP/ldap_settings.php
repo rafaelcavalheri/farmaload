@@ -1,7 +1,6 @@
 <?php
 return array (
-  'enable_ldap' => false,
-  'ldap_server' => '',
-  'ldap_domain' => '',
-  'ldap_base_dn' => '',
+  'ldap_server' => 'ldap://192.168.10.224',
+  'ldap_domain' => 'mmirim.local',
+  'ldap_base_dn' => 'dc=mmirim,dc=local',
 );

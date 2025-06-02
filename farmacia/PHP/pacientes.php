@@ -23,9 +23,13 @@ if (isset($_GET['toggle'])) {
 }
 
 $busca = $_GET['busca'] ?? '';
+$ordem = $_GET['ordem'] ?? 'nome';
+$direcao = $_GET['direcao'] ?? 'ASC';
+
 $sql = "SELECT p.id, p.nome, p.cpf, p.sim, p.nascimento, p.ativo, 
                COUNT(pm.id) AS total_medicamentos, 
-               p.validade AS proxima_renovacao
+               p.validade AS proxima_renovacao,
+               (SELECT MAX(data) FROM transacoes WHERE paciente_id = p.id) as ultima_coleta
         FROM pacientes p
         LEFT JOIN paciente_medicamentos pm ON pm.paciente_id = p.id";
 $params = [];
@@ -33,7 +37,26 @@ if (!empty($busca)) {
     $sql .= " WHERE p.nome LIKE ? OR p.cpf LIKE ? OR p.sim LIKE ?";
     $params = array_fill(0, 3, "%$busca%");
 }
-$sql .= " GROUP BY p.id ORDER BY p.nome ASC";
+$sql .= " GROUP BY p.id";
+
+// Adicionar ordenação
+$colunas_ordenacao = [
+    'nome' => 'p.nome',
+    'cpf' => 'p.cpf',
+    'sim' => 'p.sim',
+    'nascimento' => 'p.nascimento',
+    'medicamentos' => 'total_medicamentos',
+    'renovacao' => 'p.validade',
+    'ultima_coleta' => 'ultima_coleta',
+    'status' => 'p.ativo'
+];
+
+if (isset($colunas_ordenacao[$ordem])) {
+    $sql .= " ORDER BY " . $colunas_ordenacao[$ordem] . " " . ($direcao === 'DESC' ? 'DESC' : 'ASC');
+} else {
+    $sql .= " ORDER BY p.nome ASC";
+}
+
 $stmt = $pdo->prepare($sql);
 $stmt->execute($params);
 ?>
@@ -135,8 +158,9 @@ $stmt->execute($params);
         th:nth-child(5), td:nth-child(5) { width: 90px; } /* Nascimento */
         th:nth-child(6), td:nth-child(6) { width: 90px; } /* Medicamentos */
         th:nth-child(7), td:nth-child(7) { width: 80px; } /* Próx. Renovação */
-        th:nth-child(8), td:nth-child(8) { width: 70px; } /* Status */
-        th:nth-child(9), td:nth-child(9) { width: 160px; } /* Ações */
+        th:nth-child(8), td:nth-child(8) { width: 70px; } /* Última Coleta */
+        th:nth-child(9), td:nth-child(9) { width: 160px; } /* Status */
+        th:nth-child(10), td:nth-child(10) { width: 160px; } /* Ações */
         /* Responsividade */
         @media (max-width: 768px) {
             .header-actions {
@@ -245,6 +269,25 @@ $stmt->execute($params);
         .status-renovacao .data {
             font-weight: normal;
         }
+        th.sortable {
+            cursor: pointer;
+            position: relative;
+            padding-right: 20px;
+        }
+        th.sortable:after {
+            content: '↕';
+            position: absolute;
+            right: 5px;
+            color: #999;
+        }
+        th.sortable.asc:after {
+            content: '↑';
+            color: #333;
+        }
+        th.sortable.desc:after {
+            content: '↓';
+            color: #333;
+        }
     </style>
 </head>
 <body>
@@ -275,96 +318,99 @@ $stmt->execute($params);
     <table>
         <thead>
             <tr>
-                <th>Nome</th>
-                <th>CPF</th>
-                <th>SIM</th>
-                <th>Idade</th>
-                <th>Nascimento</th>
-                <th>Medicamentos</th>
-                <th>Próx. Renovação</th>
-                <th>Status</th>
+                <th class="sortable" data-ordem="nome">Nome</th>
+                <th class="sortable" data-ordem="cpf">CPF</th>
+                <th class="sortable" data-ordem="sim">SIM</th>
+                <th class="sortable" data-ordem="nascimento">Nascimento</th>
+                <th class="sortable" data-ordem="medicamentos">Medicamentos</th>
+                <th class="sortable" data-ordem="renovacao">Próx. Renovação</th>
+                <th class="sortable" data-ordem="ultima_coleta">Última Coleta</th>
+                <th class="sortable" data-ordem="status">Status</th>
                 <th>Ações</th>
             </tr>
         </thead>
-<tbody>
-<?php while ($paciente = $stmt->fetch()): ?>
-    <?php
-        $nasc = new DateTime($paciente['nascimento']);
-        $idade = (new DateTime())->diff($nasc)->y;
-        $renAlert = '';
+        <tbody>
+            <?php while ($paciente = $stmt->fetch()): ?>
+            <?php
+                $nasc = new DateTime($paciente['nascimento']);
+                $idade = (new DateTime())->diff($nasc)->y;
+                $renAlert = '';
 
-        if (!empty($paciente['proxima_renovacao'])) {
-            $dataRaw = trim($paciente['proxima_renovacao']);
-            $ren = DateTime::createFromFormat('Y-m-d', $dataRaw);
-            
-            if ($ren !== false) {
-                $hoje = new DateTime();
-                
-                if ($ren < $hoje) {
-                    $renAlert = '<span class="badge badge-danger">Atrasado</span>';
-                } elseif ($ren->format('Y-m') === $hoje->format('Y-m')) {
-                    $renAlert = '<span class="badge badge-warning">Este mês</span>';
+                if (!empty($paciente['proxima_renovacao'])) {
+                    $dataRaw = trim($paciente['proxima_renovacao']);
+                    $ren = DateTime::createFromFormat('Y-m-d', $dataRaw);
+                    
+                    if ($ren !== false) {
+                        $hoje = new DateTime();
+                        
+                        if ($ren < $hoje) {
+                            $renAlert = '<span class="badge badge-danger">Atrasado</span>';
+                        } elseif ($ren->format('Y-m') === $hoje->format('Y-m')) {
+                            $renAlert = '<span class="badge badge-warning">Este mês</span>';
+                        } else {
+                            $renAlert = '<span class="badge">'. $ren->format('d/m/Y') .'</span>';
+                        }
+                    } else {
+                        $renAlert = '<span class="badge badge-secondary">Data inválida</span>';
+                    }
                 } else {
-                    $renAlert = '<span class="badge">'. $ren->format('d/m/Y') .'</span>';
+                    $renAlert = '<span class="badge badge-secondary">Não informado</span>';
                 }
-            } else {
-                $renAlert = '<span class="badge badge-secondary">Data inválida</span>';
-            }
-        } else {
-            $renAlert = '<span class="badge badge-secondary">Não informado</span>';
-        }
-    ?>
-    <tr class="<?= !$paciente['ativo'] ? 'inativo' : '' ?>">
-    <td><?= htmlspecialchars($paciente['nome']) ?></td>
-    <td>
-        <span id="cpf-<?= $paciente['id'] ?>"><?= formatarCPF($paciente['cpf']) ?></span>
-    </td>
-    <td><?= htmlspecialchars($paciente['sim'] ?? '--') ?></td>
-    <td><?= $idade ?> anos</td>
-    <td><?= $nasc->format('d/m/Y') ?></td>
-    <td>
-        <?php if ($paciente['total_medicamentos'] > 0): ?>
-            <span class="badge"><?= $paciente['total_medicamentos'] ?></span>
-            <button type="button" class="btn-link show-medicamentos" data-paciente="<?= $paciente['id'] ?>">
-                <i class="fas fa-pills"></i> Ver
-            </button>
-            <div id="medicamentos-<?= $paciente['id'] ?>" class="medicamento-info"></div>
-        <?php else: ?>
-            -- 
-        <?php endif; ?>
-    </td>
-    <td><?= $renAlert ?></td>
-    <td><?= $paciente['ativo'] ? '<span class="badge badge-success">Ativo</span>' : '<span class="badge badge-danger">Inativo</span>' ?></td>
-    <td class="actions">
-        <div class="action-buttons">
-            <?php if ($paciente['ativo']): ?>
-                <button onclick="abrirModalDispensar(<?= $paciente['id'] ?>, '<?= htmlspecialchars($paciente['nome']) ?>')" 
-                        class="btn-secondary" 
-                        title="Dispensar Medicamentos"
-                        <?= $paciente['total_medicamentos'] == 0 ? 'disabled' : '' ?>>
-                    <i class="fas fa-pills"></i>
-                </button>
-            <?php endif; ?>
-            <a href="editar_paciente.php?id=<?= $paciente['id'] ?>" class="btn-secondary" title="Editar">
-                <i class="fas fa-edit"></i>
-            </a>
-
-            <a href="pacientes.php?toggle=<?= $paciente['id'] ?>&csrf=<?= gerarTokenCsrf() ?>"
-              class="btn-secondary"
-              title="<?= $paciente['ativo'] ? 'Desativar' : 'Ativar' ?>"
-              onclick="return confirm('Deseja realmente <?= $paciente['ativo'] ? 'desativar' : 'ativar' ?> este paciente?');">
-                <i class="fas fa-power-off"></i>
-            </a>
-
-            <a href="detalhes_paciente.php?id=<?= $paciente['id'] ?>" class="btn-secondary" title="Detalhes">
-                <i class="fas fa-eye"></i>
-            </a>
-        </div>
-    </td>
-</tr>
-
-<?php endwhile; ?>
-</tbody>
+            ?>
+            <tr class="<?= !$paciente['ativo'] ? 'inativo' : '' ?>">
+                <td><?= htmlspecialchars($paciente['nome']) ?></td>
+                <td><span id="cpf-<?= $paciente['id'] ?>"><?= formatarCPF($paciente['cpf']) ?></span></td>
+                <td><?= htmlspecialchars($paciente['sim'] ?? '--') ?></td>
+                <td><?= $nasc->format('d/m/Y') ?> (<?= $idade ?> anos)</td>
+                <td>
+                    <?php if ($paciente['total_medicamentos'] > 0): ?>
+                        <span class="badge"><?= $paciente['total_medicamentos'] ?></span>
+                        <button type="button" class="btn-link show-medicamentos" data-paciente="<?= $paciente['id'] ?>">
+                            <i class="fas fa-pills"></i> Ver
+                        </button>
+                        <div id="medicamentos-<?= $paciente['id'] ?>" class="medicamento-info"></div>
+                    <?php else: ?>
+                        -- 
+                    <?php endif; ?>
+                </td>
+                <td><?= $renAlert ?></td>
+                <td>
+                    <?php 
+                    if (!empty($paciente['ultima_coleta'])) {
+                        echo date('d/m/Y H:i', strtotime($paciente['ultima_coleta']));
+                    } else {
+                        echo '--';
+                    }
+                    ?>
+                </td>
+                <td><?= $paciente['ativo'] ? '<span class="badge badge-success">Ativo</span>' : '<span class="badge badge-danger">Inativo</span>' ?></td>
+                <td class="actions">
+                    <div class="action-buttons">
+                        <?php if ($paciente['ativo']): ?>
+                            <button onclick="abrirModalDispensar(<?= $paciente['id'] ?>, '<?= htmlspecialchars($paciente['nome']) ?>')" 
+                                    class="btn-secondary" 
+                                    title="Dispensar Medicamentos"
+                                    <?= $paciente['total_medicamentos'] == 0 ? 'disabled' : '' ?>>
+                                <i class="fas fa-pills"></i>
+                            </button>
+                        <?php endif; ?>
+                        <a href="editar_paciente.php?id=<?= $paciente['id'] ?>" class="btn-secondary" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a href="pacientes.php?toggle=<?= $paciente['id'] ?>&csrf=<?= gerarTokenCsrf() ?>"
+                          class="btn-secondary"
+                          title="<?= $paciente['ativo'] ? 'Desativar' : 'Ativar' ?>"
+                          onclick="return confirm('Deseja realmente <?= $paciente['ativo'] ? 'desativar' : 'ativar' ?> este paciente?');">
+                            <i class="fas fa-power-off"></i>
+                        </a>
+                        <a href="detalhes_paciente.php?id=<?= $paciente['id'] ?>" class="btn-secondary" title="Detalhes">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+            <?php endwhile; ?>
+        </tbody>
     </table>
     <?php else: ?>
         <div class="alert" style="margin-top:2rem;"><i class="fas fa-info-circle"></i> Nenhum paciente encontrado</div>
@@ -480,5 +526,47 @@ window.onclick = function(event) {
         fecharModalDispensar();
     }
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+    // Função para ordenar a tabela
+    function ordenarTabela(coluna) {
+        const urlParams = new URLSearchParams(window.location.search);
+        const ordemAtual = urlParams.get('ordem') || 'nome';
+        const direcaoAtual = urlParams.get('direcao') || 'ASC';
+        
+        // Alternar direção se clicar na mesma coluna
+        const novaDirecao = (ordemAtual === coluna && direcaoAtual === 'ASC') ? 'DESC' : 'ASC';
+        
+        // Atualizar parâmetros da URL
+        urlParams.set('ordem', coluna);
+        urlParams.set('direcao', novaDirecao);
+        
+        // Manter o parâmetro de busca se existir
+        const busca = urlParams.get('busca');
+        if (busca) {
+            urlParams.set('busca', busca);
+        }
+        
+        // Redirecionar com os novos parâmetros
+        window.location.href = window.location.pathname + '?' + urlParams.toString();
+    }
+
+    // Adicionar eventos de clique nos cabeçalhos
+    document.querySelectorAll('th.sortable').forEach(th => {
+        th.addEventListener('click', () => {
+            ordenarTabela(th.dataset.ordem);
+        });
+    });
+
+    // Marcar coluna atual como ordenada
+    const urlParams = new URLSearchParams(window.location.search);
+    const ordemAtual = urlParams.get('ordem') || 'nome';
+    const direcaoAtual = urlParams.get('direcao') || 'ASC';
+    
+    const thAtual = document.querySelector(`th[data-ordem="${ordemAtual}"]`);
+    if (thAtual) {
+        thAtual.classList.add(direcaoAtual.toLowerCase());
+    }
+});
 </script>
 <?php include 'footer.php'; ?> 

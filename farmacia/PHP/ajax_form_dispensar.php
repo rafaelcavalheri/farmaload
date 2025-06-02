@@ -58,14 +58,14 @@ foreach ($medicamentos as $med): ?>
             <label>Quantidade disponível: <?= $quantidade_disponivel ?></label>
             <label>Estoque atual: <?= $estoque_atual ?></label>
             <input type="number" 
-                   id="quantidade-<?= $med['medicamento_id'] ?>" 
+                   id="quantidade-<?= $med['id'] ?>" 
                    class="quantidade-input"
                    min="0" 
                    max="<?= $max_disponivel ?>" 
                    value="0">
             <button type="button" 
                     class="btn-dispensar" 
-                    onclick="dispensarMedicamento(<?= $med['medicamento_id'] ?>, <?= $paciente_id ?>)"
+                    onclick="dispensarMedicamento(<?= $med['id'] ?>, <?= $paciente_id ?>)"
                     <?= $quantidade_disponivel == 0 ? 'disabled' : '' ?>>
                 Dispensar
             </button>
@@ -74,28 +74,33 @@ foreach ($medicamentos as $med): ?>
 <?php endforeach; ?>
 
 <script>
-document.getElementById('formDispensar').addEventListener('submit', async function(e) {
-    e.preventDefault();
+function dispensarMedicamento(pmId, pacienteId) {
+    const quantidade = document.querySelector(`#quantidade-${pmId}`).value;
+    if (!quantidade || quantidade <= 0) {
+        alert('Por favor, informe uma quantidade válida.');
+        return;
+    }
 
-    const form = e.target;
-    const formData = new FormData(form);
+    const formData = new FormData();
+    formData.append('medicamento_id', pmId);
+    formData.append('paciente_id', pacienteId);
+    formData.append('quantidade', quantidade);
 
-    try {
-        const response = await fetch('ajax_dispensar.php', {
-            method: 'POST',
-            body: formData
-        });
-
-        const result = await response.json();
-        if (result.success) {
-            alert(result.message);
+    fetch('ajax_dispensar.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Medicamento dispensado com sucesso!');
             location.reload();
         } else {
-            alert("Erro: " + result.message);
+            alert('Erro: ' + data.message);
         }
-    } catch (error) {
-        alert("Erro na comunicação com o servidor.");
-        console.error(error);
-    }
-});
+    })
+    .catch(error => {
+        alert('Erro ao dispensar medicamento: ' + error.message);
+    });
+}
 </script>

@@ -23,6 +23,8 @@ $pacientes = []; // Array para armazenar resultados da busca por nome
 // Buscar paciente
 if (isset($_POST['buscar'])) {
     $busca = trim($_POST['busca'] ?? '');
+    $ordem = $_POST['ordem'] ?? 'nome';
+    $direcao = $_POST['direcao'] ?? 'ASC';
     
     if (strlen($busca) >= 3) {
         $where = [];
@@ -44,10 +46,31 @@ if (isset($_POST['buscar'])) {
         }
         
         $whereClause = implode(" OR ", $where);
-        $stmt = $pdo->prepare("SELECT *, DATE_FORMAT(validade, '%d/%m/%Y') as validade_formatada, renovado 
-                              FROM pacientes 
-                              WHERE " . $whereClause . " 
-                              ORDER BY nome");
+        
+        // Definir colunas de ordenação
+        $colunas_ordenacao = [
+            'nome' => 'nome',
+            'cpf' => 'cpf',
+            'sim' => 'sim',
+            'validade' => 'validade',
+            'ultima_coleta' => '(SELECT MAX(data) FROM transacoes WHERE paciente_id = pacientes.id)'
+        ];
+
+        $sql = "SELECT *, 
+                DATE_FORMAT(validade, '%d/%m/%Y') as validade_formatada, 
+                renovado,
+                (SELECT MAX(data) FROM transacoes WHERE paciente_id = pacientes.id) as ultima_coleta
+                FROM pacientes 
+                WHERE " . $whereClause;
+        
+        // Adicionar ordenação
+        if (isset($colunas_ordenacao[$ordem])) {
+            $sql .= " ORDER BY " . $colunas_ordenacao[$ordem] . " " . ($direcao === 'DESC' ? 'DESC' : 'ASC');
+        } else {
+            $sql .= " ORDER BY nome ASC";
+        }
+
+        $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
         $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -446,6 +469,60 @@ if (isset($_POST['atualizar_observacao'])) {
         .badge i {
             margin-right: 5px;
         }
+        th.sortable {
+            cursor: pointer;
+            position: relative;
+            padding-right: 20px;
+        }
+        th.sortable:after {
+            content: '↕';
+            position: absolute;
+            right: 5px;
+            color: #999;
+        }
+        th.sortable.asc:after {
+            content: '↑';
+            color: #333;
+        }
+        th.sortable.desc:after {
+            content: '↓';
+            color: #333;
+        }
+        .resultados-busca {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        .resultados-busca th,
+        .resultados-busca td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        .resultados-busca th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .resultados-busca td {
+            vertical-align: middle;
+        }
+        .resultados-busca tr:hover {
+            background-color: #f5f5f5;
+        }
+        /* Definir larguras específicas para cada coluna */
+        .resultados-busca th:nth-child(1), 
+        .resultados-busca td:nth-child(1) { width: 30%; } /* Nome */
+        .resultados-busca th:nth-child(2), 
+        .resultados-busca td:nth-child(2) { width: 15%; } /* CPF */
+        .resultados-busca th:nth-child(3), 
+        .resultados-busca td:nth-child(3) { width: 10%; } /* SIM */
+        .resultados-busca th:nth-child(4), 
+        .resultados-busca td:nth-child(4) { width: 15%; } /* Validade */
+        .resultados-busca th:nth-child(5), 
+        .resultados-busca td:nth-child(5) { width: 15%; } /* Última Coleta */
+        .resultados-busca th:nth-child(6), 
+        .resultados-busca td:nth-child(6) { width: 15%; } /* Ações */
     </style>
 </head>
 <body>
@@ -473,24 +550,48 @@ if (isset($_POST['atualizar_observacao'])) {
         </form>
 
         <?php if (!empty($pacientes) && count($pacientes) > 1): ?>
-            <!-- Exibir lista de pacientes quando encontrar mais de um -->
             <h3>Resultados da busca (selecione um paciente):</h3>
-            <div class="pacientes-lista">
-                <?php foreach ($pacientes as $p): ?>
-                    <form method="POST">
-                        <input type="hidden" name="paciente_id" value="<?= $p['id'] ?>">
-                        <div class="paciente-item" onclick="this.closest('form').submit();">
-                            <strong><?= htmlspecialchars($p['nome']) ?></strong><br>
-                            CPF: <?= preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $p['cpf']) ?>
-                            <?php if (!empty($p['telefone'])): ?>
-                                | Tel: <?= htmlspecialchars($p['telefone']) ?>
-                            <?php endif; ?>
-                            <?php if (!empty($p['validade_formatada'])): ?>
-                                <br>Validade do Processo: <?= htmlspecialchars($p['validade_formatada']) ?>
-                            <?php endif; ?>
-                        </div>
-                    </form>
-                <?php endforeach; ?>
+            <div class="table-responsive">
+                <table class="resultados-busca">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-ordem="nome">Nome</th>
+                            <th class="sortable" data-ordem="cpf">CPF</th>
+                            <th class="sortable" data-ordem="sim">SIM</th>
+                            <th class="sortable" data-ordem="validade">Validade</th>
+                            <th class="sortable" data-ordem="ultima_coleta">Última Coleta</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach (
+                            $pacientes as $p): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($p['nome']) ?></td>
+                                <td><?= preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $p['cpf']) ?></td>
+                                <td><?= htmlspecialchars($p['sim'] ?? '--') ?></td>
+                                <td><?= htmlspecialchars($p['validade_formatada'] ?? '--') ?></td>
+                                <td>
+                                    <?php 
+                                    if (!empty($p['ultima_coleta'])) {
+                                        echo date('d/m/Y H:i', strtotime($p['ultima_coleta']));
+                                    } else {
+                                        echo '--';
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <form method="POST" style="display: inline;">
+                                        <input type="hidden" name="paciente_id" value="<?= $p['id'] ?>">
+                                        <button type="submit" class="btn-secondary">
+                                            <i class="fas fa-user"></i> Selecionar
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
             </div>
         <?php endif; ?>
 
@@ -599,7 +700,58 @@ if (isset($_POST['atualizar_observacao'])) {
     </main>
     <?php include 'footer.php'; ?>
     <script>
-        // Removido o código AJAX que estava causando problemas
+    document.addEventListener('DOMContentLoaded', function() {
+        // Função para ordenar a tabela
+        function ordenarTabela(coluna) {
+            const form = document.querySelector('form');
+            const ordemInput = document.createElement('input');
+            ordemInput.type = 'hidden';
+            ordemInput.name = 'ordem';
+            ordemInput.value = coluna;
+
+            const direcaoInput = document.createElement('input');
+            direcaoInput.type = 'hidden';
+            direcaoInput.name = 'direcao';
+            
+            const ordemAtual = form.querySelector('input[name="ordem"]')?.value || 'nome';
+            const direcaoAtual = form.querySelector('input[name="direcao"]')?.value || 'ASC';
+            
+            direcaoInput.value = (ordemAtual === coluna && direcaoAtual === 'ASC') ? 'DESC' : 'ASC';
+
+            // Remover inputs antigos se existirem
+            form.querySelectorAll('input[name="ordem"], input[name="direcao"]').forEach(input => input.remove());
+            
+            // Adicionar novos inputs
+            form.appendChild(ordemInput);
+            form.appendChild(direcaoInput);
+            
+            // Manter o valor da busca
+            const buscaInput = form.querySelector('input[name="busca"]');
+            if (buscaInput) {
+                buscaInput.value = buscaInput.value;
+            }
+            
+            // Submeter o formulário
+            form.submit();
+        }
+
+        // Adicionar eventos de clique nos cabeçalhos
+        document.querySelectorAll('th.sortable').forEach(th => {
+            th.addEventListener('click', () => {
+                ordenarTabela(th.dataset.ordem);
+            });
+        });
+
+        // Marcar coluna atual como ordenada
+        const form = document.querySelector('form');
+        const ordemAtual = form.querySelector('input[name="ordem"]')?.value || 'nome';
+        const direcaoAtual = form.querySelector('input[name="direcao"]')?.value || 'ASC';
+        
+        const thAtual = document.querySelector(`th[data-ordem="${ordemAtual}"]`);
+        if (thAtual) {
+            thAtual.classList.add(direcaoAtual.toLowerCase());
+        }
+    });
     </script>
 </body>
 </html>
