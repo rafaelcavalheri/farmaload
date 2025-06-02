@@ -621,9 +621,18 @@ function importarDados($dados) {
                 $pacienteExistente = $stmt->fetch();
                 
                 if (!$pacienteExistente) {
-                    // Gerar CPF temporário
-                    $cpfTemp = '00000000000' . str_pad(count($pacientesProcessados) + 1, 3, '0', STR_PAD_LEFT);
-                    $cpfTemp = substr($cpfTemp, -11); // Garantir que tenha exatamente 11 caracteres (tamanho padrão do CPF)
+                    // Gerar CPF temporário único usando timestamp + microtime + número aleatório
+                    do {
+                        $timestamp = microtime(true);
+                        $random = rand(1000, 9999);
+                        $cpfTemp = '000' . str_pad($timestamp . $random, 8, '0', STR_PAD_LEFT);
+                        $cpfTemp = substr($cpfTemp, -11); // Garantir que tenha exatamente 11 caracteres
+                        
+                        // Verificar se o CPF já existe
+                        $stmt = $pdo->prepare("SELECT id FROM pacientes WHERE cpf = ?");
+                        $stmt->execute([$cpfTemp]);
+                        $cpfExiste = $stmt->fetch();
+                    } while ($cpfExiste); // Se existir, gera outro
                     
                     // Verificar se o nome do paciente é válido
                     $nomePaciente = trim($paciente['nome']);
@@ -631,7 +640,7 @@ function importarDados($dados) {
                         if ($logFile) {
                             fwrite($logFile, "ERRO: Nome do paciente vazio. Pulando registro da linha " . $paciente['linha'] . "\n");
                         }
-                        continue; // Pula este paciente e continua com o próximo
+                        continue;
                     }
                     
                     if ($logFile) {
@@ -662,16 +671,11 @@ function importarDados($dados) {
                             fwrite($logFile, "Paciente inserido com ID: " . $novoId . "\n");
                         }
                         
-                        // Log direto no console PHP
-                        error_log("[IMPORTAÇÃO] Paciente inserido: " . $nomePaciente . ", ID: " . $novoId);
-                        
                         $pacientesProcessados[$nomePaciente] = $novoId;
                     } catch (Exception $e) {
                         if ($logFile) {
                             fwrite($logFile, "ERRO ao inserir paciente: " . $e->getMessage() . "\n");
                         }
-                        // Log direto no console PHP
-                        error_log("[IMPORTAÇÃO] ERRO ao inserir paciente " . $nomePaciente . ": " . $e->getMessage());
                     }
                 } else {
                     // Atualizar validade do paciente existente
@@ -1222,34 +1226,50 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
     $arquivo = $_FILES['arquivo'];
     $extensao = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION));
     
-    // Criar log para debug
-    $logFile = fopen('/var/www/html/debug_logs/import_debug.log', 'a');
+    // Criar log para debug dentro do container
+    $logDir = '/var/www/html/debug_logs';
+    if (!file_exists($logDir)) {
+        mkdir($logDir, 0777, true);
+    }
+    $logFile = fopen($logDir . '/import_debug.log', 'a');
     
-    // Registrar início da importação
+    // Registrar início da importação com mais detalhes
     if ($logFile) {
         fwrite($logFile, "\n\n=================================================\n");
         fwrite($logFile, "INÍCIO DE IMPORTAÇÃO: " . date('Y-m-d H:i:s') . "\n");
         fwrite($logFile, "Arquivo: " . $arquivo['name'] . " (" . $arquivo['size'] . " bytes)\n");
+        fwrite($logFile, "Extensão: " . $extensao . "\n");
+        fwrite($logFile, "Tipo MIME: " . $arquivo['type'] . "\n");
         fwrite($logFile, "=================================================\n\n");
     } else {
         // Falha ao criar o log - tentar criar um arquivo de erro
-        file_put_contents('/tmp/log_error.txt', date('Y-m-d H:i:s') . ": Não foi possível criar o arquivo de log\n", FILE_APPEND);
+        file_put_contents('/var/www/html/import_error.log', date('Y-m-d H:i:s') . ": Não foi possível criar o arquivo de log\n", FILE_APPEND);
     }
     
     try {
+        // Adicionar log antes de carregar o arquivo
+        if ($logFile) {
+            fwrite($logFile, "Tentando carregar arquivo...\n");
+        }
+        
         $spreadsheet = IOFactory::load($arquivo['tmp_name']);
         
         if ($logFile) {
-            fwrite($logFile, "=== NOVA IMPORTAÇÃO: " . date('Y-m-d H:i:s') . " ===\n");
-            fwrite($logFile, "Arquivo: " . $arquivo['name'] . "\n");
-            logEstruturaPlanilha($spreadsheet, $logFile);
+            fwrite($logFile, "Arquivo carregado com sucesso!\n");
+            fwrite($logFile, "Abas encontradas: " . implode(', ', $spreadsheet->getSheetNames()) . "\n");
         }
         
         // Tentar encontrar a aba medicamentos
         $worksheet = null;
         foreach ($spreadsheet->getSheetNames() as $sheetName) {
+            if ($logFile) {
+                fwrite($logFile, "Verificando aba: " . $sheetName . "\n");
+            }
             if (strtoupper($sheetName) === 'MEDICAMENTOS') {
                 $worksheet = $spreadsheet->getSheetByName($sheetName);
+                if ($logFile) {
+                    fwrite($logFile, "Aba MEDICAMENTOS encontrada!\n");
+                }
                 break;
             }
         }
@@ -1257,6 +1277,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
         // Se não encontrou a aba medicamentos, usa a aba ativa
         if (!$worksheet) {
             $worksheet = $spreadsheet->getActiveSheet();
+            if ($logFile) {
+                fwrite($logFile, "Usando aba ativa: " . $worksheet->getTitle() . "\n");
+            }
         }
 
         // Tentar identificar o formato do arquivo
@@ -1266,18 +1289,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
         // Verificar se é o formato do template
         $primeiraLinha = [];
         for ($col = 'A'; $col <= 'D'; $col++) {
-            $primeiraLinha[] = $worksheet->getCell($col . '1')->getValue();
+            $valor = $worksheet->getCell($col . '1')->getValue();
+            $primeiraLinha[] = $valor;
+            if ($logFile) {
+                fwrite($logFile, "Cabeçalho coluna $col: " . $valor . "\n");
+            }
         }
         
         if ($primeiraLinha === $cabecalhoEsperado) {
             $isTemplateFormat = true;
+            if ($logFile) {
+                fwrite($logFile, "Formato identificado: Template\n");
+            }
+        } else {
+            if ($logFile) {
+                fwrite($logFile, "Formato não é Template. Primeira linha encontrada: " . implode(', ', $primeiraLinha) . "\n");
+            }
         }
 
         if ($spreadsheet->sheetNameExists('RELINI_FIM')) {
+            if ($logFile) {
+                fwrite($logFile, "Formato identificado: RELINI_FIM\n");
+            }
             $dados = importarReliniFim($spreadsheet);
         } else if ($isTemplateFormat) {
             $dados = processarTemplate($spreadsheet);
         } else {
+            if ($logFile) {
+                fwrite($logFile, "Formato identificado: Livre\n");
+            }
             $dados = converterFormatoLivre_Modificado($spreadsheet);
         }
 

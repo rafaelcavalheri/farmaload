@@ -89,7 +89,7 @@ CREATE TABLE IF NOT EXISTS medicamentos (
         'Frasco'
     ) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
 
-    codigo VARCHAR(20) UNIQUE NOT NULL,
+    codigo VARCHAR(20) NOT NULL,
 
     miligramas VARCHAR(20),
 
@@ -99,7 +99,9 @@ CREATE TABLE IF NOT EXISTS medicamentos (
 
     data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
-    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    UNIQUE KEY unq_nome_lote (nome, lote)
 
 ) ENGINE=InnoDB;
 

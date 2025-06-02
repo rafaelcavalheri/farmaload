@@ -133,6 +133,7 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                                 validade,
                                 ativo
                             FROM medicamentos
+                            WHERE quantidade > 0
                             ORDER BY $ordem $direcao";
                     $stmt = $pdo->query($sql);
                     

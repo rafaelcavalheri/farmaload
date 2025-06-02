@@ -44,23 +44,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($erros)) {
         try {
-            $stmt = $pdo->prepare("INSERT INTO medicamentos 
-                                 (nome, quantidade, lote, cid, apresentacao, codigo, miligramas, validade) 
-                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            
-            $stmt->execute([
-                $valores['nome'],
-                $valores['quantidade'],
-                $valores['lote'],
-                $valores['cid'],
-                $valores['apresentacao'],
-                $valores['codigo'],
-                $_POST['miligramas'] ?? null,
-                !empty($_POST['validade']) ? date('Y-m-d', strtotime($_POST['validade'])) : null
-            ]);
-            
-            header('Location: medicamentos.php?sucesso=Medicamento cadastrado com sucesso');
-            exit();
+            // Buscar por nome+lote
+            $stmt = $pdo->prepare("SELECT id, quantidade, validade FROM medicamentos WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?)) AND lote = ?");
+            $stmt->execute([trim($valores['nome']), $valores['lote']]);
+            $medicamentoExistente = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($medicamentoExistente) {
+                // Somar quantidade
+                $novaQuantidade = $medicamentoExistente['quantidade'] + $valores['quantidade'];
+                // Atualizar validade se a nova for maior
+                $dataExistente = DateTime::createFromFormat('Y-m-d', $medicamentoExistente['validade']);
+                $dataNovo = !empty($valores['validade']) ? DateTime::createFromFormat('Y-m-d', date('Y-m-d', strtotime($valores['validade']))) : false;
+                if ($dataExistente && $dataNovo && $dataNovo > $dataExistente) {
+                    $validade = $dataNovo->format('Y-m-d');
+                } else {
+                    $validade = $dataExistente ? $dataExistente->format('Y-m-d') : (!empty($valores['validade']) ? date('Y-m-d', strtotime($valores['validade'])) : null);
+                }
+                $stmt = $pdo->prepare("UPDATE medicamentos SET quantidade = ?, validade = ? WHERE id = ?");
+                $stmt->execute([$novaQuantidade, $validade, $medicamentoExistente['id']]);
+                header('Location: medicamentos.php?sucesso=Medicamento atualizado com sucesso');
+                exit();
+            } else {
+                $stmt = $pdo->prepare("INSERT INTO medicamentos (nome, quantidade, lote, cid, apresentacao, codigo, miligramas, validade) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->execute([
+                    $valores['nome'],
+                    $valores['quantidade'],
+                    $valores['lote'],
+                    $valores['cid'],
+                    $valores['apresentacao'],
+                    $valores['codigo'],
+                    $_POST['miligramas'] ?? null,
+                    !empty($_POST['validade']) ? date('Y-m-d', strtotime($_POST['validade'])) : null
+                ]);
+                header('Location: medicamentos.php?sucesso=Medicamento cadastrado com sucesso');
+                exit();
+            }
         } catch (PDOException $e) {
             $erro_banco = "Erro ao cadastrar: " . $e->getMessage();
         }
