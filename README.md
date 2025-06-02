@@ -1,6 +1,6 @@
 # Farmaload - Notas da Versão
 
-**Versão:** v.1.2025.0206.1155  
+**Versão:** v.1.2025.0206.1450  
 **Data:** 02/06/2025
 
 # Histórico de versões
