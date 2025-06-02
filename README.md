@@ -30,4 +30,4 @@
 - Adicionada página para configuração dos parâmetros do servidor LDAP, permitindo integração e autenticação centralizada.
 
 ---
-**Equipe responsável:** Rafael Cavalheri e Assistente IA 
+**Equipe responsável:** Rafael Cavalheri
