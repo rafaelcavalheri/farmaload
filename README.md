@@ -29,5 +29,13 @@
 ### 6. Configuração de Servidor LDAP
 - Adicionada página para configuração dos parâmetros do servidor LDAP, permitindo integração e autenticação centralizada.
 
+# Histórico de versões
+
+## v.1.2025.0206.1450 (06/02/2025)
+### Página de Medicamentos
+- Adicionada ordenação clicável em todas as colunas da tabela de medicamentos.
+- Implementada ordenação especial para a coluna "Total Recebido" (ordenada via PHP).
+- Restaurada a exibição da data da última importação no cabeçalho da coluna "Total Recebido".
+
 ---
 **Equipe responsável:** Rafael Cavalheri

@@ -48,6 +48,9 @@ if (isset($_GET['ativar'])) {
 // Buscar a última data/hora de importação global
 $stmtUltimaImport = $pdo->query("SELECT MAX(data) as ultima_data FROM movimentacoes WHERE tipo = 'IMPORTACAO'");
 $ultimaImportGlobal = $stmtUltimaImport->fetch(PDO::FETCH_ASSOC);
+
+$ordem = $_GET['ordem'] ?? 'nome';
+$direcao = $_GET['direcao'] ?? 'ASC';
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -104,17 +107,17 @@ $ultimaImportGlobal = $stmtUltimaImport->fetch(PDO::FETCH_ASSOC);
             <table id="medicamentosTable">
                 <thead>
                     <tr>
-                        <th>Nome</th>
-                        <th>Quantidade</th>
-                        <th>Total Recebido<br>
+                        <th class="sortable" data-ordem="nome">Nome</th>
+                        <th class="sortable" data-ordem="quantidade">Quantidade</th>
+                        <th class="sortable" data-ordem="total_recebido">Total Recebido<br>
                             <?php if(!empty($ultimaImportGlobal['ultima_data'])): ?>
                                 <span style="font-weight:normal;font-size:0.95em;">(Última Importação: <?php echo date('d/m/Y H:i', strtotime($ultimaImportGlobal['ultima_data'])); ?>)</span>
                             <?php endif; ?>
                         </th>
-                        <th>Código</th>
-                        <th>Lote</th>
-                        <th>Apresentação</th>
-                        <th>Validade</th>
+                        <th class="sortable" data-ordem="codigo">Código</th>
+                        <th class="sortable" data-ordem="lote">Lote</th>
+                        <th class="sortable" data-ordem="apresentacao">Apresentação</th>
+                        <th class="sortable" data-ordem="validade">Validade</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -130,7 +133,7 @@ $ultimaImportGlobal = $stmtUltimaImport->fetch(PDO::FETCH_ASSOC);
                                 validade,
                                 ativo
                             FROM medicamentos
-                            ORDER BY nome ASC";
+                            ORDER BY $ordem $direcao";
                     $stmt = $pdo->query($sql);
                     
                     while ($medicamento = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
@@ -278,6 +281,26 @@ $ultimaImportGlobal = $stmtUltimaImport->fetch(PDO::FETCH_ASSOC);
         tr:hover {
             background-color: #f5f5f5;
         }
+
+        th.sortable {
+            cursor: pointer;
+            position: relative;
+            padding-right: 20px;
+        }
+        th.sortable:after {
+            content: '↕';
+            position: absolute;
+            right: 5px;
+            color: #999;
+        }
+        th.sortable.asc:after {
+            content: '↑';
+            color: #333;
+        }
+        th.sortable.desc:after {
+            content: '↓';
+            color: #333;
+        }
         </style>
 
         <script>
@@ -301,9 +324,10 @@ $ultimaImportGlobal = $stmtUltimaImport->fetch(PDO::FETCH_ASSOC);
         <script>
         function searchMedicamentos() {
             const searchInput = document.getElementById('searchInput').value.toLowerCase();
-            
-            // Fazer a busca via AJAX
-            fetch('buscar_medicamentos.php?busca=' + encodeURIComponent(searchInput))
+            const urlParams = new URLSearchParams(window.location.search);
+            const ordem = urlParams.get('ordem') || 'nome';
+            const direcao = urlParams.get('direcao') || 'ASC';
+            fetch('buscar_medicamentos.php?busca=' + encodeURIComponent(searchInput) + '&ordem=' + ordem + '&direcao=' + direcao)
                 .then(response => response.text())
                 .then(html => {
                     document.getElementById('medicamentosTableBody').innerHTML = html;
@@ -313,9 +337,31 @@ $ultimaImportGlobal = $stmtUltimaImport->fetch(PDO::FETCH_ASSOC);
                 });
         }
 
-        // Buscar medicamentos ao carregar a página
         document.addEventListener('DOMContentLoaded', function() {
             searchMedicamentos();
+            // Ordenação ao clicar nos cabeçalhos
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.addEventListener('click', function() {
+                    const urlParams = new URLSearchParams(window.location.search);
+                    const ordemAtual = urlParams.get('ordem') || 'nome';
+                    const direcaoAtual = urlParams.get('direcao') || 'ASC';
+                    const coluna = th.dataset.ordem;
+                    const novaDirecao = (ordemAtual === coluna && direcaoAtual === 'ASC') ? 'DESC' : 'ASC';
+                    urlParams.set('ordem', coluna);
+                    urlParams.set('direcao', novaDirecao);
+                    history.replaceState(null, '', '?' + urlParams.toString());
+                    searchMedicamentos();
+                    // Atualizar setas visuais
+                    document.querySelectorAll('th.sortable').forEach(th2 => th2.classList.remove('asc', 'desc'));
+                    th.classList.add(novaDirecao.toLowerCase());
+                });
+            });
+            // Marcar coluna ordenada ao carregar
+            const urlParams = new URLSearchParams(window.location.search);
+            const ordemAtual = urlParams.get('ordem') || 'nome';
+            const direcaoAtual = urlParams.get('direcao') || 'ASC';
+            const thAtual = document.querySelector(`th[data-ordem="${ordemAtual}"]`);
+            if (thAtual) thAtual.classList.add(direcaoAtual.toLowerCase());
         });
         </script>
     </main>
