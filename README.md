@@ -10,13 +10,13 @@
 ## v.1.2025.0306.0900 (03/06/2025)
  - Correção na importação de medicamentos por lote
 
-## v.1.2025.0206.1450 (06/02/2025)
+## v.1.2025.0206.1450 (02/06/2025)
 ### Página de Medicamentos
 - Adicionada ordenação clicável em todas as colunas da tabela de medicamentos.
 - Implementada ordenação especial para a coluna "Total Recebido" (ordenada via PHP).
 - Restaurada a exibição da data da última importação no cabeçalho da coluna "Total Recebido".
 
-## v.1.2025.0206.1155 (06/02/2025)
+## v.1.2025.0206.1155 (02/06/2025)
 ### Principais melhorias e correções desta versão
 
 #### 1. Ordenação de Colunas
