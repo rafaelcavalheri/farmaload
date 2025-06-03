@@ -99,15 +99,6 @@ if ($stmt->rowCount() > 0) {
                 <td><?= htmlspecialchars($medicamento['codigo'] ?? '') ?></td>
                 <td><?= $medicamento['lotes'] ?: '--' ?></td>
                 <td><?= htmlspecialchars($medicamento['apresentacao'] ?? '') ?></td>
-                <td>
-                    <?php
-                    if ($medicamento['validade'] && $medicamento['validade'] != '0000-00-00') {
-                        echo date('d/m/Y', strtotime($medicamento['validade']));
-                    } else {
-                        echo "--";
-                    }
-                    ?>
-                </td>
                 <td class="actions">
                     <div style="display: flex; gap: 6px;">
                         <a href="editar_medicamento.php?id=<?= $medicamento['id'] ?>" class="btn-secondary btn-small">
@@ -155,9 +146,10 @@ if ($stmt->rowCount() > 0) {
                     if (!empty($lotes)) {
                         foreach ($lotes as $lote) {
                             echo htmlspecialchars($lote['lote']);
-                            if (count($lotes) > 1) {
-                                echo "<br>";
-                            }
+                            echo ' (';
+                            echo ($lote['validade'] && $lote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($lote['validade'])) : '--';
+                            echo ')';
+                            echo '<br>';
                         }
                     } else {
                         echo "--";
@@ -165,20 +157,6 @@ if ($stmt->rowCount() > 0) {
                     ?>
                 </td>
                 <td><?= htmlspecialchars($medicamento['apresentacao'] ?? '') ?></td>
-                <td>
-                    <?php
-                    if (!empty($lotes)) {
-                        $validade = $lotes[0]['validade'];
-                        if ($validade && $validade != '0000-00-00') {
-                            echo date('d/m/Y', strtotime($validade));
-                        } else {
-                            echo "--";
-                        }
-                    } else {
-                        echo "--";
-                    }
-                    ?>
-                </td>
                 <td class="actions">
                     <div style="display: flex; gap: 6px;">
                         <a href="editar_medicamento.php?id=<?= $medicamento['id'] ?>" class="btn-secondary btn-small">

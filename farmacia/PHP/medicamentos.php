@@ -115,9 +115,8 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                             <?php endif; ?>
                         </th>
                         <th class="sortable" data-ordem="codigo">Código</th>
-                        <th class="sortable" data-ordem="lote">Lote</th>
+                        <th class="sortable" data-ordem="lote">Lote/Validade</th>
                         <th class="sortable" data-ordem="apresentacao">Apresentação</th>
-                        <th class="sortable" data-ordem="validade">Validade</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
@@ -144,25 +143,41 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                     $stmt = $pdo->query($sql);
                     
                     while ($medicamento = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
-                        <tr>
-                            <td><?= htmlspecialchars($medicamento['nome']) ?></td>
+                        <tr class="med-row" data-id="<?= $medicamento['id'] ?>">
+                            <td class="med-nome" style="cursor:pointer;color:#0d6efd;text-decoration:underline;">
+                                <?= htmlspecialchars($medicamento['nome']) ?>
+                            </td>
                             <td><?php echo calcularEstoqueAtual($pdo, $medicamento['id']); ?></td>
                             <?php $ultimaImport = getTotalUltimaImportacao($pdo, $medicamento['id']); ?>
                             <td>
                                 <?= $ultimaImport ? $ultimaImport['total'] : '--' ?>
                             </td>
                             <td><?= htmlspecialchars($medicamento['codigo']) ?></td>
-                            <td><?= $medicamento['lotes'] ?: '--' ?></td>
-                            <td><?= htmlspecialchars($medicamento['apresentacao']) ?></td>
                             <td>
                                 <?php
-                                if ($medicamento['validade'] && $medicamento['validade'] != '0000-00-00') {
-                                    echo date('d/m/Y', strtotime($medicamento['validade']));
+                                // Buscar lotes ativos com validade
+                                $stmtLotes = $pdo->prepare("
+                                    SELECT lote, validade 
+                                    FROM lotes_medicamentos 
+                                    WHERE medicamento_id = ? AND quantidade > 0 
+                                    ORDER BY validade ASC
+                                ");
+                                $stmtLotes->execute([$medicamento['id']]);
+                                $lotes = $stmtLotes->fetchAll(PDO::FETCH_ASSOC);
+                                if (!empty($lotes)) {
+                                    foreach ($lotes as $lote) {
+                                        echo htmlspecialchars($lote['lote']);
+                                        echo ' (';
+                                        echo ($lote['validade'] && $lote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($lote['validade'])) : '--';
+                                        echo ')';
+                                        echo '<br>';
+                                    }
                                 } else {
                                     echo "--";
                                 }
                                 ?>
                             </td>
+                            <td><?= htmlspecialchars($medicamento['apresentacao']) ?></td>
                             <td class="actions">
                                 <div style="display: flex; gap: 6px;">
                                     <a href="editar_medicamento.php?id=<?= $medicamento['id'] ?>" class="btn-secondary btn-small">
@@ -181,6 +196,13 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                                             <i class="fas fa-power-off"></i>
                                         </a>
                                     <?php endif; ?>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="lotes-row" id="lotes-row-<?= $medicamento['id'] ?>" style="display:none;background:#f8f9fa;">
+                            <td colspan="8">
+                                <div class="lotes-content" id="lotes-content-<?= $medicamento['id'] ?>">
+                                    <!-- Conteúdo dos lotes será carregado via AJAX -->
                                 </div>
                             </td>
                         </tr>
@@ -371,6 +393,32 @@ $direcao = $_GET['direcao'] ?? 'ASC';
             const direcaoAtual = urlParams.get('direcao') || 'ASC';
             const thAtual = document.querySelector(`th[data-ordem="${ordemAtual}"]`);
             if (thAtual) thAtual.classList.add(direcaoAtual.toLowerCase());
+            // Expansão de lotes por medicamento
+            document.querySelectorAll('.med-nome').forEach(function(td) {
+                td.addEventListener('click', function() {
+                    const tr = td.closest('tr');
+                    const medId = tr.getAttribute('data-id');
+                    const lotesRow = document.getElementById('lotes-row-' + medId);
+                    const lotesContent = document.getElementById('lotes-content-' + medId);
+                    if (lotesRow.style.display === 'none') {
+                        // Expandir e buscar lotes
+                        lotesRow.style.display = '';
+                        if (!lotesContent.innerHTML.trim()) {
+                            lotesContent.innerHTML = '<em>Carregando lotes...</em>';
+                            fetch('ajax_lotes_medicamento.php?id=' + medId)
+                                .then(resp => resp.text())
+                                .then(html => {
+                                    lotesContent.innerHTML = html;
+                                })
+                                .catch(() => {
+                                    lotesContent.innerHTML = '<span style="color:red;">Erro ao carregar lotes.</span>';
+                                });
+                        }
+                    } else {
+                        lotesRow.style.display = 'none';
+                    }
+                });
+            });
         });
         </script>
     </main>
