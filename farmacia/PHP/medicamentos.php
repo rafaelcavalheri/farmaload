@@ -124,16 +124,22 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                 <tbody id="medicamentosTableBody">
                     <?php
                     $sql = "SELECT 
-                                id,
-                                nome,
-                                quantidade,
-                                codigo,
-                                lote,
-                                apresentacao,
-                                validade,
-                                ativo
-                            FROM medicamentos
-                            WHERE quantidade > 0
+                                m.id,
+                                m.nome,
+                                m.codigo,
+                                m.apresentacao,
+                                m.ativo,
+                                GROUP_CONCAT(DISTINCT lm.lote ORDER BY lm.validade ASC SEPARATOR '<br>') as lotes,
+                                MIN(lm.validade) as validade
+                            FROM medicamentos m
+                            LEFT JOIN lotes_medicamentos lm ON m.id = lm.medicamento_id
+                            WHERE EXISTS (
+                                SELECT 1 
+                                FROM lotes_medicamentos lm2 
+                                WHERE lm2.medicamento_id = m.id 
+                                AND lm2.quantidade > 0
+                            )
+                            GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo
                             ORDER BY $ordem $direcao";
                     $stmt = $pdo->query($sql);
                     
@@ -146,14 +152,16 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                                 <?= $ultimaImport ? $ultimaImport['total'] : '--' ?>
                             </td>
                             <td><?= htmlspecialchars($medicamento['codigo']) ?></td>
-                            <td><?= htmlspecialchars($medicamento['lote']) ?></td>
+                            <td><?= $medicamento['lotes'] ?: '--' ?></td>
                             <td><?= htmlspecialchars($medicamento['apresentacao']) ?></td>
                             <td>
-                                <?php if (!empty($medicamento['validade']) && $medicamento['validade'] != '0000-00-00'): ?>
-                                    <?= date('d/m/Y', strtotime($medicamento['validade'])) ?>
-                                <?php else: ?>
-                                    --
-                                <?php endif; ?>
+                                <?php
+                                if ($medicamento['validade'] && $medicamento['validade'] != '0000-00-00') {
+                                    echo date('d/m/Y', strtotime($medicamento['validade']));
+                                } else {
+                                    echo "--";
+                                }
+                                ?>
                             </td>
                             <td class="actions">
                                 <div style="display: flex; gap: 6px;">

@@ -48,10 +48,6 @@ CREATE TABLE IF NOT EXISTS medicamentos (
 
     nome VARCHAR(100) NOT NULL,
 
-    quantidade INT NOT NULL DEFAULT 0,
-
-    lote VARCHAR(50) NOT NULL,
-
     apresentacao ENUM(
         'Comprimido', 
         'Cápsula', 
@@ -93,7 +89,7 @@ CREATE TABLE IF NOT EXISTS medicamentos (
 
     miligramas VARCHAR(20),
 
-    validade DATE,
+    quantidade INT NOT NULL DEFAULT 0,
 
     ativo TINYINT(1) NOT NULL DEFAULT 1,
 
@@ -101,9 +97,80 @@ CREATE TABLE IF NOT EXISTS medicamentos (
 
     data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
 
-    UNIQUE KEY unq_nome_lote (nome, lote)
+    UNIQUE KEY unq_nome (nome)
 
 ) ENGINE=InnoDB;
+
+
+-- Tabela de lotes de medicamentos
+
+CREATE TABLE IF NOT EXISTS lotes_medicamentos (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    medicamento_id INT NOT NULL,
+
+    lote VARCHAR(50) NOT NULL,
+
+    quantidade INT NOT NULL DEFAULT 0,
+
+    validade DATE NOT NULL,
+
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (medicamento_id) REFERENCES medicamentos(id) ON DELETE CASCADE,
+
+    UNIQUE KEY unq_medicamento_lote (medicamento_id, lote)
+
+) ENGINE=InnoDB;
+
+
+-- Trigger para atualizar a quantidade total do medicamento
+
+DELIMITER //
+
+CREATE TRIGGER atualizar_quantidade_medicamento
+AFTER INSERT ON lotes_medicamentos
+FOR EACH ROW
+BEGIN
+    UPDATE medicamentos 
+    SET quantidade = (
+        SELECT SUM(quantidade) 
+        FROM lotes_medicamentos 
+        WHERE medicamento_id = NEW.medicamento_id
+    )
+    WHERE id = NEW.medicamento_id;
+END//
+
+CREATE TRIGGER atualizar_quantidade_medicamento_update
+AFTER UPDATE ON lotes_medicamentos
+FOR EACH ROW
+BEGIN
+    UPDATE medicamentos 
+    SET quantidade = (
+        SELECT SUM(quantidade) 
+        FROM lotes_medicamentos 
+        WHERE medicamento_id = NEW.medicamento_id
+    )
+    WHERE id = NEW.medicamento_id;
+END//
+
+CREATE TRIGGER atualizar_quantidade_medicamento_delete
+AFTER DELETE ON lotes_medicamentos
+FOR EACH ROW
+BEGIN
+    UPDATE medicamentos 
+    SET quantidade = (
+        SELECT COALESCE(SUM(quantidade), 0) 
+        FROM lotes_medicamentos 
+        WHERE medicamento_id = OLD.medicamento_id
+    )
+    WHERE id = OLD.medicamento_id;
+END//
+
+DELIMITER ;
 
 
 -- Tabela de pacientes

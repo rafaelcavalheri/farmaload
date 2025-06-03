@@ -218,7 +218,7 @@ function converterFormatoLivre($spreadsheet) {
         if (empty($nome)) continue;
         
         // Ignorar linha de Total Geral
-        if (stripos($nome, 'Total Geral') !== false) {
+        if (stripos($nome, 'Total') !== false) {
             continue;
         }
         
@@ -558,28 +558,7 @@ function importarDados($dados) {
     
     if ($logFile) {
         fwrite($logFile, "--- NOVA IMPORTAÇÃO: " . date('Y-m-d H:i:s') . " ---\n");
-        
-        // Registrar pacientes no log
-        if (isset($dados['pacientes'])) {
-            fwrite($logFile, "Pacientes encontrados: " . count($dados['pacientes']) . "\n");
-            foreach ($dados['pacientes'] as $p) {
-                fwrite($logFile, "- Paciente: " . $p['nome'] . " (linha " . $p['linha'] . ")\n");
-            }
-        } else {
-            fwrite($logFile, "ERRO: Array de pacientes não encontrado\n");
-            fwrite($logFile, "Estrutura de dados: " . print_r($dados, true) . "\n");
-        }
-    } else {
-        // Falha ao criar o log - tentar criar um arquivo de erro
-        file_put_contents('/tmp/log_error.txt', date('Y-m-d H:i:s') . ": Não foi possível criar o arquivo de log\n", FILE_APPEND);
-        
-        // Log direto no console PHP
-        error_log("[IMPORTAÇÃO] Falha ao criar arquivo de log");
-        if (isset($dados['pacientes'])) {
-            error_log("[IMPORTAÇÃO] Pacientes encontrados: " . count($dados['pacientes']));
-        } else {
-            error_log("[IMPORTAÇÃO] ERRO: Array de pacientes não encontrado");
-        }
+        fwrite($logFile, "Total de medicamentos a importar: " . count($dados['medicamentos']) . "\n");
     }
     
     try {
@@ -591,13 +570,9 @@ function importarDados($dados) {
         // Processar pacientes primeiro (se existirem)
         $pacientesProcessados = [];
         
-        // Log direto ao console PHP
-        error_log("[IMPORTAÇÃO] Iniciando processamento de pacientes com " . 
-                  (isset($dados['pacientes']) ? count($dados['pacientes']) : 0) . " registros");
-        
         if (isset($dados['pacientes']) && !empty($dados['pacientes'])) {
             if ($logFile) {
-                fwrite($logFile, "Iniciando processamento de pacientes...\n");
+                fwrite($logFile, "Processando " . count($dados['pacientes']) . " pacientes...\n");
             }
             
             foreach ($dados['pacientes'] as $paciente) {
@@ -607,20 +582,18 @@ function importarDados($dados) {
                 $pacienteExistente = $stmt->fetch();
                 
                 if (!$pacienteExistente) {
-                    // Gerar CPF temporário único usando timestamp + microtime + número aleatório
+                    // Gerar CPF temporário único
                     do {
                         $timestamp = microtime(true);
                         $random = rand(1000, 9999);
                         $cpfTemp = '000' . str_pad($timestamp . $random, 8, '0', STR_PAD_LEFT);
-                        $cpfTemp = substr($cpfTemp, -11); // Garantir que tenha exatamente 11 caracteres
+                        $cpfTemp = substr($cpfTemp, -11);
                         
-                        // Verificar se o CPF já existe
                         $stmt = $pdo->prepare("SELECT id FROM pacientes WHERE cpf = ?");
                         $stmt->execute([$cpfTemp]);
                         $cpfExiste = $stmt->fetch();
-                    } while ($cpfExiste); // Se existir, gera outro
+                    } while ($cpfExiste);
                     
-                    // Verificar se o nome do paciente é válido
                     $nomePaciente = trim($paciente['nome']);
                     if (empty($nomePaciente)) {
                         if ($logFile) {
@@ -634,7 +607,6 @@ function importarDados($dados) {
                     }
                     
                     try {
-                        // Inserir novo paciente
                         $stmt = $pdo->prepare("
                             INSERT INTO pacientes (
                                 nome, 
@@ -681,81 +653,71 @@ function importarDados($dados) {
                     $pacientesProcessados[$paciente['nome']] = $pacienteExistente['id'];
                 }
             }
-        } else {
-            if ($logFile) {
-                fwrite($logFile, "Nenhum paciente para processar.\n");
-            }
-            // Log direto no console PHP
-            error_log("[IMPORTAÇÃO] Nenhum paciente para processar");
-        }
-        
-        if ($logFile) {
-            fwrite($logFile, "Total de pacientes processados: " . count($pacientesProcessados) . "\n");
         }
         
         // Processar medicamentos
         foreach ($dados['medicamentos'] as $item) {
-            // Verificar se o medicamento já existe
-            // Primeiro tenta encontrar pelo nome exato e lote
-            $stmt = $pdo->prepare("
-                SELECT id, quantidade, validade 
-                FROM medicamentos 
-                WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?)) AND lote = ?
-            ");
-            $stmt->execute([trim($item['nome']), $item['lote']]);
-            $medicamentoExistente = $stmt->fetch(PDO::FETCH_ASSOC);
-
-            // Se não encontrou pelo lote, tenta encontrar só pelo nome exato
-            if (!$medicamentoExistente) {
-                $stmt = $pdo->prepare("
-                    SELECT id, quantidade, validade, lote 
-                    FROM medicamentos 
-                    WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?))
-                    ORDER BY STR_TO_DATE(validade, '%d/%m/%Y') DESC
-                    LIMIT 1
-                ");
-                $stmt->execute([trim($item['nome'])]);
-                $medicamentoExistente = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($logFile) {
+                fwrite($logFile, "Processando medicamento: " . $item['nome'] . " (Lote: " . $item['lote'] . ")\n");
             }
+            
+            // Verificar se o medicamento já existe
+            $stmt = $pdo->prepare("SELECT id FROM medicamentos WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?))");
+            $stmt->execute([trim($item['nome'])]);
+            $medicamentoExistente = $stmt->fetch();
 
             if ($medicamentoExistente) {
-                // Comparar datas de validade
-                $dataExistente = DateTime::createFromFormat('Y-m-d', $medicamentoExistente['validade']);
-                $dataImportacao = DateTime::createFromFormat('d/m/Y', $item['validade']);
+                $medicamentoId = $medicamentoExistente['id'];
                 
-                // Verificar se as datas foram convertidas corretamente antes de comparar
-                if ($dataExistente && $dataImportacao) {
-                    // Se a data de validade do novo lote for maior, atualiza
-                    if ($dataImportacao > $dataExistente) {
-                        $validade = $item['validade'];
-                    } else {
-                        $validade = $dataExistente->format('d/m/Y');
-                    }
-                } else {
-                    // Se houve problema na conversão, usa a data do item
-                    $validade = $item['validade'];
-                    // Registra no log
-                    if ($logFile) {
-                        fwrite($logFile, "AVISO: Problema na conversão de datas. Usando data do item: " . $item['validade'] . "\n");
-                    }
-                }
-
-                // Atualizar medicamento existente (NÃO ALTERAR QUANTIDADE)
-                $updateQueryApresentacao = $colunaApresentacaoInfo['exists'] ? ", apresentacao = ?" : "";
+                // Verificar se o lote já existe para este medicamento
                 $stmt = $pdo->prepare("
-                    UPDATE medicamentos 
-                    SET validade = STR_TO_DATE(?, '%d/%m/%Y')
-                    $updateQueryApresentacao
-                    WHERE id = ?
+                    SELECT id, quantidade 
+                    FROM lotes_medicamentos 
+                    WHERE medicamento_id = ? AND lote = ?
                 ");
-                $params = [
-                    $validade
-                ];
-                if ($colunaApresentacaoInfo['exists']) {
-                    $params[] = $item['apresentacao'];
+                $stmt->execute([$medicamentoId, $item['lote']]);
+                $loteExistente = $stmt->fetch();
+
+                if ($loteExistente) {
+                    // Atualizar quantidade do lote existente
+                    $novaQuantidade = $loteExistente['quantidade'] + $item['quantidade'];
+                    if ($logFile) {
+                        fwrite($logFile, "Atualizando lote existente. Quantidade anterior: " . $loteExistente['quantidade'] . 
+                                        ", Nova quantidade: " . $novaQuantidade . "\n");
+                    }
+                    
+                    $stmt = $pdo->prepare("
+                        UPDATE lotes_medicamentos 
+                        SET quantidade = ?,
+                            validade = STR_TO_DATE(?, '%d/%m/%Y')
+                        WHERE id = ?
+                    ");
+                    $stmt->execute([
+                        $novaQuantidade,
+                        $item['validade'],
+                        $loteExistente['id']
+                    ]);
+                } else {
+                    // Inserir novo lote
+                    if ($logFile) {
+                        fwrite($logFile, "Inserindo novo lote para medicamento existente. Quantidade: " . $item['quantidade'] . "\n");
+                    }
+                    
+                    $stmt = $pdo->prepare("
+                        INSERT INTO lotes_medicamentos (
+                            medicamento_id,
+                            lote,
+                            quantidade,
+                            validade
+                        ) VALUES (?, ?, ?, STR_TO_DATE(?, '%d/%m/%Y'))
+                    ");
+                    $stmt->execute([
+                        $medicamentoId,
+                        $item['lote'],
+                        $item['quantidade'],
+                        $item['validade']
+                    ]);
                 }
-                $params[] = $medicamentoExistente['id'];
-                $stmt->execute($params);
 
                 // Registrar movimentação
                 $stmt = $pdo->prepare("
@@ -770,51 +732,50 @@ function importarDados($dados) {
                     ) VALUES (?, 'IMPORTACAO', ?, ?, ?, NOW(), ?)
                 ");
                 $stmt->execute([
-                    $medicamentoExistente['id'],
+                    $medicamentoId,
                     $item['quantidade'],
-                    0, // quantidade_anterior não é mais relevante para o campo fixo
-                    0, // quantidade_nova idem
+                    $loteExistente ? $loteExistente['quantidade'] : 0,
+                    $loteExistente ? ($loteExistente['quantidade'] + $item['quantidade']) : $item['quantidade'],
                     'Importação automática - Lote: ' . $item['lote']
                 ]);
 
             } else {
-                // Inserir novo medicamento (NÃO ALTERAR QUANTIDADE)
-                if ($colunaApresentacaoInfo['exists']) {
-                    $stmt = $pdo->prepare("
-                        INSERT INTO medicamentos (
-                            nome, 
-                            quantidade, 
-                            lote, 
-                            validade, 
-                            codigo,
-                            apresentacao
-                        ) VALUES (?, 0, ?, STR_TO_DATE(?, '%d/%m/%Y'), ?, ?)
-                    ");
-                    $stmt->execute([
-                        $item['nome'],
-                        $item['lote'],
-                        $item['validade'],
-                        $item['codigo'],
-                        $item['apresentacao']
-                    ]);
-                } else {
-                    $stmt = $pdo->prepare("
-                        INSERT INTO medicamentos (
-                            nome, 
-                            quantidade, 
-                            lote, 
-                            validade, 
-                            codigo
-                        ) VALUES (?, 0, ?, STR_TO_DATE(?, '%d/%m/%Y'), ?)
-                    ");
-                    $stmt->execute([
-                        $item['nome'],
-                        $item['lote'],
-                        $item['validade'],
-                        $item['codigo']
-                    ]);
+                // Inserir novo medicamento
+                if ($logFile) {
+                    fwrite($logFile, "Inserindo novo medicamento: " . $item['nome'] . "\n");
                 }
+                
+                $stmt = $pdo->prepare("
+                    INSERT INTO medicamentos (
+                        nome, 
+                        apresentacao, 
+                        codigo
+                    ) VALUES (?, ?, ?)
+                ");
+                $stmt->execute([
+                    $item['nome'],
+                    $item['apresentacao'],
+                    $item['codigo']
+                ]);
+                
                 $novoId = $pdo->lastInsertId();
+                
+                // Inserir o lote
+                $stmt = $pdo->prepare("
+                    INSERT INTO lotes_medicamentos (
+                        medicamento_id,
+                        lote,
+                        quantidade,
+                        validade
+                    ) VALUES (?, ?, ?, STR_TO_DATE(?, '%d/%m/%Y'))
+                ");
+                $stmt->execute([
+                    $novoId,
+                    $item['lote'],
+                    $item['quantidade'],
+                    $item['validade']
+                ]);
+
                 // Registrar movimentação inicial
                 $stmt = $pdo->prepare("
                     INSERT INTO movimentacoes (
@@ -825,10 +786,11 @@ function importarDados($dados) {
                         quantidade_nova,
                         data,
                         observacao
-                    ) VALUES (?, 'IMPORTACAO', ?, 0, 0, NOW(), ?)
+                    ) VALUES (?, 'IMPORTACAO', ?, 0, ?, NOW(), ?)
                 ");
                 $stmt->execute([
                     $novoId,
+                    $item['quantidade'],
                     $item['quantidade'],
                     'Importação automática - Cadastro inicial - Lote: ' . $item['lote']
                 ]);
@@ -842,32 +804,23 @@ function importarDados($dados) {
             if ($logFile) {
                 fwrite($logFile, "Total de associações paciente-medicamento processadas: " . $associacoesProcessadas . "\n");
             }
-        } else {
-            if ($logFile) {
-                fwrite($logFile, "Nenhuma associação para processar. Usando converterFormatoLivre_Modificado?\n");
-            }
         }
 
         $pdo->commit();
         if ($logFile) {
             fwrite($logFile, "Transação concluída com sucesso!\n");
+            fclose($logFile);
         }
     } catch (Exception $e) {
         $pdo->rollBack();
         if ($logFile) {
             fwrite($logFile, "ERRO na transação: " . $e->getMessage() . "\n");
-        }
-        if ($logFile) {
             fclose($logFile);
         }
         throw $e;
     }
-    
-    if ($logFile) {
-        fclose($logFile);
-    }
 
-    return count($pacientesProcessados);  // Retorna o número de pacientes processados
+    return count($pacientesProcessados);
 }
 
 // Adicionar função para imprimir a estrutura do arquivo importado no log
@@ -990,16 +943,6 @@ function processarAssociacoes($dados, $pdo, $pacientesProcessados, $logFile) {
         }
     );
 
-    // Diagnóstico extra: logar e lançar exceção se algum item não for array
-    foreach ($dados['associacoes'] as $idx => $item) {
-        if (!is_array($item)) {
-            if ($logFile) {
-                fwrite($logFile, "ERRO: Associação em posição $idx não é array: " . print_r($item, true) . "\n");
-            }
-            throw new \Exception("Associação em posição $idx não é array: " . print_r($item, true));
-        }
-    }
-
     $associacoesProcessadas = 0;
 
     if ($logFile) {
@@ -1017,39 +960,44 @@ function processarAssociacoes($dados, $pdo, $pacientesProcessados, $logFile) {
         
         $pacienteId = $pacientesProcessados[$associacao['paciente']];
         
-        // Buscar o medicamento pelo nome e lote
+        // Buscar o medicamento pelo nome
         $stmt = $pdo->prepare("
-            SELECT id, nome FROM medicamentos 
-            WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?)) AND lote = ?
+            SELECT id, nome 
+            FROM medicamentos 
+            WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?))
         ");
-        $stmt->execute([trim($associacao['medicamento']), $associacao['lote']]);
+        $stmt->execute([trim($associacao['medicamento'])]);
         $medicamento = $stmt->fetch(PDO::FETCH_ASSOC);
         
-        if (!$medicamento) {
-            // Se não encontrou pelo lote, tenta pelo nome
-            $stmt = $pdo->prepare("
-                SELECT id, nome FROM medicamentos 
-                WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?))
-                ORDER BY id DESC LIMIT 1
-            ");
-            $stmt->execute([trim($associacao['medicamento'])]);
-            $medicamento = $stmt->fetch(PDO::FETCH_ASSOC);
-        }
-        
         if ($medicamento) {
-            // Vincular paciente ao medicamento
-            $resultado = vincularMedicamentoPaciente(
-                $pdo, 
-                $pacienteId, 
-                $medicamento['id'], 
-                $medicamento['nome'], 
-                $associacao['quantidade'],
-                $associacao['cid'] ?? null,
-                $logFile
-            );
+            // Buscar o lote específico
+            $stmt = $pdo->prepare("
+                SELECT id 
+                FROM lotes_medicamentos 
+                WHERE medicamento_id = ? AND lote = ?
+            ");
+            $stmt->execute([$medicamento['id'], $associacao['lote']]);
+            $lote = $stmt->fetch(PDO::FETCH_ASSOC);
             
-            if ($resultado) {
-                $associacoesProcessadas++;
+            if ($lote) {
+                // Vincular paciente ao medicamento
+                $resultado = vincularMedicamentoPaciente(
+                    $pdo, 
+                    $pacienteId, 
+                    $medicamento['id'], 
+                    $medicamento['nome'], 
+                    $associacao['quantidade'],
+                    $associacao['cid'] ?? null,
+                    $logFile
+                );
+                
+                if ($resultado) {
+                    $associacoesProcessadas++;
+                }
+            } else {
+                if ($logFile) {
+                    fwrite($logFile, "AVISO: Lote '" . $associacao['lote'] . "' não encontrado para o medicamento '" . $associacao['medicamento'] . "'. Linha: " . $associacao['linha'] . "\n");
+                }
             }
         } else {
             if ($logFile) {
@@ -1063,22 +1011,6 @@ function processarAssociacoes($dados, $pdo, $pacientesProcessados, $logFile) {
     }
     
     return $associacoesProcessadas;
-}
-
-function mapearCIDsReliniFim($spreadsheet) {
-    $cidMap = [];
-    $worksheet = $spreadsheet->getSheetByName('RELINI_FIM');
-    if (!$worksheet) return $cidMap;
-    $lastRow = $worksheet->getHighestRow();
-    for ($row = 2; $row <= $lastRow; $row++) {
-        $paciente = trim($worksheet->getCell('F' . $row)->getValue());
-        $medicamento = trim($worksheet->getCell('I' . $row)->getValue());
-        $cid = trim($worksheet->getCell('J' . $row)->getValue() ?? '');
-        if ($paciente && $medicamento && $cid) {
-            $cidMap[strtolower($paciente.'|'.$medicamento)] = $cid;
-        }
-    }
-    return $cidMap;
 }
 
 function mapearValidadesMedicamentos($spreadsheet) {
@@ -1096,12 +1028,12 @@ function mapearValidadesMedicamentos($spreadsheet) {
         $lote = $worksheet->getCell('B' . $row)->getValue();
         $validade = $worksheet->getCell('C' . $row)->getValue();
         
-        // Tratar valores nulos
+        // Padronizar nome para evitar problemas de busca
         if ($nome !== null) {
-            $nome = trim((string)$nome);
-            if ($nome) {
-                $validades[$nome] = converterDataExcel($validade);
-                $lotes[$nome] = !empty($lote) ? trim((string)$lote) : 'LOT' . str_pad($row, 3, '0', STR_PAD_LEFT);
+            $nomePadronizado = trim(mb_strtoupper((string)$nome));
+            if ($nomePadronizado) {
+                $validades[$nomePadronizado] = converterDataExcel($validade);
+                $lotes[$nomePadronizado] = !empty($lote) ? trim((string)$lote) : 'LOT' . str_pad($row, 3, '0', STR_PAD_LEFT);
             }
         }
     }
@@ -1164,10 +1096,154 @@ function importarReliniFim($spreadsheet) {
 
         // Se tiver nome de medicamento, atualiza o medicamento atual e suas informações
         if (!empty($medicamento)) {
-            $medicamentoAtual = trim(preg_replace('/\s+/', ' ', $medicamento));
+            $medicamentoAtual = trim(mb_strtoupper($medicamento));
             $apresentacaoAtual = extrairApresentacao($medicamentoAtual);
             
-            // Usar lote da aba MEDICAMENTOS
+            // Usar lote da aba MEDICAMENTOS (padronizado)
+            $loteAtual = $lotesMedicamentos[$medicamentoAtual] ?? 'LOT' . str_pad($row, 3, '0', STR_PAD_LEFT);
+            $validadeAtual = $validadesMedicamentos[$medicamentoAtual] ?? '31/12/2024';
+            
+            if ($logFile) {
+                fwrite($logFile, "Medicamento atualizado: $medicamentoAtual | Lote: $loteAtual | Validade: $validadeAtual\n");
+            }
+        }
+
+        if ($paciente && $medicamentoAtual && is_numeric($quantidade) && $quantidade > 0) {
+            // Padronizar pacientes como array ['nome'=>..., 'linha'=>..., 'validade'=>...]
+            $nomesExistentes = array_column($pacientes, 'nome');
+            if (!in_array($paciente, $nomesExistentes)) {
+                $pacientes[] = [
+                    'nome'  => $paciente,
+                    'linha' => $row,
+                    'validade' => $validade_paciente
+                ];
+            }
+
+            // Verificar se já existe um medicamento com o mesmo nome e lote
+            $medicamentoEncontrado = false;
+            foreach ($medicamentosUnicos as $chave => $med) {
+                if ($med['nome'] === $medicamentoAtual && $med['lote'] === $loteAtual) {
+                    // Somar a quantidade ao lote existente
+                    $medicamentosUnicos[$chave]['quantidade'] += (int)$quantidade;
+                    $medicamentoEncontrado = true;
+                    if ($logFile) {
+                        fwrite($logFile, "Somando quantidade ao lote existente: $medicamentoAtual | Lote: $loteAtual | Nova quantidade: {$medicamentosUnicos[$chave]['quantidade']}\n");
+                    }
+                    break;
+                }
+            }
+
+            // Se não encontrou um lote existente, criar novo
+            if (!$medicamentoEncontrado) {
+                $chave = $medicamentoAtual . '|' . $loteAtual;
+                $medicamentosUnicos[$chave] = [
+                    'nome' => $medicamentoAtual,
+                    'quantidade' => (int)$quantidade,
+                    'lote' => $loteAtual,
+                    'validade' => $validadeAtual,
+                    'codigo' => $codigo,
+                    'apresentacao' => $apresentacaoAtual,
+                    'cid' => $cid
+                ];
+                if ($logFile) {
+                    fwrite($logFile, "Criando novo lote: $medicamentoAtual | Lote: $loteAtual | Quantidade: $quantidade\n");
+                }
+            }
+
+            $associacoes[] = [
+                'paciente' => $paciente,
+                'medicamento' => $medicamentoAtual,
+                'lote' => $loteAtual,
+                'validade_processo' => $validade_paciente,
+                'validade_medicamento' => $validadeAtual,
+                'codigo' => $codigo,
+                'apresentacao' => $apresentacaoAtual,
+                'quantidade' => (int)$quantidade,
+                'cid' => $cid,
+                'linha' => $row
+            ];
+        }
+    }
+
+    if ($logFile) {
+        fwrite($logFile, "\n=== RESUMO DA IMPORTAÇÃO RELINI_FIM ===\n");
+        fwrite($logFile, "Total de medicamentos: " . count($medicamentosUnicos) . "\n");
+        fwrite($logFile, "Total de pacientes: " . count($pacientes) . "\n");
+        fwrite($logFile, "Total de associações: " . count($associacoes) . "\n");
+        fclose($logFile);
+    }
+
+    // Filtro final: garantir que só arrays válidos estejam em associacoes
+    $associacoes = array_values(array_filter($associacoes, function($item) {
+        return is_array($item) && isset($item['paciente'], $item['medicamento'], $item['quantidade']);
+    }));
+
+    return [
+        'medicamentos' => array_values($medicamentosUnicos),
+        'pacientes' => $pacientes,
+        'associacoes' => $associacoes
+    ];
+}
+
+function importarReliniInicio($spreadsheet) {
+    $worksheet = $spreadsheet->getSheetByName('RELINI_INICIO');
+    if (!$worksheet) {
+        throw new Exception('Aba RELINI_INICIO não encontrada na planilha.');
+    }
+    $highestCol = $worksheet->getHighestColumn();
+    $lastRow = $worksheet->getHighestRow();
+    $colCount = \PhpOffice\PhpSpreadsheet\Cell\Coordinate::columnIndexFromString($highestCol);
+
+    $logDir = __DIR__ . '/debug_logs';
+    if (!file_exists($logDir)) {
+        mkdir($logDir, 0777, true);
+    }
+    $logFile = fopen($logDir . '/import_debug.log', 'a');
+    if ($logFile) {
+        fwrite($logFile, "\n=== INICIANDO IMPORTAÇÃO EXCLUSIVA ABA RELINI_INICIO (MAPEAMENTO CONFIRMADO) ===\n");
+        fwrite($logFile, "Última linha: $lastRow\n");
+        fwrite($logFile, "Número de colunas: $colCount\n");
+    }
+
+    // Mapear validades e lotes dos medicamentos
+    $medicamentosInfo = mapearValidadesMedicamentos($spreadsheet);
+    $validadesMedicamentos = $medicamentosInfo['validades'];
+    $lotesMedicamentos = $medicamentosInfo['lotes'];
+    
+    if ($logFile) {
+        fwrite($logFile, "Total de validades de medicamentos mapeadas: " . count($validadesMedicamentos) . "\n");
+        fwrite($logFile, "Total de lotes de medicamentos mapeados: " . count($lotesMedicamentos) . "\n");
+    }
+
+    $medicamentosUnicos = [];
+    $pacientes = [];
+    $associacoes = [];
+
+    // Variáveis para controlar o medicamento atual
+    $medicamentoAtual = null;
+    $loteAtual = null;
+    $validadeAtual = null;
+    $apresentacaoAtual = null;
+
+    for ($row = 2; $row <= $lastRow; $row++) {
+        $validade_paciente = converterDataExcel($worksheet->getCell('D' . $row)->getValue()); // INICIO VAL. convertido
+        $paciente = trim($worksheet->getCell('E' . $row)->getValue() ?? ''); // PACIENTES
+        $dataAtend = trim($worksheet->getCell('F' . $row)->getValue() ?? ''); // DT ATEND. (opcional)
+        $quantidade = trim($worksheet->getCell('G' . $row)->getValue() ?? ''); // QTDE.
+        $medicamento = trim($worksheet->getCell('H' . $row)->getValue() ?? ''); // MEDICAMENTOS
+        $cid = trim($worksheet->getCell('I' . $row)->getValue() ?? ''); // CID
+        $codigo = 'MED' . str_pad($row, 5, '0', STR_PAD_LEFT); // Gera código único
+
+        if ($logFile) {
+            fwrite($logFile, "Linha $row: Paciente: $paciente | Medicamento: $medicamento | Qtd: $quantidade | ValidadePaciente: $validade_paciente | CID: $cid | DataAtend: $dataAtend | Codigo: $codigo\n");
+        }
+
+        // Se tiver nome de medicamento, atualiza o medicamento atual e suas informações
+        if (!empty($medicamento)) {
+            $medicamentoAtual = trim(mb_strtoupper($medicamento));
+            $apresentacaoAtual = extrairApresentacao($medicamentoAtual);
+            
+            // Usar lote da aba MEDICAMENTOS (padronizado)
             $loteAtual = $lotesMedicamentos[$medicamentoAtual] ?? 'LOT' . str_pad($row, 3, '0', STR_PAD_LEFT);
             $validadeAtual = $validadesMedicamentos[$medicamentoAtual] ?? '31/12/2024';
             
@@ -1218,7 +1294,7 @@ function importarReliniFim($spreadsheet) {
     }
 
     if ($logFile) {
-        fwrite($logFile, "\n=== RESUMO DA IMPORTAÇÃO RELINI_FIM ===\n");
+        fwrite($logFile, "\n=== RESUMO DA IMPORTAÇÃO RELINI_INICIO ===\n");
         fwrite($logFile, "Total de medicamentos: " . count($medicamentosUnicos) . "\n");
         fwrite($logFile, "Total de pacientes: " . count($pacientes) . "\n");
         fwrite($logFile, "Total de associações: " . count($associacoes) . "\n");
@@ -1356,7 +1432,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
         }
         
         if ($spreadsheet->sheetNameExists('RELINI_FIM')) {
-            $cidMap = mapearCIDsReliniFim($spreadsheet);
+            $cidMap = importarReliniFim($spreadsheet);
             if (!empty($cidMap)) {
                 foreach ($cidMap as $chave => $cid) {
                     list($paciente, $medicamento) = explode('|', $chave, 2);

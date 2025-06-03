@@ -1,22 +1,14 @@
 <?php
 // Função para calcular o estoque atual de um medicamento
 function calcularEstoqueAtual($pdo, $medicamento_id) {
-    // Entradas: IMPORTACAO, ENTRADA, AJUSTE (positivo ou negativo)
-    $stmt = $pdo->prepare("SELECT COALESCE(SUM(quantidade),0) FROM movimentacoes WHERE medicamento_id = ? AND tipo IN ('IMPORTACAO', 'ENTRADA', 'AJUSTE')");
+    // Buscar a soma das quantidades dos lotes ativos
+    $stmt = $pdo->prepare("
+        SELECT COALESCE(SUM(quantidade), 0) 
+        FROM lotes_medicamentos 
+        WHERE medicamento_id = ?
+    ");
     $stmt->execute([$medicamento_id]);
-    $entradas = $stmt->fetchColumn();
-
-    // Saídas: SAIDA
-    $stmt = $pdo->prepare("SELECT COALESCE(SUM(quantidade),0) FROM movimentacoes WHERE medicamento_id = ? AND tipo = 'SAIDA'");
-    $stmt->execute([$medicamento_id]);
-    $saidas = $stmt->fetchColumn();
-
-    // Dispensações (transacoes)
-    $stmt = $pdo->prepare("SELECT COALESCE(SUM(quantidade),0) FROM transacoes WHERE medicamento_id = ?");
-    $stmt->execute([$medicamento_id]);
-    $dispensado = $stmt->fetchColumn();
-
-    return (int)$entradas - (int)$saidas - (int)$dispensado;
+    return (int)$stmt->fetchColumn();
 }
 
 // Retorna a soma das quantidades da última importação de um medicamento

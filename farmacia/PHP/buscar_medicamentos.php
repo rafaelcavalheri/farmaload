@@ -10,29 +10,35 @@ $busca = $_GET['busca'] ?? '';
 $ordem = $_GET['ordem'] ?? 'nome';
 $direcao = $_GET['direcao'] ?? 'ASC';
 $colunas_ordenacao = [
-    'nome' => 'nome',
-    'quantidade' => 'quantidade',
+    'nome' => 'm.nome',
+    'quantidade' => null, // será tratado manualmente
     'total_recebido' => null, // será tratado manualmente
-    'codigo' => 'codigo',
-    'lote' => 'lote',
-    'apresentacao' => 'apresentacao',
-    'validade' => 'validade'
+    'codigo' => 'm.codigo',
+    'lote' => 'lm.lote',
+    'apresentacao' => 'm.apresentacao',
+    'validade' => 'lm.validade'
 ];
 $sql = "SELECT 
-            id,
-            nome,
-            quantidade,
-            codigo,
-            lote,
-            apresentacao,
-            validade,
-            ativo
-        FROM medicamentos";
+            m.id,
+            m.nome,
+            m.codigo,
+            m.apresentacao,
+            m.ativo,
+            GROUP_CONCAT(DISTINCT lm.lote ORDER BY lm.validade ASC SEPARATOR '<br>') as lotes,
+            MIN(lm.validade) as validade
+        FROM medicamentos m
+        LEFT JOIN lotes_medicamentos lm ON m.id = lm.medicamento_id
+        WHERE EXISTS (
+            SELECT 1 
+            FROM lotes_medicamentos lm2 
+            WHERE lm2.medicamento_id = m.id 
+            AND lm2.quantidade > 0
+        )";
 
 $params = [];
 
 if (!empty($busca)) {
-    $sql .= " WHERE LOWER(nome) LIKE ? OR LOWER(codigo) LIKE ? OR LOWER(lote) LIKE ?";
+    $sql .= " AND (LOWER(m.nome) LIKE ? OR LOWER(m.codigo) LIKE ? OR LOWER(lm.lote) LIKE ?)";
     $params = ["%$busca%", "%$busca%", "%$busca%"];
 }
 
@@ -54,11 +60,30 @@ if ($ordem === 'total_recebido') {
             return $a['total_recebido'] > $b['total_recebido'] ? 1 : -1;
         }
     });
+} else if ($ordem === 'quantidade') {
+    // Executa a query SEM ORDER BY, ordenação será manual
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($medicamentos as &$medicamento) {
+        $medicamento['quantidade'] = calcularEstoqueAtual($pdo, $medicamento['id']);
+    }
+    unset($medicamento);
+    usort($medicamentos, function($a, $b) use ($direcao) {
+        if ($a['quantidade'] == $b['quantidade']) return 0;
+        if ($direcao === 'DESC') {
+            return $a['quantidade'] < $b['quantidade'] ? 1 : -1;
+        } else {
+            return $a['quantidade'] > $b['quantidade'] ? 1 : -1;
+        }
+    });
 } else if (isset($colunas_ordenacao[$ordem]) && $colunas_ordenacao[$ordem]) {
+    $sql .= " GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo";
     $sql .= " ORDER BY " . $colunas_ordenacao[$ordem] . " " . ($direcao === 'DESC' ? 'DESC' : 'ASC');
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
 } else {
+    $sql .= " GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo";
     $sql .= " ORDER BY nome ASC";
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
@@ -72,14 +97,16 @@ if ($stmt->rowCount() > 0) {
                 <td><?= calcularEstoqueAtual($pdo, $medicamento['id']) ?></td>
                 <td><?= $medicamento['total_recebido'] ?? (getTotalUltimaImportacao($pdo, $medicamento['id'])['total'] ?? '--') ?></td>
                 <td><?= htmlspecialchars($medicamento['codigo'] ?? '') ?></td>
-                <td><?= htmlspecialchars($medicamento['lote'] ?? '') ?></td>
+                <td><?= $medicamento['lotes'] ?: '--' ?></td>
                 <td><?= htmlspecialchars($medicamento['apresentacao'] ?? '') ?></td>
                 <td>
-                    <?php if (!empty($medicamento['validade']) && $medicamento['validade'] != '0000-00-00'): ?>
-                        <?= date('d/m/Y', strtotime($medicamento['validade'])) ?>
-                    <?php else: ?>
-                        --
-                    <?php endif; ?>
+                    <?php
+                    if ($medicamento['validade'] && $medicamento['validade'] != '0000-00-00') {
+                        echo date('d/m/Y', strtotime($medicamento['validade']));
+                    } else {
+                        echo "--";
+                    }
+                    ?>
                 </td>
                 <td class="actions">
                     <div style="display: flex; gap: 6px;">
@@ -113,14 +140,44 @@ if ($stmt->rowCount() > 0) {
                     <?= $ultimaImport ? $ultimaImport['total'] : '--' ?>
                 </td>
                 <td><?= htmlspecialchars($medicamento['codigo'] ?? '') ?></td>
-                <td><?= htmlspecialchars($medicamento['lote'] ?? '') ?></td>
+                <td>
+                    <?php
+                    // Buscar lotes ativos
+                    $stmtLotes = $pdo->prepare("
+                        SELECT lote, validade 
+                        FROM lotes_medicamentos 
+                        WHERE medicamento_id = ? AND quantidade > 0 
+                        ORDER BY validade ASC
+                    ");
+                    $stmtLotes->execute([$medicamento['id']]);
+                    $lotes = $stmtLotes->fetchAll(PDO::FETCH_ASSOC);
+                    
+                    if (!empty($lotes)) {
+                        foreach ($lotes as $lote) {
+                            echo htmlspecialchars($lote['lote']);
+                            if (count($lotes) > 1) {
+                                echo "<br>";
+                            }
+                        }
+                    } else {
+                        echo "--";
+                    }
+                    ?>
+                </td>
                 <td><?= htmlspecialchars($medicamento['apresentacao'] ?? '') ?></td>
                 <td>
-                    <?php if (!empty($medicamento['validade']) && $medicamento['validade'] != '0000-00-00'): ?>
-                        <?= date('d/m/Y', strtotime($medicamento['validade'])) ?>
-                    <?php else: ?>
-                        --
-                    <?php endif; ?>
+                    <?php
+                    if (!empty($lotes)) {
+                        $validade = $lotes[0]['validade'];
+                        if ($validade && $validade != '0000-00-00') {
+                            echo date('d/m/Y', strtotime($validade));
+                        } else {
+                            echo "--";
+                        }
+                    } else {
+                        echo "--";
+                    }
+                    ?>
                 </td>
                 <td class="actions">
                     <div style="display: flex; gap: 6px;">
