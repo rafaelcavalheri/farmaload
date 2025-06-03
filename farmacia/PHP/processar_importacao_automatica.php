@@ -392,14 +392,14 @@ function converterFormatoLivre_Modificado($spreadsheet) {
             continue;
         }
         
-        // Se tiver nome de medicamento, atualiza o medicamento atual
+        // Se tiver nome de medicamento, atualiza o medicamento atual e suas informações
         if (!empty($nome)) {
             $medicamentoAtual = trim(preg_replace('/\s+/', ' ', $nome));
             
             // Tentar extrair a apresentação do nome do medicamento
             $apresentacaoAtual = extrairApresentacao($medicamentoAtual);
             
-            // Informações do medicamento
+            // Atualizar lote e validade apenas se forem fornecidos
             if (!empty($lote)) {
                 $loteAtual = $lote;
             } else {
@@ -439,7 +439,7 @@ function converterFormatoLivre_Modificado($spreadsheet) {
                     ];
                 }
                 
-                // Cria associação entre paciente e medicamento
+                // Cria associação entre paciente e medicamento usando o lote e validade atuais
                 $qtd = is_numeric($quantidade) ? (int)$quantidade : 0;
                 if ($qtd > 0) {
                     $associacoes[] = [
@@ -452,9 +452,6 @@ function converterFormatoLivre_Modificado($spreadsheet) {
                         'quantidade' => $qtd,
                         'linha' => $row
                     ];
-                    
-                    // Não adicionamos à lista de medicamentos aqui
-                    // Isso será feito apenas no final processamento
                 }
             }
         }
@@ -494,7 +491,6 @@ function converterFormatoLivre_Modificado($spreadsheet) {
                     fwrite($logFile, "Novo medicamento: $medicamentoAtual, Lote: $loteAtual, Qtd: $quantidadeAUsar\n");
                 }
             }
-            // Não incrementamos quantidades aqui para evitar duplicação
         }
     }
     
@@ -546,16 +542,6 @@ function converterFormatoLivre_Modificado($spreadsheet) {
     
     // Converter medicamentos únicos para o array de dados
     $dados = array_values($medicamentosUnicos);
-    
-    if (isset($dados['associacoes'])) {
-        $dados['associacoes'] = array_values(array_filter(
-            $dados['associacoes'],
-            function($item) {
-                return is_array($item)
-                    && isset($item['paciente'], $item['medicamento'], $item['quantidade']);
-            }
-        ));
-    }
     
     return [
         'medicamentos' => $dados, 
@@ -1098,14 +1084,16 @@ function mapearCIDsReliniFim($spreadsheet) {
 function mapearValidadesMedicamentos($spreadsheet) {
     $worksheet = $spreadsheet->getSheetByName('MEDICAMENTOS');
     if (!$worksheet) {
-        return [];
+        return ['validades' => [], 'lotes' => []];
     }
     
     $validades = [];
+    $lotes = [];
     $lastRow = $worksheet->getHighestRow();
     
     for ($row = 2; $row <= $lastRow; $row++) {
         $nome = $worksheet->getCell('A' . $row)->getValue();
+        $lote = $worksheet->getCell('B' . $row)->getValue();
         $validade = $worksheet->getCell('C' . $row)->getValue();
         
         // Tratar valores nulos
@@ -1113,11 +1101,12 @@ function mapearValidadesMedicamentos($spreadsheet) {
             $nome = trim((string)$nome);
             if ($nome) {
                 $validades[$nome] = converterDataExcel($validade);
+                $lotes[$nome] = !empty($lote) ? trim((string)$lote) : 'LOT' . str_pad($row, 3, '0', STR_PAD_LEFT);
             }
         }
     }
     
-    return $validades;
+    return ['validades' => $validades, 'lotes' => $lotes];
 }
 
 function importarReliniFim($spreadsheet) {
@@ -1140,18 +1129,27 @@ function importarReliniFim($spreadsheet) {
         fwrite($logFile, "Número de colunas: $colCount\n");
     }
 
-    // Mapear validades dos medicamentos
-    $validadesMedicamentos = mapearValidadesMedicamentos($spreadsheet);
+    // Mapear validades e lotes dos medicamentos
+    $medicamentosInfo = mapearValidadesMedicamentos($spreadsheet);
+    $validadesMedicamentos = $medicamentosInfo['validades'];
+    $lotesMedicamentos = $medicamentosInfo['lotes'];
+    
     if ($logFile) {
         fwrite($logFile, "Total de validades de medicamentos mapeadas: " . count($validadesMedicamentos) . "\n");
+        fwrite($logFile, "Total de lotes de medicamentos mapeados: " . count($lotesMedicamentos) . "\n");
     }
 
     $medicamentosUnicos = [];
     $pacientes = [];
     $associacoes = [];
 
+    // Variáveis para controlar o medicamento atual
+    $medicamentoAtual = null;
+    $loteAtual = null;
+    $validadeAtual = null;
+    $apresentacaoAtual = null;
+
     for ($row = 2; $row <= $lastRow; $row++) {
-        $lote = trim($worksheet->getCell('A' . $row)->getValue() ?? ''); // LMES (opcional)
         $validade_paciente = converterDataExcel($worksheet->getCell('D' . $row)->getValue()); // FIM VAL. convertido
         $paciente = trim($worksheet->getCell('E' . $row)->getValue() ?? ''); // PACIENTES
         $dataAtend = trim($worksheet->getCell('F' . $row)->getValue() ?? ''); // DT ATEND. (opcional)
@@ -1161,10 +1159,24 @@ function importarReliniFim($spreadsheet) {
         $codigo = 'MED' . str_pad($row, 5, '0', STR_PAD_LEFT); // Gera código único
 
         if ($logFile) {
-            fwrite($logFile, "Linha $row: Paciente: $paciente | Medicamento: $medicamento | Qtd: $quantidade | ValidadePaciente: $validade_paciente | CID: $cid | Lote: $lote | DataAtend: $dataAtend | Codigo: $codigo\n");
+            fwrite($logFile, "Linha $row: Paciente: $paciente | Medicamento: $medicamento | Qtd: $quantidade | ValidadePaciente: $validade_paciente | CID: $cid | DataAtend: $dataAtend | Codigo: $codigo\n");
         }
 
-        if ($paciente && $medicamento && is_numeric($quantidade) && $quantidade > 0) {
+        // Se tiver nome de medicamento, atualiza o medicamento atual e suas informações
+        if (!empty($medicamento)) {
+            $medicamentoAtual = trim(preg_replace('/\s+/', ' ', $medicamento));
+            $apresentacaoAtual = extrairApresentacao($medicamentoAtual);
+            
+            // Usar lote da aba MEDICAMENTOS
+            $loteAtual = $lotesMedicamentos[$medicamentoAtual] ?? 'LOT' . str_pad($row, 3, '0', STR_PAD_LEFT);
+            $validadeAtual = $validadesMedicamentos[$medicamentoAtual] ?? '31/12/2024';
+            
+            if ($logFile) {
+                fwrite($logFile, "Medicamento atualizado: $medicamentoAtual | Lote: $loteAtual | Validade: $validadeAtual\n");
+            }
+        }
+
+        if ($paciente && $medicamentoAtual && is_numeric($quantidade) && $quantidade > 0) {
             // Padronizar pacientes como array ['nome'=>..., 'linha'=>..., 'validade'=>...]
             $nomesExistentes = array_column($pacientes, 'nome');
             if (!in_array($paciente, $nomesExistentes)) {
@@ -1175,15 +1187,15 @@ function importarReliniFim($spreadsheet) {
                 ];
             }
 
-            $chave = $medicamento . '|' . $lote;
+            $chave = $medicamentoAtual . '|' . $loteAtual;
             if (!isset($medicamentosUnicos[$chave])) {
                 $medicamentosUnicos[$chave] = [
-                    'nome' => $medicamento,
+                    'nome' => $medicamentoAtual,
                     'quantidade' => (int)$quantidade,
-                    'lote' => $lote,
-                    'validade' => $validadesMedicamentos[$medicamento] ?? '31/12/2024', // Validade do medicamento
+                    'lote' => $loteAtual,
+                    'validade' => $validadeAtual,
                     'codigo' => $codigo,
-                    'apresentacao' => extrairApresentacao($medicamento),
+                    'apresentacao' => $apresentacaoAtual,
                     'cid' => $cid
                 ];
             } else {
@@ -1192,18 +1204,19 @@ function importarReliniFim($spreadsheet) {
 
             $associacoes[] = [
                 'paciente' => $paciente,
-                'medicamento' => $medicamento,
-                'lote' => $lote,
-                'validade_processo' => $validade_paciente, // Validade do processo
-                'validade_medicamento' => $validadesMedicamentos[$medicamento] ?? '31/12/2024', // Validade do medicamento
+                'medicamento' => $medicamentoAtual,
+                'lote' => $loteAtual,
+                'validade_processo' => $validade_paciente,
+                'validade_medicamento' => $validadeAtual,
                 'codigo' => $codigo,
-                'apresentacao' => extrairApresentacao($medicamento),
+                'apresentacao' => $apresentacaoAtual,
                 'quantidade' => (int)$quantidade,
                 'cid' => $cid,
                 'linha' => $row
             ];
         }
     }
+
     if ($logFile) {
         fwrite($logFile, "\n=== RESUMO DA IMPORTAÇÃO RELINI_FIM ===\n");
         fwrite($logFile, "Total de medicamentos: " . count($medicamentosUnicos) . "\n");
@@ -1211,10 +1224,12 @@ function importarReliniFim($spreadsheet) {
         fwrite($logFile, "Total de associações: " . count($associacoes) . "\n");
         fclose($logFile);
     }
+
     // Filtro final: garantir que só arrays válidos estejam em associacoes
     $associacoes = array_values(array_filter($associacoes, function($item) {
         return is_array($item) && isset($item['paciente'], $item['medicamento'], $item['quantidade']);
     }));
+
     return [
         'medicamentos' => array_values($medicamentosUnicos),
         'pacientes' => $pacientes,
