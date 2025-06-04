@@ -1,11 +1,14 @@
 # Farmaload - Notas da Versão
 
-**Versão:** v.1.2025.0406.0744
+**Versão:** v.1.2025.0406.0820
 **Data:** 04/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.0406.0820 (04/06/2025)
+ - Visualização de quantidade por lote na pagina medicamentos
 
 ## v.1.2025.0406.0744 (04/06/2025)
  - Correção de bugs

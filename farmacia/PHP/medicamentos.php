@@ -115,7 +115,7 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                             <?php endif; ?>
                         </th>
                         <th class="sortable" data-ordem="codigo">Código</th>
-                        <th class="sortable" data-ordem="lote">Lote/Validade</th>
+                        <th class="sortable" data-ordem="lote">Lote/Qtd/Validade</th>
                         <th class="sortable" data-ordem="apresentacao">Apresentação</th>
                         <th>Ações</th>
                     </tr>

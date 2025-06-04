@@ -24,7 +24,7 @@ $sql = "SELECT
             m.codigo,
             m.apresentacao,
             m.ativo,
-            GROUP_CONCAT(DISTINCT lm.lote ORDER BY lm.validade ASC SEPARATOR '<br>') as lotes,
+            GROUP_CONCAT(DISTINCT CONCAT(lm.lote, ' (', lm.quantidade, ')') ORDER BY lm.validade ASC SEPARATOR '<br>') as lotes,
             MIN(lm.validade) as validade
         FROM medicamentos m
         LEFT JOIN lotes_medicamentos lm ON m.id = lm.medicamento_id
@@ -134,7 +134,7 @@ if ($stmt->rowCount() > 0) {
                     <?php
                     // Buscar lotes ativos
                     $stmtLotes = $pdo->prepare("
-                        SELECT lote, validade 
+                        SELECT lote, validade, quantidade 
                         FROM lotes_medicamentos 
                         WHERE medicamento_id = ? AND quantidade > 0 
                         ORDER BY validade ASC
@@ -146,8 +146,9 @@ if ($stmt->rowCount() > 0) {
                         foreach ($lotes as $lote) {
                             echo htmlspecialchars($lote['lote']);
                             echo ' (';
+                            echo $lote['quantidade'] . ' un)';
+                            echo ' - ';
                             echo ($lote['validade'] && $lote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($lote['validade'])) : '--';
-                            echo ')';
                             echo '<br>';
                         }
                     } else {
