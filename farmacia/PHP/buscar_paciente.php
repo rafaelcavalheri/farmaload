@@ -24,12 +24,11 @@ try {
         'nome' => 'nome',
         'cpf' => 'cpf',
         'sim' => 'sim',
-        'nascimento' => 'nascimento',
-        'validade' => 'validade'
+        'nascimento' => 'nascimento'
     ];
 
     // Construir a consulta SQL
-    $sql = "SELECT id, nome, cpf, sim, nascimento, validade, 
+    $sql = "SELECT id, nome, cpf, sim, nascimento, 
             (SELECT MAX(data) FROM transacoes WHERE paciente_id = pacientes.id) as ultima_coleta
             FROM pacientes WHERE cpf = :cpf";
     

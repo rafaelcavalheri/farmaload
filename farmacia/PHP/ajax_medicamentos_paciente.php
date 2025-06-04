@@ -24,10 +24,12 @@ try {
                 FROM transacoes 
                 WHERE medicamento_id = pm.medicamento_id 
                 AND paciente_id = pm.paciente_id
-            ), 0) as quantidade_entregue
+            ), 0) as quantidade_entregue,
+            p.validade as proxima_renovacao
         FROM paciente_medicamentos pm
         LEFT JOIN medicamentos m ON m.id = pm.medicamento_id
         LEFT JOIN medicos med ON med.id = pm.medico_id
+        LEFT JOIN pacientes p ON p.id = pm.paciente_id
         WHERE pm.paciente_id = ?
         ORDER BY pm.renovacao ASC
     ");
@@ -69,8 +71,18 @@ try {
             echo 'Médico: ' . htmlspecialchars($med['medico_texto']) . '<br>';
         }
 
-        if (!empty($med['renovacao'])) {
-            echo 'Renovação: ' . htmlspecialchars($med['renovacao']) . '<br>';
+        // Adicionar informação da próxima renovação
+        if (!empty($med['proxima_renovacao'])) {
+            $dataRenovacao = new DateTime($med['proxima_renovacao']);
+            $hoje = new DateTime();
+            
+            if ($dataRenovacao < $hoje) {
+                echo '<span style="color: #dc3545;">Próxima Renovação: ' . $dataRenovacao->format('d/m/Y') . ' (Atrasada)</span><br>';
+            } elseif ($dataRenovacao->format('Y-m') === $hoje->format('Y-m')) {
+                echo '<span style="color: #ffc107;">Próxima Renovação: ' . $dataRenovacao->format('d/m/Y') . ' (Este mês)</span><br>';
+            } else {
+                echo '<span style="color: #28a745;">Próxima Renovação: ' . $dataRenovacao->format('d/m/Y') . '</span><br>';
+            }
         }
 
         echo '</li>';

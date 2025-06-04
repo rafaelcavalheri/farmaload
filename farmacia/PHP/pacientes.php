@@ -28,7 +28,6 @@ $direcao = $_GET['direcao'] ?? 'ASC';
 
 $sql = "SELECT p.id, p.nome, p.cpf, p.sim, p.nascimento, p.ativo, 
                COUNT(pm.id) AS total_medicamentos, 
-               p.validade AS proxima_renovacao,
                (SELECT MAX(data) FROM transacoes WHERE paciente_id = p.id) as ultima_coleta
         FROM pacientes p
         LEFT JOIN paciente_medicamentos pm ON pm.paciente_id = p.id";
@@ -46,7 +45,6 @@ $colunas_ordenacao = [
     'sim' => 'p.sim',
     'nascimento' => 'p.nascimento',
     'medicamentos' => 'total_medicamentos',
-    'renovacao' => 'p.validade',
     'ultima_coleta' => 'ultima_coleta',
     'status' => 'p.ativo'
 ];
@@ -323,7 +321,6 @@ $stmt->execute($params);
                 <th class="sortable" data-ordem="sim">SIM</th>
                 <th class="sortable" data-ordem="nascimento">Nascimento</th>
                 <th class="sortable" data-ordem="medicamentos">Medicamentos</th>
-                <th class="sortable" data-ordem="renovacao">Próx. Renovação</th>
                 <th class="sortable" data-ordem="ultima_coleta">Última Coleta</th>
                 <th class="sortable" data-ordem="status">Status</th>
                 <th>Ações</th>
@@ -373,7 +370,6 @@ $stmt->execute($params);
                         -- 
                     <?php endif; ?>
                 </td>
-                <td><?= $renAlert ?></td>
                 <td>
                     <?php 
                     if (!empty($paciente['ultima_coleta'])) {

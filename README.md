@@ -1,11 +1,16 @@
 # Farmaload - Notas da Versão
 
-**Versão:** v.1.2025.0406.0820
+**Versão:** v.1.2025.0406.0900
 **Data:** 04/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.0406.0900 (04/06/2025)
+ - Remoção da coluna Prox renovação da pagina pacientes
+   agora a prox renovação aparece ao clicar em versão
+   Correção de bug na pagina editar pacientes
 
 ## v.1.2025.0406.0820 (04/06/2025)
  - Visualização de quantidade por lote na pagina medicamentos

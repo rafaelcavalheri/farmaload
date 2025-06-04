@@ -223,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Buscar medicamentos associados
     $stmtMed = $pdo->prepare("
-        SELECT pm.*, m.nome as medicamento_nome, m.validade as medicamento_validade, pm.renovado 
+        SELECT pm.*, m.nome as medicamento_nome, pm.renovado 
         FROM paciente_medicamentos pm 
         JOIN medicamentos m ON pm.medicamento_id = m.id 
         WHERE pm.paciente_id = ? 
