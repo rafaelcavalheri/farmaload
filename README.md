@@ -8,7 +8,7 @@
 # Histórico de versões
 
 ## v.1.2025.0406.1935 (04/06/2025)
- - Melhora na geração automatica de CPF na importação
+ Melhora na geração automatica de CPF na importação, 
  agora o CPF gerado começa com 000 para fácil identificação de CPF genérico
 
 ## v.1.2025.0406.1450 (04/06/2025)
