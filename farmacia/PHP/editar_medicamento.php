@@ -7,6 +7,20 @@ if (!isset($_SESSION['usuario']) || $_SESSION['usuario']['perfil'] !== 'admin') 
     exit();
 }
 
+// Adicionar função calcularEstoqueAtual se não estiver definida
+if (!function_exists('calcularEstoqueAtual')) {
+    function calcularEstoqueAtual($pdo, $medicamentoId) {
+        $stmt = $pdo->prepare("
+            SELECT COALESCE(SUM(quantidade), 0) as total 
+            FROM lotes_medicamentos 
+            WHERE medicamento_id = ? AND quantidade > 0
+        ");
+        $stmt->execute([$medicamentoId]);
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return (int)$result['total'];
+    }
+}
+
 if (!isset($_GET['id'])) {
     header('Location: medicamentos.php');
     exit();
@@ -24,23 +38,49 @@ if (!$medicamento) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['editar_medicamento'])) {
     try {
         $stmt = $pdo->prepare("UPDATE medicamentos SET 
-                             nome = ?, lote = ?, apresentacao = ?, 
-                             codigo = ?, validade = ? 
+                             nome = ?, apresentacao = ?, 
+                             codigo = ?
                              WHERE id = ?");
         $stmt->execute([
             $_POST['nome'],
-            $_POST['lote'],
             $_POST['apresentacao'],
             $_POST['codigo'],
-            $_POST['validade'],
             $_GET['id']
         ]);
+
+        // Atualizar o lote específico
+        if (isset($_POST['lote_id']) && !empty($_POST['lote_id'])) {
+            $stmt = $pdo->prepare("UPDATE lotes_medicamentos SET 
+                                 lote = ?, 
+                                 quantidade = ?,
+                                 validade = ?
+                                 WHERE id = ? AND medicamento_id = ?");
+            $stmt->execute([
+                $_POST['lote'],
+                $_POST['quantidade'],
+                $_POST['validade'],
+                $_POST['lote_id'],
+                $_GET['id']
+            ]);
+        }
+
         header('Location: medicamentos.php?sucesso=Medicamento atualizado com sucesso');
     } catch (PDOException $e) {
         header('Location: editar_medicamento.php?id=' . $_GET['id'] . '&erro=' . urlencode($e->getMessage()));
     }
     exit();
 }
+
+// Buscar todos os lotes do medicamento
+$stmt = $pdo->prepare("
+    SELECT lm.*, 
+           DATE_FORMAT(lm.validade, '%Y-%m-%d') as validade_formatada
+    FROM lotes_medicamentos lm 
+    WHERE lm.medicamento_id = ? 
+    ORDER BY lm.validade ASC
+");
+$stmt->execute([$_GET['id']]);
+$lotes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajustar_estoque'])) {
     $estoque_correto = (int)$_POST['estoque_correto'];
@@ -100,16 +140,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajustar_estoque'])) {
             </div>
 
             <div class="form-group">
-                <label>Estoque Atual:</label>
-                <input type="text" value="<?= calcularEstoqueAtual($pdo, $medicamento['id']) ?>" readonly>
-            </div>
-
-            <div class="form-group">
-                <label for="lote">Lote:</label>
-                <input type="text" id="lote" name="lote" value="<?= htmlspecialchars($medicamento['lote'] ?? '') ?>" required>
-            </div>
-
-            <div class="form-group">
                 <label for="apresentacao">Apresentação:</label>
                 <select id="apresentacao" name="apresentacao" required>
                     <?php
@@ -130,9 +160,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajustar_estoque'])) {
                 <input type="text" id="codigo" name="codigo" value="<?= htmlspecialchars($medicamento['codigo'] ?? '') ?>" required>
             </div>
 
-            <div class="form-group">
-                <label for="validade">Validade:</label>
-                <input type="date" id="validade" name="validade" value="<?= $medicamento['validade'] ?>">
+            <h3>Lotes do Medicamento</h3>
+            <div class="lotes-container">
+                <?php foreach ($lotes as $lote): ?>
+                <div class="lote-item">
+                    <div class="form-group">
+                        <label>Lote:</label>
+                        <input type="text" name="lote" value="<?= htmlspecialchars($lote['lote']) ?>" required>
+                        <input type="hidden" name="lote_id" value="<?= $lote['id'] ?>">
+                    </div>
+                    <div class="form-group">
+                        <label>Quantidade:</label>
+                        <input type="number" name="quantidade" value="<?= $lote['quantidade'] ?>" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Validade:</label>
+                        <input type="date" name="validade" value="<?= $lote['validade_formatada'] ?>">
+                    </div>
+                </div>
+                <?php endforeach; ?>
             </div>
 
             <div class="form-actions">
@@ -145,7 +191,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajustar_estoque'])) {
         <h3>Ajuste de Estoque</h3>
         <?php $estoque_atual = calcularEstoqueAtual($pdo, $medicamento['id']); ?>
         <div class="form-group">
-            <label><strong>Estoque Atual:</strong> <span style="color: #007bff; font-weight: bold; font-size: 1.2em;"><?= $estoque_atual ?></span></label>
+            <label>Estoque Atual: <span class="estoque-valor"><?= htmlspecialchars($estoque_atual) ?></span></label>
         </div>
         <form method="POST" style="margin-top: 1em;">
             <input type="hidden" name="ajustar_estoque" value="1">
@@ -157,5 +203,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajustar_estoque'])) {
         </form>
     </div>
 </main>
+
+<style>
+.lotes-container {
+    margin: 20px 0;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+.lote-item {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 15px;
+    margin-bottom: 10px;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    background-color: white;
+}
+
+.lote-item:last-child {
+    margin-bottom: 0;
+}
+
+.estoque-valor {
+    color: #007bff;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+</style>
 </body>
 </html>
