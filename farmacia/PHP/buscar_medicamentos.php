@@ -14,9 +14,9 @@ $colunas_ordenacao = [
     'quantidade' => null, // será tratado manualmente
     'total_recebido' => null, // será tratado manualmente
     'codigo' => 'm.codigo',
-    'lote' => 'lm.lote',
+    'lote' => 'MIN(lm.lote)',
     'apresentacao' => 'm.apresentacao',
-    'validade' => 'lm.validade'
+    'validade' => 'MIN(lm.validade)'
 ];
 $sql = "SELECT 
             m.id,
@@ -42,48 +42,47 @@ if (!empty($busca)) {
     $params = ["%$busca%", "%$busca%", "%$busca%"];
 }
 
-if ($ordem === 'total_recebido') {
-    // Executa a query SEM ORDER BY, ordenação será manual
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($medicamentos as &$medicamento) {
-        $ultimaImport = getTotalUltimaImportacao($pdo, $medicamento['id']);
-        $medicamento['total_recebido'] = $ultimaImport ? $ultimaImport['total'] : 0;
-    }
-    unset($medicamento);
-    usort($medicamentos, function($a, $b) use ($direcao) {
-        if ($a['total_recebido'] == $b['total_recebido']) return 0;
-        if ($direcao === 'DESC') {
-            return $a['total_recebido'] < $b['total_recebido'] ? 1 : -1;
-        } else {
-            return $a['total_recebido'] > $b['total_recebido'] ? 1 : -1;
-        }
-    });
-} else if ($ordem === 'quantidade') {
-    // Executa a query SEM ORDER BY, ordenação será manual
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
-    $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
-    foreach ($medicamentos as &$medicamento) {
-        $medicamento['quantidade'] = calcularEstoqueAtual($pdo, $medicamento['id']);
-    }
-    unset($medicamento);
-    usort($medicamentos, function($a, $b) use ($direcao) {
-        if ($a['quantidade'] == $b['quantidade']) return 0;
-        if ($direcao === 'DESC') {
-            return $a['quantidade'] < $b['quantidade'] ? 1 : -1;
-        } else {
-            return $a['quantidade'] > $b['quantidade'] ? 1 : -1;
-        }
-    });
-} else if (isset($colunas_ordenacao[$ordem]) && $colunas_ordenacao[$ordem]) {
+if ($ordem === 'total_recebido' || $ordem === 'quantidade') {
+    // Adiciona sempre o GROUP BY
     $sql .= " GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo";
+    $stmt = $pdo->prepare($sql);
+    $stmt->execute($params);
+    $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    if ($ordem === 'total_recebido') {
+        foreach ($medicamentos as &$medicamento) {
+            $ultimaImport = getTotalUltimaImportacao($pdo, $medicamento['id']);
+            $medicamento['total_recebido'] = $ultimaImport ? $ultimaImport['total'] : 0;
+        }
+        unset($medicamento);
+        usort($medicamentos, function($a, $b) use ($direcao) {
+            if ($a['total_recebido'] == $b['total_recebido']) return 0;
+            if ($direcao === 'DESC') {
+                return $a['total_recebido'] < $b['total_recebido'] ? 1 : -1;
+            } else {
+                return $a['total_recebido'] > $b['total_recebido'] ? 1 : -1;
+            }
+        });
+    } else if ($ordem === 'quantidade') {
+        foreach ($medicamentos as &$medicamento) {
+            $medicamento['quantidade'] = calcularEstoqueAtual($pdo, $medicamento['id']);
+        }
+        unset($medicamento);
+        usort($medicamentos, function($a, $b) use ($direcao) {
+            if ($a['quantidade'] == $b['quantidade']) return 0;
+            if ($direcao === 'DESC') {
+                return $a['quantidade'] < $b['quantidade'] ? 1 : -1;
+            } else {
+                return $a['quantidade'] > $b['quantidade'] ? 1 : -1;
+            }
+        });
+    }
+} else if (isset($colunas_ordenacao[$ordem]) && $colunas_ordenacao[$ordem]) {
+    $sql .= " GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo, lm.lote";
     $sql .= " ORDER BY " . $colunas_ordenacao[$ordem] . " " . ($direcao === 'DESC' ? 'DESC' : 'ASC');
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
 } else {
-    $sql .= " GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo";
+    $sql .= " GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo, lm.lote";
     $sql .= " ORDER BY nome ASC";
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
