@@ -1306,15 +1306,15 @@ function importarReliniInicio($spreadsheet) {
 
 // Funções para gerar CPF válido
 function gerarCpfTemporario() {
-    // Gera os 9 primeiros dígitos
+    // Gera os 6 primeiros dígitos (já que vamos adicionar '000' no início)
     $cpf = '';
-    for ($i = 0; $i < 9; $i++) {
+    for ($i = 0; $i < 6; $i++) {
         $cpf .= mt_rand(0, 9);
     }
     
     // Calcula o primeiro dígito verificador
     $soma = 0;
-    for ($i = 0; $i < 9; $i++) {
+    for ($i = 0; $i < 6; $i++) {
         $soma += intval($cpf[$i]) * (10 - $i);
     }
     $resto = $soma % 11;
@@ -1323,14 +1323,15 @@ function gerarCpfTemporario() {
     
     // Calcula o segundo dígito verificador
     $soma = 0;
-    for ($i = 0; $i < 10; $i++) {
+    for ($i = 0; $i < 7; $i++) {
         $soma += intval($cpf[$i]) * (11 - $i);
     }
     $resto = $soma % 11;
     $dv2 = ($resto < 2) ? 0 : 11 - $resto;
     $cpf .= $dv2;
     
-    return $cpf;
+    // Adiciona o prefixo '000' para identificar CPF genérico
+    return '000' . $cpf;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
