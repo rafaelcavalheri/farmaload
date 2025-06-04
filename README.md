@@ -7,6 +7,9 @@
 
 # Histórico de versões
 
+## v.1.2025.0406.0744 (04/06/2025)
+ - Correção de bugs
+
 ## v.1.2025.0306.1008 (03/06/2025)
  - Melhora na visualização de medicamentos por lote
 
