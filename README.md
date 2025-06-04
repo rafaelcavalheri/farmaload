@@ -7,6 +7,10 @@
 
 # Histórico de versões
 
+## v.1.2025.0406.0945 (04/06/2025)
+ - Correção da quantidade dos medicamentos por movimentações
+ - Correção da data de renovação por medicamento
+
 ## v.1.2025.0406.0900 (04/06/2025)
  - Remoção da coluna Prox renovação da pagina pacientes
    agora a prox renovação aparece ao clicar em versão
