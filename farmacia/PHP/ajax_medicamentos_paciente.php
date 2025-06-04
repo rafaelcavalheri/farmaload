@@ -25,11 +25,10 @@ try {
                 WHERE medicamento_id = pm.medicamento_id 
                 AND paciente_id = pm.paciente_id
             ), 0) as quantidade_entregue,
-            p.validade as proxima_renovacao
+            pm.renovacao as proxima_renovacao
         FROM paciente_medicamentos pm
         LEFT JOIN medicamentos m ON m.id = pm.medicamento_id
         LEFT JOIN medicos med ON med.id = pm.medico_id
-        LEFT JOIN pacientes p ON p.id = pm.paciente_id
         WHERE pm.paciente_id = ?
         ORDER BY pm.renovacao ASC
     ");

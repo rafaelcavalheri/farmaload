@@ -232,15 +232,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $stmtMed->execute([$pacienteId]);
     $medicamentos = $stmtMed->fetchAll(PDO::FETCH_ASSOC);
     
-    // Adiciona a validade do paciente para cada medicamento
-    foreach ($medicamentos as &$med) {
-        $med['renovacao'] = $paciente['validade'];
-        $med['medicamento_id'] = $med['medicamento_id'];
-        $med['quantidade'] = $med['quantidade'];
-        $med['cid'] = $med['cid'];
-        $med['medico_id'] = $med['medico_id'];
-        $med['renovado'] = (int)$med['renovado']; // Garante que seja um inteiro
-    }
     $valores['medicamentos'] = $medicamentos;
 }
 ?>

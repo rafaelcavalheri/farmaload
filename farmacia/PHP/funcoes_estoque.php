@@ -8,7 +8,19 @@ function calcularEstoqueAtual($pdo, $medicamento_id) {
         WHERE medicamento_id = ?
     ");
     $stmt->execute([$medicamento_id]);
-    return (int)$stmt->fetchColumn();
+    $estoque_lotes = (int)$stmt->fetchColumn();
+
+    // Buscar a soma das saídas (transações)
+    $stmt = $pdo->prepare("
+        SELECT COALESCE(SUM(quantidade), 0) 
+        FROM transacoes 
+        WHERE medicamento_id = ?
+    ");
+    $stmt->execute([$medicamento_id]);
+    $saidas = (int)$stmt->fetchColumn();
+
+    // Retorna o estoque atual (lotes - saídas)
+    return max(0, $estoque_lotes - $saidas);
 }
 
 // Retorna a soma das quantidades da última importação de um medicamento

@@ -53,7 +53,7 @@ try {
                 AND paciente_id = pm.paciente_id
             ), 0) as quantidade_entregue,
             pm.renovado,
-            DATE_FORMAT(p.validade, '%d/%m/%Y') as validade_formatada,
+            DATE_FORMAT(pm.renovacao, '%d/%m/%Y') as renovacao_formatada,
             med.nome AS medico,
             med.crm_completo
         FROM paciente_medicamentos pm
@@ -220,10 +220,10 @@ try {
                                     Renovação em Andamento
                                 </span>
                             <?php endif; ?>
-                            <?php if (!empty($med['validade_formatada'])): ?>
+                            <?php if (!empty($med['renovacao_formatada'])): ?>
                                 <span class="info-item">
                                     <i class="fas fa-calendar"></i>
-                                    Validade: <?= htmlspecialchars($med['validade_formatada']) ?>
+                                    Renovação: <?= htmlspecialchars($med['renovacao_formatada']) ?>
                                 </span>
                             <?php endif; ?>
                         </div>

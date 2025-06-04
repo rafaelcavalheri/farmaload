@@ -613,22 +613,18 @@ function importarDados($dados) {
                                 cpf, 
                                 nascimento, 
                                 telefone, 
-                                validade,
                                 observacao
-                            ) VALUES (?, ?, '1900-01-01', '00000000000', STR_TO_DATE(?, '%d/%m/%Y'), ?)
+                            ) VALUES (?, ?, '1900-01-01', '00000000000', ?)
                         ");
                         $stmt->execute([
                             $nomePaciente,
                             $cpfTemp,
-                            $paciente['validade'] ?? '31/12/2024',
                             'Paciente importado automaticamente. Dados precisam ser atualizados.'
                         ]);
-                        
                         $novoId = $pdo->lastInsertId();
                         if ($logFile) {
                             fwrite($logFile, "Paciente inserido com ID: " . $novoId . "\n");
                         }
-                        
                         $pacientesProcessados[$nomePaciente] = $novoId;
                     } catch (Exception $e) {
                         if ($logFile) {
@@ -636,19 +632,9 @@ function importarDados($dados) {
                         }
                     }
                 } else {
-                    // Atualizar validade do paciente existente
-                    $stmt = $pdo->prepare("
-                        UPDATE pacientes 
-                        SET validade = STR_TO_DATE(?, '%d/%m/%Y')
-                        WHERE id = ?
-                    ");
-                    $stmt->execute([
-                        $paciente['validade'] ?? '31/12/2024',
-                        $pacienteExistente['id']
-                    ]);
-                    
+                    // Não atualize mais a validade do paciente!
                     if ($logFile) {
-                        fwrite($logFile, "Paciente já existe: " . $paciente['nome'] . " (ID: " . $pacienteExistente['id'] . "), validade atualizada\n");
+                        fwrite($logFile, "Paciente já existe: " . $paciente['nome'] . " (ID: " . $pacienteExistente['id'] . ")\n");
                     }
                     $pacientesProcessados[$paciente['nome']] = $pacienteExistente['id'];
                 }
@@ -861,8 +847,12 @@ function logEstruturaPlanilha($spreadsheet, $logFile) {
 }
 
 // Função para vincular medicamento ao paciente durante a importação
-function vincularMedicamentoPaciente($pdo, $pacienteId, $medicamentoId, $nomeMedicamento, $quantidade, $cid = null, $logFile = null) {
+function vincularMedicamentoPaciente($pdo, $pacienteId, $medicamentoId, $nomeMedicamento, $quantidade, $cid = null, $logFile = null, $renovacao = null) {
     try {
+        // Converter data para formato YYYY-MM-DD se vier como dd/mm/yyyy
+        if ($renovacao && preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $renovacao, $m)) {
+            $renovacao = $m[3] . '-' . $m[2] . '-' . $m[1];
+        }
         // Verificar se o vínculo já existe
         $stmt = $pdo->prepare("
             SELECT id FROM paciente_medicamentos 
@@ -872,19 +862,20 @@ function vincularMedicamentoPaciente($pdo, $pacienteId, $medicamentoId, $nomeMed
         $vinculoExistente = $stmt->fetch();
         
         if ($vinculoExistente) {
-            // Substituir quantidade se o vínculo já existir (em vez de incrementar)
+            // Substituir quantidade e renovacao se o vínculo já existir (em vez de incrementar)
             $stmt = $pdo->prepare("
                 UPDATE paciente_medicamentos 
                 SET quantidade = ?,
                     cid = ?,
+                    renovacao = ?,
                     data_atualizacao = NOW(),
                     observacoes = CONCAT(IFNULL(observacoes, ''), ' | Atualizado via importação em ', NOW())
                 WHERE id = ?
             ");
-            $stmt->execute([$quantidade, $cid, $vinculoExistente['id']]);
+            $stmt->execute([$quantidade, $cid, $renovacao, $vinculoExistente['id']]);
             
             if ($logFile) {
-                fwrite($logFile, "Vínculo paciente-medicamento atualizado: Paciente ID $pacienteId, Medicamento ID $medicamentoId, Nova Quantidade definida para $quantidade, CID: $cid\n");
+                fwrite($logFile, "Vínculo paciente-medicamento atualizado: Paciente ID $pacienteId, Medicamento ID $medicamentoId, Nova Quantidade definida para $quantidade, CID: $cid, Renovacao: $renovacao\n");
             }
         } else {
             // Criar novo vínculo
@@ -895,8 +886,9 @@ function vincularMedicamentoPaciente($pdo, $pacienteId, $medicamentoId, $nomeMed
                     nome_medicamento,
                     quantidade,
                     cid,
+                    renovacao,
                     observacoes
-                ) VALUES (?, ?, ?, ?, ?, ?)
+                ) VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
                 $pacienteId,
@@ -904,11 +896,12 @@ function vincularMedicamentoPaciente($pdo, $pacienteId, $medicamentoId, $nomeMed
                 $nomeMedicamento,
                 $quantidade,
                 $cid,
+                $renovacao,
                 'Vínculo criado automaticamente durante importação em ' . date('Y-m-d H:i:s')
             ]);
             
             if ($logFile) {
-                fwrite($logFile, "Novo vínculo paciente-medicamento criado: Paciente ID $pacienteId, Medicamento ID $medicamentoId, Quantidade $quantidade, CID: $cid\n");
+                fwrite($logFile, "Novo vínculo paciente-medicamento criado: Paciente ID $pacienteId, Medicamento ID $medicamentoId, Quantidade $quantidade, CID: $cid, Renovacao: $renovacao\n");
             }
         }
         
@@ -988,7 +981,8 @@ function processarAssociacoes($dados, $pdo, $pacientesProcessados, $logFile) {
                     $medicamento['nome'], 
                     $associacao['quantidade'],
                     $associacao['cid'] ?? null,
-                    $logFile
+                    $logFile,
+                    $associacao['validade_processo'] ?? null // Passa a data de renovação individual
                 );
                 
                 if ($resultado) {
