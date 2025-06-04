@@ -1,11 +1,14 @@
 # Farmaload - Notas da Versão
 
-**Versão:** v.1.2025.0406.1040
+**Versão:** v.1.2025.0406.1430
 **Data:** 04/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.0406.1430 (04/06/2025)
+ - Correção de geração automatica de CPF em importação
 
 ## v.1.2025.0406.1040 (04/06/2025)
  - Correção da quantidade dos medicamentos por movimentações

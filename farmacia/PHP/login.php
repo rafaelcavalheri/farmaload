@@ -80,8 +80,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     } catch (PDOException $e) {
-        $erro = "Erro no sistema. Tente novamente mais tarde.";
-        error_log($e->getMessage());
+        error_log("Erro PDO: " . $e->getMessage());
+        if (ENVIRONMENT === 'development') {
+            $erro = "Erro no banco de dados: " . $e->getMessage();
+        } else {
+            $erro = "Erro no sistema. Tente novamente mais tarde.";
+        }
+    } catch (Exception $e) {
+        error_log("Erro geral: " . $e->getMessage());
+        if (ENVIRONMENT === 'development') {
+            $erro = "Erro: " . $e->getMessage();
+        } else {
+            $erro = "Erro no sistema. Tente novamente mais tarde.";
+        }
     }
 }
 

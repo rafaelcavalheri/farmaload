@@ -584,10 +584,7 @@ function importarDados($dados) {
                 if (!$pacienteExistente) {
                     // Gerar CPF temporário único
                     do {
-                        $timestamp = microtime(true);
-                        $random = rand(1000, 9999);
-                        $cpfTemp = '000' . str_pad($timestamp . $random, 8, '0', STR_PAD_LEFT);
-                        $cpfTemp = substr($cpfTemp, -11);
+                        $cpfTemp = gerarCpfTemporario();
                         
                         $stmt = $pdo->prepare("SELECT id FROM pacientes WHERE cpf = ?");
                         $stmt->execute([$cpfTemp]);
@@ -1305,6 +1302,35 @@ function importarReliniInicio($spreadsheet) {
         'pacientes' => $pacientes,
         'associacoes' => $associacoes
     ];
+}
+
+// Funções para gerar CPF válido
+function gerarCpfTemporario() {
+    // Gera os 9 primeiros dígitos
+    $cpf = '';
+    for ($i = 0; $i < 9; $i++) {
+        $cpf .= mt_rand(0, 9);
+    }
+    
+    // Calcula o primeiro dígito verificador
+    $soma = 0;
+    for ($i = 0; $i < 9; $i++) {
+        $soma += intval($cpf[$i]) * (10 - $i);
+    }
+    $resto = $soma % 11;
+    $dv1 = ($resto < 2) ? 0 : 11 - $resto;
+    $cpf .= $dv1;
+    
+    // Calcula o segundo dígito verificador
+    $soma = 0;
+    for ($i = 0; $i < 10; $i++) {
+        $soma += intval($cpf[$i]) * (11 - $i);
+    }
+    $resto = $soma % 11;
+    $dv2 = ($resto < 2) ? 0 : 11 - $resto;
+    $cpf .= $dv2;
+    
+    return $cpf;
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {

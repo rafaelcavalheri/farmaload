@@ -40,6 +40,12 @@ CREATE TABLE IF NOT EXISTS usuarios (
 ) ENGINE=InnoDB;
 
 
+-- Inserir usuário admin padrão (senha: admin123)
+INSERT INTO usuarios (nome, email, senha, perfil, auth_type, ativo)
+VALUES ('Administrador', 'admin@local', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'admin', 'local', 1)
+ON DUPLICATE KEY UPDATE id=id;
+
+
 -- Tabela de medicamentos (DEVE VIR ANTES de paciente_medicamentos)
 
 CREATE TABLE IF NOT EXISTS medicamentos (
