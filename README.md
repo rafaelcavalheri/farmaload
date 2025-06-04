@@ -7,7 +7,7 @@
 
 # Histórico de versões
 
-## v.1.2025.0406.0945 (04/06/2025)
+## v.1.2025.0406.1040 (04/06/2025)
  - Correção da quantidade dos medicamentos por movimentações
  - Correção da data de renovação por medicamento
 
