@@ -1,11 +1,21 @@
 # Farmaload - Notas da Versão
 
-**Versão:** v.1.2025.0506.1020
+**Versão:** v.1.2025.0506.1549
 **Data:** 05/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.0506.1549 (05/06/2025)
+### Implementação de Backup e Restauração
+- Adicionados novos arquivos para gerenciamento de backup:
+  - `gerar_backup.php`: Implementação do sistema de backup seletivo
+  - `restaurar_backup.php`: Sistema de restauração de backups
+- Melhorias no sistema de backup:
+  - Otimização do processo de backup
+  - Melhor gerenciamento de arquivos grandes
+  - Correção de problemas com arquivos de log
 
 ## v.1.2025.0506.1020 (05/06/2025)
 ### Padronização do Favicon
