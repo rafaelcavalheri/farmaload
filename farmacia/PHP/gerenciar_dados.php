@@ -11,14 +11,42 @@ if ($_SESSION['usuario']['perfil'] !== 'admin') {
 }
 
 // Função para gerar backup do banco de dados
-function gerarBackup($pdo) {
-    $tables = $pdo->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+function gerarBackup($pdo, $tipo_backup = 'completo', $tabelas_especificas = []) {
     $backup = "";
     
     // Adicionar comandos para desabilitar foreign keys
     $backup .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
     
-    foreach ($tables as $table) {
+    // Definir tabelas baseadas no tipo de backup
+    $tabelas = [];
+    switch ($tipo_backup) {
+        case 'relatorios':
+            // Incluindo tabelas relacionadas para manter a integridade dos dados
+            $tabelas = [
+                'transacoes',
+                'pacientes',
+                'medicamentos',
+                'usuarios',
+                'lotes_medicamentos',  // Necessário para quantidade de medicamentos
+                'movimentacoes'        // Necessário para histórico de movimentações
+            ];
+            break;
+        case 'pacientes':
+            $tabelas = ['pacientes', 'paciente_medicamentos', 'pessoas_autorizadas'];
+            break;
+        case 'medicamentos':
+            $tabelas = ['medicamentos', 'lotes_medicamentos', 'movimentacoes'];
+            break;
+        case 'personalizado':
+            $tabelas = $tabelas_especificas;
+            break;
+        case 'completo':
+        default:
+            $tabelas = $pdo->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+            break;
+    }
+    
+    foreach ($tabelas as $table) {
         $backup .= "DROP TABLE IF EXISTS `$table`;\n";
         
         $createTable = $pdo->query("SHOW CREATE TABLE `$table`")->fetch(PDO::FETCH_ASSOC);
@@ -44,12 +72,25 @@ function gerarBackup($pdo) {
 
 // Processar backup
 if (isset($_POST['backup'])) {
-    $backup = gerarBackup($pdo);
-    $filename = 'backup_' . date('Y-m-d_H-i-s') . '.sql';
+    $tipo_backup = $_POST['tipo_backup'] ?? 'completo';
+    $tabelas_especificas = $_POST['tabelas_especificas'] ?? [];
     
+    $backup = gerarBackup($pdo, $tipo_backup, $tabelas_especificas);
+    $filename = 'backup_' . $tipo_backup . '_' . date('Y-m-d_H-i-s') . '.sql';
+    
+    // Enviar headers para download
     header('Content-Type: application/octet-stream');
     header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Content-Length: ' . strlen($backup));
+    
+    // Limpar qualquer saída anterior
+    ob_clean();
+    flush();
+    
+    // Enviar o conteúdo
     echo $backup;
+    
+    // Encerrar a execução
     exit();
 }
 
@@ -106,8 +147,40 @@ if (isset($_POST['import']) && isset($_FILES['arquivo'])) {
             <!-- Backup do Banco -->
             <div class="card">
                 <h3><i class="fas fa-download"></i> Backup do Banco</h3>
-                <p>Gere um arquivo de backup completo do banco de dados.</p>
+                <p>Gere um arquivo de backup do banco de dados.</p>
                 <form method="POST">
+                    <div class="form-group">
+                        <label for="tipo_backup">Tipo de Backup:</label>
+                        <select id="tipo_backup" name="tipo_backup" onchange="toggleTabelasEspecificas()">
+                            <option value="completo">Backup Completo</option>
+                            <option value="relatorios">Apenas Relatórios (inclui dados de estoque)</option>
+                            <option value="pacientes">Apenas Pacientes</option>
+                            <option value="medicamentos">Apenas Medicamentos</option>
+                            <option value="personalizado">Personalizado</option>
+                        </select>
+                    </div>
+                    
+                    <div class="info-box">
+                        <p><i class="fas fa-info-circle"></i> <strong>Nota:</strong> O backup de relatórios inclui automaticamente as tabelas relacionadas ao estoque para manter a integridade dos dados.</p>
+                    </div>
+                    
+                    <div id="tabelasEspecificas" style="display: none;">
+                        <div class="form-group">
+                            <label>Tabelas para Backup:</label>
+                            <div class="checkbox-group">
+                                <?php
+                                $tabelas = $pdo->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+                                foreach ($tabelas as $tabela) {
+                                    echo "<label class='checkbox-label'>";
+                                    echo "<input type='checkbox' name='tabelas_especificas[]' value='$tabela'>";
+                                    echo htmlspecialchars($tabela);
+                                    echo "</label>";
+                                }
+                                ?>
+                            </div>
+                        </div>
+                    </div>
+                    
                     <button type="submit" name="backup" class="btn-primary">
                         <i class="fas fa-download"></i> Gerar Backup
                     </button>
@@ -353,6 +426,43 @@ if (isset($_POST['import']) && isset($_FILES['arquivo'])) {
         .btn-action:hover {
             background-color: #1976D2;
         }
+
+        .checkbox-group {
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 4px;
+            margin-top: 5px;
+        }
+
+        .checkbox-label {
+            display: block;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .info-box {
+            background-color: #e3f2fd;
+            border-left: 4px solid #2196F3;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: #0d47a1;
+            font-size: 0.9em;
+        }
+
+        .info-box i {
+            margin-right: 5px;
+        }
     </style>
 
     <script>
@@ -376,7 +486,28 @@ if (isset($_POST['import']) && isset($_FILES['arquivo'])) {
             backupBtn.addEventListener('click', function() {
                 document.getElementById('loadingMessage').textContent = 'Por favor, aguarde enquanto o backup está sendo gerado.';
                 document.getElementById('loadingModal').style.display = 'block';
+                
+                // Adicionar timeout para fechar o modal após 5 segundos
+                setTimeout(function() {
+                    document.getElementById('loadingModal').style.display = 'none';
+                }, 5000);
             });
+        }
+
+        // Adicionar evento para fechar o modal quando a página for carregada
+        window.addEventListener('load', function() {
+            document.getElementById('loadingModal').style.display = 'none';
+        });
+
+        // Adicionar evento para fechar o modal quando a página for descarregada
+        window.addEventListener('beforeunload', function() {
+            document.getElementById('loadingModal').style.display = 'none';
+        });
+
+        function toggleTabelasEspecificas() {
+            const tipoBackup = document.getElementById('tipo_backup').value;
+            const tabelasEspecificas = document.getElementById('tabelasEspecificas');
+            tabelasEspecificas.style.display = tipoBackup === 'personalizado' ? 'block' : 'none';
         }
     </script>
 </body>

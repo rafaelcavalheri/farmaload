@@ -1,11 +1,27 @@
 # Farmaload - Notas da Versão
 
-**Versão:** v.1.2025.0406.1935
-**Data:** 04/06/2025
+**Versão:** v.1.2025.0506.0810
+**Data:** 05/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.0506.0810 (05/06/2025)
+### Gerenciamento de Dados
+- Implementado sistema de backup seletivo com opções para:
+  - Backup completo
+  - Apenas relatórios (inclui dados de estoque)
+  - Apenas pacientes
+  - Apenas medicamentos
+  - Backup personalizado (seleção de tabelas específicas)
+- Melhorias na interface de backup:
+  - Adicionada caixa de informação sobre integridade dos dados
+  - Implementada seleção de tabelas específicas para backup personalizado
+  - Corrigido comportamento do modal de carregamento durante download
+- Garantia de integridade dos dados em backups parciais:
+  - Backup de relatórios inclui automaticamente tabelas relacionadas ao estoque
+  - Mantém consistência entre transações e quantidades de medicamentos
 
 ## v.1.2025.0406.1935 (04/06/2025)
  Melhora na geração automatica de CPF na importação, 
