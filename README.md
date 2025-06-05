@@ -16,6 +16,10 @@
   - Otimização do processo de backup
   - Melhor gerenciamento de arquivos grandes
   - Correção de problemas com arquivos de log
+### Melhorias na Página de Relatórios
+- Atualização da interface de relatórios
+- Otimização da geração de relatórios
+- Melhorias na visualização dos dados
 
 ## v.1.2025.0506.1020 (05/06/2025)
 ### Padronização do Favicon
