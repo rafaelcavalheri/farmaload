@@ -117,6 +117,12 @@ if (isset($_POST['restore']) && isset($_FILES['sql_file'])) {
     }
 }
 
+// Função para obter a versão do sistema
+function getSystemVersion() {
+    require_once __DIR__ . '/version.php';
+    return SYSTEM_VERSION;
+}
+
 // Processar importação de dados
 if (isset($_POST['import']) && isset($_FILES['arquivo'])) {
     try {
@@ -244,7 +250,14 @@ if (isset($_POST['import']) && isset($_FILES['arquivo'])) {
                                     ORDER BY data_hora DESC 
                                     LIMIT 1");
                 $ultimaImportacao = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                // Obter versão do sistema
+                $versao_sistema = getSystemVersion();
                 ?>
+                <div class="info-item">
+                    <strong>Versão do Sistema:</strong>
+                    <span><?= htmlspecialchars($versao_sistema) ?></span>
+                </div>
                 <div class="info-item">
                     <strong>Total de Pacientes:</strong>
                     <span><?= number_format($total_pacientes, 0, ',', '.') ?></span>

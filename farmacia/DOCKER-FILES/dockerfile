@@ -63,6 +63,11 @@ COPY ../CONFIG/farmacia.conf /etc/apache2/sites-available/000-default.conf
 # Copiar aplicação
 COPY ../PHP/ /var/www/html/
 
+# Criar arquivo de versão
+RUN echo '<?php define("SYSTEM_VERSION", "v.1.2025.0506.1549"); define("SYSTEM_VERSION_DATE", "05/06/2025"); ?>' > /var/www/html/version.php && \
+    chown www-data:www-data /var/www/html/version.php && \
+    chmod 644 /var/www/html/version.php
+
 # Configurar diretório de logs e permissões
 RUN mkdir -p /var/www/html/LOG && \
     mkdir -p /var/www/html/logs && \
