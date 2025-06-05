@@ -2,3 +2,29 @@
 farmacia/PHP/ldap_settings.php
 /error.log
 *log
+
+# Arquivos de log
+*.log
+error.log
+debug.log
+import_debug.log
+debug_logs/
+logs/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de ambiente
+.env
+.env.*
+
+# Arquivos de IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos temporários
+*.tmp
+*.temp
