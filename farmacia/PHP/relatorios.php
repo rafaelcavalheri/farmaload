@@ -84,19 +84,24 @@ if ($tipo_relatorio === 'dispensas') {
     }
 } else {
     // Relatório de pacientes
-    $sql = "SELECT id, nome, cpf, telefone, validade, renovado FROM pacientes WHERE ativo = 1";
+    $sql = "SELECT p.id, p.nome, p.cpf, p.telefone, 
+                   pm.renovacao as data_renovacao, pm.medicamento_id, m.nome as medicamento_nome
+            FROM pacientes p
+            LEFT JOIN paciente_medicamentos pm ON p.id = pm.paciente_id
+            LEFT JOIN medicamentos m ON pm.medicamento_id = m.id
+            WHERE p.ativo = 1";
     $params = [];
     // Filtro de status
     if (!empty($status_paciente)) {
         if ($status_paciente === 'vencido') {
-            $sql .= " AND validade < CURDATE() AND renovado = 0";
+            $sql .= " AND pm.renovacao < CURDATE()";
         } elseif ($status_paciente === 'a_vencer') {
-            $sql .= " AND validade >= CURDATE() AND validade <= DATE_ADD(CURDATE(), INTERVAL 30 DAY) AND renovado = 0";
+            $sql .= " AND pm.renovacao >= CURDATE() AND pm.renovacao <= DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
         } elseif ($status_paciente === 'renovado') {
-            $sql .= " AND renovado = 1";
+            $sql .= " AND pm.renovacao > CURDATE()";
         }
     }
-    $sql .= " ORDER BY nome";
+    $sql .= " ORDER BY p.nome, m.nome";
     try {
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
@@ -277,7 +282,8 @@ if ($tipo_relatorio === 'dispensas') {
                                 <th>Nome</th>
                                 <th>CPF</th>
                                 <th>Telefone</th>
-                                <th>Validade</th>
+                                <th>Medicamento</th>
+                                <th>Data Renovação</th>
                                 <th>Status</th>
                             </tr>
                         </thead>
@@ -285,28 +291,33 @@ if ($tipo_relatorio === 'dispensas') {
                             <?php foreach ($resultados_pacientes as $pac): ?>
                                 <?php
                                     $hoje = new DateTime();
-                                    $validade = $pac['validade'] ? new DateTime($pac['validade']) : null;
+                                    $data_renovacao = $pac['data_renovacao'] ? new DateTime($pac['data_renovacao']) : null;
                                     $status = '';
-                                    if ($pac['renovado']) {
-                                        $status = 'Renovado';
-                                    } elseif ($validade) {
-                                        if ($validade < $hoje) {
+                                    $cor_status = '';
+                                    
+                                    if ($data_renovacao) {
+                                        if ($data_renovacao < $hoje) {
                                             $status = 'Vencido';
-                                        } elseif ($validade <= (clone $hoje)->modify('+30 days')) {
+                                            $cor_status = '#dc3545'; // Vermelho
+                                        } elseif ($data_renovacao <= (clone $hoje)->modify('+30 days')) {
                                             $status = 'A vencer';
+                                            $cor_status = '#ffc107'; // Amarelo
                                         } else {
                                             $status = 'Válido';
+                                            $cor_status = '#28a745'; // Verde
                                         }
                                     } else {
-                                        $status = 'Sem validade';
+                                        $status = 'Sem renovação';
+                                        $cor_status = '#6c757d'; // Cinza
                                     }
                                 ?>
                                 <tr>
                                     <td><?= htmlspecialchars($pac['nome']) ?></td>
                                     <td><?= htmlspecialchars($pac['cpf']) ?></td>
                                     <td><?= htmlspecialchars($pac['telefone']) ?></td>
-                                    <td><?= $validade ? $validade->format('d/m/Y') : '-' ?></td>
-                                    <td><?= $status ?></td>
+                                    <td><?= htmlspecialchars($pac['medicamento_nome'] ?? '-') ?></td>
+                                    <td><?= $data_renovacao ? $data_renovacao->format('d/m/Y') : '-' ?></td>
+                                    <td style="color: <?= $cor_status ?>; font-weight: bold;"><?= $status ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

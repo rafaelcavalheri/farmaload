@@ -2,6 +2,16 @@
 // Incluir o autoloader do Composer primeiro
 require_once __DIR__ . '/vendor/autoload.php';
 require_once 'config.php';
+
+if (!isset($_SESSION['usuario'])) {
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SESSION['usuario']['perfil'] !== 'admin') {
+    die("Acesso negado! Apenas administradores podem acessar esta página.");
+}
+
 // A função vincularMedicamentoPaciente já está definida no final do arquivo
 
 // Adicionar namespace para PhpSpreadsheet
@@ -1334,6 +1344,14 @@ function gerarCpfTemporario() {
     return '000' . $cpf;
 }
 
+// Verificar se é uma requisição AJAX
+$isAjax = !empty($_SERVER['HTTP_X_REQUESTED_WITH']) && 
+          strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest';
+
+if ($isAjax) {
+    header('Content-Type: application/json');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
     $arquivo = $_FILES['arquivo'];
     $extensao = strtolower(pathinfo($arquivo['name'], PATHINFO_EXTENSION));
@@ -1464,17 +1482,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
             }
         }
         
-        header('Location: medicamentos.php?sucesso=' . urlencode($mensagem));
+        if ($isAjax) {
+            echo json_encode(['success' => true, 'message' => $mensagem]);
+        } else {
+            header('Location: medicamentos.php?sucesso=' . urlencode($mensagem));
+        }
         exit();
 
     } catch (Exception $e) {
         // Registrar erro em um arquivo de log alternativo
         file_put_contents('/tmp/import_error.log', date('Y-m-d H:i:s') . ': ' . $e->getMessage() . "\n", FILE_APPEND);
         
-        header('Location: medicamentos.php?erro=' . urlencode($e->getMessage()));
+        if ($isAjax) {
+            echo json_encode(['success' => false, 'message' => 'Erro ao importar dados: ' . $e->getMessage()]);
+        } else {
+            header('Location: medicamentos.php?erro=' . urlencode($e->getMessage()));
+        }
         exit();
     }
 } else {
-    header('Location: medicamentos.php?erro=' . urlencode('Nenhum arquivo enviado'));
+    if ($isAjax) {
+        echo json_encode(['success' => false, 'message' => 'Nenhum arquivo enviado']);
+    } else {
+        header('Location: medicamentos.php?erro=' . urlencode('Nenhum arquivo enviado'));
+    }
     exit();
 } 

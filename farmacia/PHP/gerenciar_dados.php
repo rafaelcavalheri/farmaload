@@ -467,41 +467,41 @@ if (isset($_POST['import']) && isset($_FILES['arquivo'])) {
     </style>
 
     <script>
+        // Função para mostrar o modal de carregamento
+        function showLoadingModal(message) {
+            document.getElementById('loadingMessage').textContent = message;
+            document.getElementById('loadingModal').style.display = 'block';
+        }
+
+        // Manipulador para o formulário de restauração
         document.getElementById('restoreForm').addEventListener('submit', function(e) {
             if (confirm('ATENÇÃO: Esta ação irá substituir todos os dados atuais. Deseja continuar?')) {
-                document.getElementById('loadingMessage').textContent = 'Por favor, aguarde enquanto o backup está sendo restaurado.';
-                document.getElementById('loadingModal').style.display = 'block';
-            } else {
-                e.preventDefault();
+                showLoadingModal('Por favor, aguarde enquanto o backup está sendo restaurado...');
+                // Permitir que o formulário seja enviado normalmente
+                return true;
             }
+            e.preventDefault();
+            return false;
         });
 
+        // Manipulador para o formulário de importação
         document.getElementById('importForm').addEventListener('submit', function(e) {
-            document.getElementById('loadingMessage').textContent = 'Por favor, aguarde enquanto os dados estão sendo importados.';
-            document.getElementById('loadingModal').style.display = 'block';
+            showLoadingModal('Por favor, aguarde enquanto os dados estão sendo importados...');
+            // Permitir que o formulário seja enviado normalmente
+            return true;
         });
 
-        // Se houver botão de backup, adicionar evento
+        // Manipulador para o botão de backup - sem modal
         var backupBtn = document.querySelector('form button[name="backup"]');
         if (backupBtn) {
             backupBtn.addEventListener('click', function() {
-                document.getElementById('loadingMessage').textContent = 'Por favor, aguarde enquanto o backup está sendo gerado.';
-                document.getElementById('loadingModal').style.display = 'block';
-                
-                // Adicionar timeout para fechar o modal após 5 segundos
-                setTimeout(function() {
-                    document.getElementById('loadingModal').style.display = 'none';
-                }, 5000);
+                // Sem mostrar o modal para backup
+                return true;
             });
         }
 
         // Adicionar evento para fechar o modal quando a página for carregada
         window.addEventListener('load', function() {
-            document.getElementById('loadingModal').style.display = 'none';
-        });
-
-        // Adicionar evento para fechar o modal quando a página for descarregada
-        window.addEventListener('beforeunload', function() {
             document.getElementById('loadingModal').style.display = 'none';
         });
 
