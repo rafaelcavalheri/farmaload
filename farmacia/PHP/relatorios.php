@@ -291,7 +291,16 @@ if ($tipo_relatorio === 'dispensas') {
                             <?php foreach ($resultados_pacientes as $pac): ?>
                                 <?php
                                     $hoje = new DateTime();
-                                    $data_renovacao = $pac['data_renovacao'] ? new DateTime($pac['data_renovacao']) : null;
+                                    $data_renovacao = null;
+                                    if ($pac['data_renovacao']) {
+                                        if (strpos($pac['data_renovacao'], '/') !== false) {
+                                            // Formato brasileiro
+                                            $data_renovacao = DateTime::createFromFormat('d/m/Y', $pac['data_renovacao']);
+                                        } else {
+                                            // Formato ISO
+                                            $data_renovacao = new DateTime($pac['data_renovacao']);
+                                        }
+                                    }
                                     $status = '';
                                     $cor_status = '';
                                     
