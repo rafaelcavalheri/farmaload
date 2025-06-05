@@ -57,6 +57,7 @@ $direcao = $_GET['direcao'] ?? 'ASC';
 <head>
     <meta charset="UTF-8">
     <title>Gerenciar Medicamentos</title>
+    <link rel="icon" type="image/png" href="/images/fav.png">
     <link rel="stylesheet" href="style.css">
     <script>
         document.addEventListener('DOMContentLoaded', function () {

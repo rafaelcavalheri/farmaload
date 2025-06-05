@@ -1,11 +1,28 @@
 # Farmaload - Notas da Versão
 
-**Versão:** v.1.2025.0506.0810
+**Versão:** v.1.2025.0506.1020
 **Data:** 05/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.0506.1020 (05/06/2025)
+### Padronização do Favicon
+- Implementada padronização do favicon em todas as páginas do sistema:
+  - Adicionado favicon em páginas que não possuíam
+  - Corrigido favicon em páginas que usavam formato incorreto
+  - Todas as páginas agora utilizam o arquivo `fav.png` da pasta images
+- Páginas atualizadas:
+  - login.php
+  - medicos.php
+  - medicamentos.php
+  - editar_medico.php
+  - pacientes.php (corrigido de fav.ico para fav.png)
+  - dispensar.php
+  - usuarios.php
+  - relatorios.php
+  - gerenciar_dados.php
 
 ## v.1.2025.0506.0810 (05/06/2025)
 ### Gerenciamento de Dados
