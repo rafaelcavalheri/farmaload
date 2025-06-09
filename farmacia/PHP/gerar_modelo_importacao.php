@@ -2,7 +2,7 @@
 require 'vendor/autoload.php';
 
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Border;
@@ -170,11 +170,11 @@ $sheet3->getColumnDimension('E')->setWidth(15);
 $sheet3->getStyle('A1:E' . ($row-1))->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
 
 // Configurar cabeçalhos HTTP para download
-header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="modelo_importacao.xlsx"');
+header('Content-Type: application/vnd.ms-excel');
+header('Content-Disposition: attachment;filename="modelo_importacao.xls"');
 header('Cache-Control: max-age=0');
 
 // Criar o arquivo Excel
-$writer = new Xlsx($spreadsheet);
+$writer = new Xls($spreadsheet);
 $writer->save('php://output');
 exit; 
