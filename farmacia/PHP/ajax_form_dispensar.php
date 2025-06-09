@@ -8,6 +8,11 @@ if (!$paciente_id) {
     die("ID de paciente inválido");
 }
 
+// Buscar dados do paciente para obter a observação
+$stmt = $pdo->prepare("SELECT observacao FROM pacientes WHERE id = ?");
+$stmt->execute([$paciente_id]);
+$paciente = $stmt->fetch(PDO::FETCH_ASSOC);
+
 // Buscar medicamentos do paciente
 $stmt = $pdo->prepare("
     SELECT 
@@ -32,7 +37,16 @@ $stmt = $pdo->prepare("
 $stmt->execute([$paciente_id]);
 $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($medicamentos as $med): ?>
+// Adicionar campo de observação no início
+?>
+<div class="observacao-box">
+    <div class="observacao-header">
+        <strong>Observações:</strong>
+    </div>
+    <textarea id="observacao" class="observacao-editor" rows="4"><?= htmlspecialchars($paciente['observacao'] ?? '') ?></textarea>
+</div>
+
+<?php foreach ($medicamentos as $med): ?>
     <div class="medicamento-dispensar">
         <h4><?= htmlspecialchars($med['nome']) ?></h4>
         
@@ -76,6 +90,11 @@ foreach ($medicamentos as $med): ?>
 <script>
 function dispensarMedicamento(pmId, pacienteId) {
     const quantidade = document.querySelector(`#quantidade-${pmId}`).value;
+    const observacao = document.querySelector('#observacao').value;
+    
+    // Debug log
+    console.log('Observação a ser enviada:', observacao);
+    
     if (!quantidade || quantidade <= 0) {
         alert('Por favor, informe uma quantidade válida.');
         return;
@@ -85,6 +104,10 @@ function dispensarMedicamento(pmId, pacienteId) {
     formData.append('medicamento_id', pmId);
     formData.append('paciente_id', pacienteId);
     formData.append('quantidade', quantidade);
+    formData.append('observacao', observacao);
+
+    // Debug log
+    console.log('FormData observação:', formData.get('observacao'));
 
     fetch('ajax_dispensar.php', {
         method: 'POST',
@@ -104,3 +127,32 @@ function dispensarMedicamento(pmId, pacienteId) {
     });
 }
 </script>
+
+<style>
+.observacao-box {
+    margin: 15px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 4px;
+}
+.observacao-header {
+    margin-bottom: 10px;
+}
+.observacao-editor {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    font-family: inherit;
+    font-size: inherit;
+    resize: vertical;
+    margin-top: 5px;
+}
+.observacao-editor:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
+}
+</style>

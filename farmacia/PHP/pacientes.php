@@ -341,17 +341,17 @@ $stmt->execute($params);
                         $hoje = new DateTime();
                         
                         if ($ren < $hoje) {
-                            $renAlert = '<span class="badge badge-danger">Atrasado</span>';
+                            $renAlert = '<span class="badge badge-danger">' . $ren->format('d/m/Y') . ' (Atrasada)</span>';
                         } elseif ($ren->format('Y-m') === $hoje->format('Y-m')) {
-                            $renAlert = '<span class="badge badge-warning">Este mês</span>';
+                            $renAlert = '<span class="badge badge-warning">' . $ren->format('d/m/Y') . ' (Este mês)</span>';
                         } else {
-                            $renAlert = '<span class="badge">'. $ren->format('d/m/Y') .'</span>';
+                            $renAlert = '<span class="badge">' . $ren->format('d/m/Y') . '</span>';
                         }
                     } else {
-                        $renAlert = '<span class="badge badge-secondary">Data inválida</span>';
+                        $renAlert = '<span class="badge badge-secondary">Sem data definida</span>';
                     }
                 } else {
-                    $renAlert = '<span class="badge badge-secondary">Não informado</span>';
+                    $renAlert = '<span class="badge badge-secondary">Sem data definida</span>';
                 }
             ?>
             <tr class="<?= !$paciente['ativo'] ? 'inativo' : '' ?>">
@@ -487,6 +487,8 @@ function fecharModalDispensar() {
 
 function dispensarMedicamento(medicamentoId, pacienteId) {
     const quantidade = document.querySelector(`#quantidade-${medicamentoId}`).value;
+    const observacao = document.querySelector('#observacao').value;
+    
     if (!quantidade || quantidade <= 0) {
         alert('Por favor, informe uma quantidade válida.');
         return;
@@ -496,6 +498,7 @@ function dispensarMedicamento(medicamentoId, pacienteId) {
     formData.append('medicamento_id', medicamentoId);
     formData.append('paciente_id', pacienteId);
     formData.append('quantidade', quantidade);
+    formData.append('observacao', observacao);
 
     fetch('ajax_dispensar.php', {
         method: 'POST',

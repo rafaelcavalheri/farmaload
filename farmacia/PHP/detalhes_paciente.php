@@ -53,7 +53,7 @@ try {
                 AND paciente_id = pm.paciente_id
             ), 0) as quantidade_entregue,
             pm.renovado,
-            DATE_FORMAT(pm.renovacao, '%d/%m/%Y') as renovacao_formatada,
+            pm.renovacao,
             med.nome AS medico,
             med.crm_completo
         FROM paciente_medicamentos pm
@@ -104,40 +104,51 @@ try {
             color: #333;
         }
         .medicamento-info {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            margin: 10px 0;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 15px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+            margin-top: 10px;
         }
         .info-item {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 8px;
+            font-size: 0.95em;
         }
         .badge {
-            padding: 5px 10px;
-            border-radius: 4px;
-            font-size: 0.9em;
             display: inline-flex;
             align-items: center;
             gap: 5px;
-            white-space: nowrap;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.9em;
+            font-weight: 500;
         }
-        .badge.renovado {
+        .badge-success {
             background-color: #28a745;
             color: white;
         }
-        .badge.quantidade {
-            background-color: #17a2b8;
-            color: white;
-            transition: background-color 0.3s;
+        .badge-warning {
+            background-color: #ffc107;
+            color: #000;
         }
-        .badge.quantidade:hover {
-            background-color: #138496;
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
+        }
+        .badge-secondary {
+            background-color: #6c757d;
+            color: white;
         }
         .badge i {
-            font-size: 1em;
-            margin-right: 3px;
+            font-size: 0.9em;
         }
         .medico-info {
             font-size: 0.9em;
@@ -146,15 +157,28 @@ try {
             padding-top: 10px;
             border-top: 1px solid #eee;
         }
-        /* Ajuste para telas menores */
         @media (max-width: 768px) {
-            .medicamento-info {
-                gap: 10px;
+            .info-grid {
+                grid-template-columns: 1fr;
             }
-            .badge {
-                font-size: 0.85em;
-                padding: 4px 8px;
-            }
+        }
+        .observacao-box {
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+        }
+        .observacao-box h4 {
+            margin: 0 0 10px 0;
+            color: #495057;
+            font-size: 1.1em;
+        }
+        .observacao-content {
+            white-space: pre-wrap;
+            margin: 0;
+            color: #212529;
+            line-height: 1.5;
         }
     </style>
 </head>
@@ -187,6 +211,12 @@ try {
                     }
                 ?>
             </p>
+            <?php if (!empty($paciente['observacao'])): ?>
+            <div class="observacao-box">
+                <h4><i class="fas fa-sticky-note"></i> Observações:</h4>
+                <p class="observacao-content"><?= nl2br(sanitizar($paciente['observacao'])) ?></p>
+            </div>
+            <?php endif; ?>
         </div>
 
         <div class="medicamentos-atuais">
@@ -198,34 +228,43 @@ try {
                             <span class="medicamento-nome"><?= sanitizar($med['medicamento']) ?></span>
                         </div>
                         <div class="medicamento-info">
-                            <span class="badge quantidade">
-                                <i class="fas fa-pills"></i>
-                                Qtde Recebida: <?= (int)$med['quantidade_recebida'] ?>
-                            </span>
-                            <span class="badge quantidade">
-                                <i class="fas fa-file-medical"></i>
-                                Qtde Solicitada: <?= (int)$med['quantidade_solicitada'] ?>
-                            </span>
-                            <span class="badge quantidade">
-                                <i class="fas fa-check"></i>
-                                Qtde Entregue: <?= (int)$med['quantidade_entregue'] ?>
-                            </span>
-                            <span class="badge quantidade">
-                                <i class="fas fa-box-open"></i>
-                                Qtde Disponível: <?= max(0, (int)$med['quantidade_solicitada'] - (int)$med['quantidade_entregue']) ?>
-                            </span>
-                            <?php if ((int)$med['renovado'] === 1): ?>
-                                <span class="badge renovado">
-                                    <i class="fas fa-sync-alt"></i>
-                                    Renovação em Andamento
-                                </span>
-                            <?php endif; ?>
-                            <?php if (!empty($med['renovacao_formatada'])): ?>
+                            <h4><?= sanitizar($med['medicamento']) ?></h4>
+                            <div class="info-grid">
                                 <span class="info-item">
-                                    <i class="fas fa-calendar"></i>
-                                    Renovação: <?= htmlspecialchars($med['renovacao_formatada']) ?>
+                                    <i class="fas fa-pills"></i>
+                                    Quantidade: <?= sanitizar($med['quantidade_recebida']) ?>
                                 </span>
-                            <?php endif; ?>
+                                <span class="info-item">
+                                    <i class="fas fa-box"></i>
+                                    Entregue: <?= sanitizar($med['quantidade_entregue']) ?>
+                                </span>
+                                <?php
+                                $hoje = new DateTime();
+                                $statusRenovacao = '';
+                                
+                                if ($med['renovado']) {
+                                    $statusRenovacao = '<span class="badge badge-success"><i class="fas fa-check"></i> Renovado</span>';
+                                } elseif (!empty($med['renovacao'])) {
+                                    $dataRenovacao = DateTime::createFromFormat('Y-m-d', $med['renovacao']);
+                                    if (!$dataRenovacao) {
+                                        $dataRenovacao = new DateTime($med['renovacao']);
+                                    }
+                                    
+                                    if ($dataRenovacao < $hoje) {
+                                        $statusRenovacao = '<span class="badge badge-danger"><i class="fas fa-exclamation-triangle"></i> ' . $dataRenovacao->format('d/m/Y') . ' (Atrasada)</span>';
+                                    } elseif ($dataRenovacao->format('Y-m') === $hoje->format('Y-m')) {
+                                        $statusRenovacao = '<span class="badge badge-warning"><i class="fas fa-clock"></i> ' . $dataRenovacao->format('d/m/Y') . ' (Este mês)</span>';
+                                    } else {
+                                        $statusRenovacao = '<span class="badge"><i class="fas fa-calendar"></i> ' . $dataRenovacao->format('d/m/Y') . '</span>';
+                                    }
+                                } else {
+                                    $statusRenovacao = '<span class="badge badge-secondary"><i class="fas fa-question"></i> Sem data definida</span>';
+                                }
+                                ?>
+                                <span class="info-item">
+                                    <?= $statusRenovacao ?>
+                                </span>
+                            </div>
                         </div>
                         <?php if (!empty($med['medico'])): ?>
                             <div class="medico-info">

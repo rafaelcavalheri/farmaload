@@ -204,7 +204,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
 
             $pdo->commit();
-            header('Location: pacientes.php?sucesso=Paciente atualizado com sucesso');
+            header('Location: editar_paciente.php?id=' . $pacienteId . '&sucesso=Paciente+atualizado+com+sucesso');
             exit();
         } catch (Exception $e) {
             $pdo->rollBack();
@@ -254,6 +254,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <?php if (!empty($erros['geral'])): ?>
         <div class="alert erro"><i class="fas fa-exclamation-circle"></i> <?= htmlspecialchars($erros['geral']) ?></div>
+    <?php endif; ?>
+
+    <?php if (isset($_GET['sucesso'])): ?>
+        <div class="alert sucesso">
+            <i class="fas fa-check-circle"></i> <?= htmlspecialchars($_GET['sucesso']) ?>
+        </div>
     <?php endif; ?>
 
     <form method="POST" action="" id="form-paciente">

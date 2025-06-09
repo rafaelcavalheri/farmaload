@@ -1,11 +1,21 @@
 # Farmaload - Notas da Versão
 
-**Versão:** v.1.2025.0506.1700
-**Data:** 05/06/2025
+**Versão:** v.1.2025.0906.1500
+**Data:** 09/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.0906.1500 (09/06/2025)
+### Data de renovação por medicamentos
+- Data de renovação visível por medicamento na pagina detalhes do paciente
+### Observações
+- Campo observações agora disponível em detalhes do paciente e ao dispensar pela pagina pacientes
+### Acesso à Página de Relatórios
+- Expandido o acesso à página de relatórios para incluir o perfil de operador
+- Atualizado o menu de navegação para mostrar o link de relatórios para todos os usuários
+- Mantida a restrição de outras funcionalidades administrativas apenas para administradores
 
 ## v.1.2025.0506.1700 (05/06/2025)
 ### Correções

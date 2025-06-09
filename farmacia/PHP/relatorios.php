@@ -1,7 +1,7 @@
 <?php
 include 'config.php';
 
-verificarAutenticacao(['admin']);
+verificarAutenticacao(['admin', 'operador']);
 
 // Validação das datas
 $data_inicio = new DateTime();
