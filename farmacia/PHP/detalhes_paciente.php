@@ -245,9 +245,24 @@ try {
                                 if ($med['renovado']) {
                                     $statusRenovacao = '<span class="badge badge-success"><i class="fas fa-check"></i> Renovado</span>';
                                 } elseif (!empty($med['renovacao'])) {
-                                    $dataRenovacao = DateTime::createFromFormat('Y-m-d', $med['renovacao']);
+                                    // Try to parse the date in different formats
+                                    $dataRenovacao = null;
+                                    if (strpos($med['renovacao'], '/') !== false) {
+                                        // Brazilian format (DD/MM/YYYY)
+                                        $dataRenovacao = DateTime::createFromFormat('d/m/Y', $med['renovacao']);
+                                    } else {
+                                        // ISO format (YYYY-MM-DD)
+                                        $dataRenovacao = DateTime::createFromFormat('Y-m-d', $med['renovacao']);
+                                    }
+                                    
                                     if (!$dataRenovacao) {
-                                        $dataRenovacao = new DateTime($med['renovacao']);
+                                        // If both formats fail, try direct DateTime constructor
+                                        try {
+                                            $dataRenovacao = new DateTime($med['renovacao']);
+                                        } catch (Exception $e) {
+                                            $statusRenovacao = '<span class="badge badge-secondary"><i class="fas fa-question"></i> Data inválida</span>';
+                                            continue;
+                                        }
                                     }
                                     
                                     if ($dataRenovacao < $hoje) {
