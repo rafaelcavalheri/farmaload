@@ -15,10 +15,6 @@ logs/
 .DS_Store
 Thumbs.db
 
-# Arquivos de ambiente
-.env
-.env.*
-
 # Arquivos de IDE/Editor
 .vscode/
 .idea/
