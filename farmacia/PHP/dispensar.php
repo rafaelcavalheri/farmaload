@@ -276,7 +276,7 @@ if (isset($_POST['atualizar_observacao'])) {
     <meta charset="UTF-8">
     <title>Dispensa de Medicamentos</title>
     <link rel="icon" type="image/png" href="/images/fav.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         .search-container {

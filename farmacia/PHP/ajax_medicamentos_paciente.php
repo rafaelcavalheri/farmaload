@@ -72,7 +72,12 @@ try {
 
         // Adicionar informação da próxima renovação
         if (!empty($med['proxima_renovacao'])) {
-            $dataRenovacao = new DateTime($med['proxima_renovacao']);
+            // Converter data do formato brasileiro para ISO
+            $dataRenovacao = DateTime::createFromFormat('d/m/Y', $med['proxima_renovacao']);
+            if (!$dataRenovacao) {
+                // Se falhar, tenta converter do formato ISO
+                $dataRenovacao = new DateTime($med['proxima_renovacao']);
+            }
             $hoje = new DateTime();
             
             if ($dataRenovacao < $hoje) {

@@ -58,7 +58,7 @@ $direcao = $_GET['direcao'] ?? 'ASC';
     <meta charset="UTF-8">
     <title>Gerenciar Medicamentos</title>
     <link rel="icon" type="image/png" href="/images/fav.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/style.css">
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             const hoje = new Date();

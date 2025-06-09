@@ -116,7 +116,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajustar_estoque'])) {
 <head>
     <meta charset="UTF-8">
     <title>Editar Medicamento</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body class="editar-medicamento">
 <?php include 'header.php'; ?>

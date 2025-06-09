@@ -616,22 +616,144 @@ th {
 
 /* Welcome Text */
 .welcome-text {
-  text-align: center;
-  margin-bottom: 2rem;
+  text-align: center !important;
+  margin: 0 auto 2rem auto;
+  max-width: 1000px;
+  padding: 1.5rem 1rem 1rem 1rem;
+  word-break: break-word;
+  line-height: 1.4;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+}
+
+.welcome-text h2, .welcome-text p {
+  text-align: center !important;
 }
 
 .welcome-text h2 {
-  color: var(--primary-color);
   font-size: 1.25rem;
-  margin-bottom: 1rem;
+  font-weight: 700;
+  margin-bottom: 1.1rem;
+  color: #2c3e50;
 }
 
 .welcome-text p {
-  color: var(--secondary-color);
-  font-size: 0.95rem;
+  font-size: 1.05rem;
+  margin-bottom: 0.7rem;
+  color: #444;
+}
+
+.main-content {
+  text-align: center !important;
+}
+
+/* Estilos centralizados da página de edição de medicamento */
+.editar-medicamento {
+  background: #f6f8fa;
+  min-height: 100vh;
+}
+
+.editar-medicamento .edit-card {
+  background: #fff;
   max-width: 600px;
+  margin: 40px auto 0 auto;
+  padding: 32px 28px 24px 28px;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.08);
+}
+
+.editar-medicamento .edit-card h2 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #2c3e50;
+  font-size: 1.7rem;
+  letter-spacing: 1px;
+}
+
+.editar-medicamento .form-group {
+  margin-bottom: 18px;
+}
+
+.editar-medicamento .form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #34495e;
+  font-weight: 500;
+}
+
+.editar-medicamento .form-group input,
+.editar-medicamento .form-group select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 5px;
+  font-size: 1rem;
+  background: #f9fafb;
+  transition: border 0.2s;
+}
+
+.editar-medicamento .form-group input:focus,
+.editar-medicamento .form-group select:focus {
+  border-color: #1976d2;
+  outline: none;
+  background: #fff;
+}
+
+.editar-medicamento .form-actions {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 22px;
+}
+
+.editar-medicamento .btn-save {
+  background: #1976d2;
+  color: #fff;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.editar-medicamento .btn-save:hover {
+  background: #125ea2;
+}
+
+.editar-medicamento .btn-cancel {
+  background: #e0e0e0;
+  color: #333;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 5px;
+  font-size: 1rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: background 0.2s;
+}
+
+.editar-medicamento .btn-cancel:hover {
+  background: #bdbdbd;
+}
+
+.editar-medicamento .erro {
+  background: #ffebee;
+  color: #c62828;
+  border: 1px solid #ffcdd2;
+  padding: 10px 14px;
+  border-radius: 5px;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+.editar-medicamento #nome {
+  max-width: 600px;
+  min-width: 250px;
+  width: 100%;
   margin: 0 auto;
-  line-height: 1.5;
+  display: block;
 }
 
 /* Responsive adjustments for login */

@@ -118,7 +118,7 @@ if ($tipo_relatorio === 'dispensas') {
     <title>Relatórios</title>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="/images/fav.png">
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="/css/style.css">
     
 </head>
 <body>
