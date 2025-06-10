@@ -7,7 +7,7 @@ verificarAutenticacao(['admin', 'operador']);
 $data_inicio = new DateTime();
 $data_fim = new DateTime();
 try {
-    $data_inicio = new DateTime($_GET['data_inicio'] ?? 'first day of this month');
+    $data_inicio = new DateTime($_GET['data_inicio'] ?? 'first day of january this year');
     $data_fim = new DateTime($_GET['data_fim'] ?? 'last day of this month');
 } catch (Exception $e) {
     $_SESSION['erro'] = "Formato de data inválido";
@@ -250,7 +250,15 @@ if ($tipo_relatorio === 'dispensas') {
                                     <td><?= htmlspecialchars($dispensa['paciente_nome']) ?></td>
                                     <td><?= htmlspecialchars($dispensa['paciente_cpf']) ?></td>
                                     <td><?= htmlspecialchars($dispensa['paciente_telefone']) ?></td>
-                                    <td><?= htmlspecialchars($dispensa['observacoes'] ?? '') ?></td>
+                                    <td class="observacoes-cell">
+                                        <input type="text" class="observacoes-content" value="<?= htmlspecialchars(trim(preg_replace('/\s+/', ' ', $dispensa['observacoes'] ?? ''))) ?>" readonly>
+                                        <?php 
+                                            $obs = $dispensa['observacoes'] ?? '';
+                                            if (!empty($obs)):
+                                        ?>
+                                            <button class="btn-ver-mais" onclick="mostrarObservacoes(this)">Ver mais</button>
+                                        <?php endif; ?>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -374,37 +382,78 @@ if ($tipo_relatorio === 'dispensas') {
         }
 
         /* Estilos para a coluna de observações */
-        table td:last-child {
+        .observacoes-cell {
             max-width: 300px;
             min-width: 200px;
-            white-space: pre-wrap;
-            overflow-x: auto;
             padding: 8px;
+            position: relative;
         }
 
-        /* Estiliza a barra de rolagem */
-        table td:last-child::-webkit-scrollbar {
-            height: 8px;
+        .observacoes-cell .observacoes-content {
+            font-size: 12px;
         }
 
-        table td:last-child::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 4px;
+        .observacoes-content {
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            outline: none;
         }
 
-        table td:last-child::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 4px;
+        .btn-ver-mais {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            padding: 2px 5px;
+            font-size: 0.9em;
+            margin-top: 5px;
         }
 
-        table td:last-child::-webkit-scrollbar-thumb:hover {
-            background: #555;
+        .btn-ver-mais:hover {
+            text-decoration: underline;
         }
 
-        /* Garante que o texto quebre em palavras longas */
-        table td:last-child {
-            word-wrap: break-word;
-            word-break: break-word;
+        /* Modal de observações */
+        .modal-observacoes {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            width: 50%;
+            max-width: 600px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .modal-content .observacoes-content {
+            text-align: left;
+            white-space: pre-wrap;
+            margin-top: 10px;
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .close-modal:hover {
+            color: #000;
         }
 
         /* Ajusta o tamanho das outras colunas */
@@ -418,7 +467,40 @@ if ($tipo_relatorio === 'dispensas') {
         table th:nth-child(5) { width: 200px; } /* Paciente */
         table th:nth-child(6) { width: 120px; } /* CPF */
         table th:nth-child(7) { width: 120px; } /* Telefone */
-        /* A última coluna (Observações) já está configurada acima */
     </style>
+
+    <!-- Modal para observações -->
+    <div id="modalObservacoes" class="modal-observacoes">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal()">&times;</span>
+            <h3>Observações</h3>
+            <div class="observacoes-content"></div>
+        </div>
+    </div>
+
+    <script>
+        function mostrarObservacoes(button) {
+            const cell = button.closest('.observacoes-cell');
+            let content = cell.querySelector('.observacoes-content').value || '';
+            content = content.replace(/^\s+/, ''); // Remove espaços extras no início
+            const modal = document.getElementById('modalObservacoes');
+            const modalContent = modal.querySelector('.observacoes-content');
+            modalContent.textContent = content;
+            modal.style.display = 'block';
+        }
+
+        function fecharModal() {
+            const modal = document.getElementById('modalObservacoes');
+            modal.style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora dele
+        window.onclick = function(event) {
+            const modal = document.getElementById('modalObservacoes');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
 </body>
 </html>

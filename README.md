@@ -1,11 +1,16 @@
 # Farmaload - Notas da Versão
 
-**Versão:** v.1.2025.0906.1500
-**Data:** 09/06/2025
+**Versão:** v.1.2025.1006.0850
+**Data:** 10/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.1006.0850 (10/06/2025)
+### Melhorias de Visualização
+- Adicionado botão "Ver mais" no campo observações da página de relatórios para evitar que textos longos estourem o tamanho da linha, 
+melhorando a experiência visual e a organização da tabela.
 
 ## v.1.2025.0906.1500 (09/06/2025)
 ### Data de renovação por medicamentos
