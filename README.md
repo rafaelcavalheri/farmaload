@@ -1,7 +1,7 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-# Farmaload - Notas da Versão
+## Farmaload - Notas da Versão
 
 **Versão:** v.1.2025.1006.0850
 **Data:** 10/06/2025
