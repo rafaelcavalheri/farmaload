@@ -132,13 +132,13 @@ if ($tipo_relatorio === 'dispensas') {
                 <div class="form-row">
                     <div class="form-group">
                         <label for="tipo_relatorio">Tipo de Relatório:</label>
-                        <select id="tipo_relatorio" name="tipo_relatorio" onchange="this.form.submit()">
+                        <select id="tipo_relatorio" name="tipo_relatorio" onchange="toggleDateFields(this.value)">
                             <option value="dispensas" <?= $tipo_relatorio === 'dispensas' ? 'selected' : '' ?>>Dispensas de Medicamentos</option>
                             <option value="pacientes" <?= $tipo_relatorio === 'pacientes' ? 'selected' : '' ?>>Situação dos Pacientes</option>
                         </select>
                     </div>
                 </div>
-                <div class="form-row" id="filtrosDatas">
+                <div class="form-row" id="filtrosDatas" style="display: <?= $tipo_relatorio === 'pacientes' ? 'none' : 'flex' ?>;">
                     <div class="form-group">
                         <label for="data_inicio">Data Início:</label>
                         <input type="date" id="data_inicio" name="data_inicio" 
@@ -407,27 +407,46 @@ if ($tipo_relatorio === 'dispensas') {
         /* Ajusta o tamanho das outras colunas */
         /* Removido para permitir que o CSS global controle a largura e quebra de linha */
         .btn-remover-filtro {
-            background: #e74c3c;
-            color: #fff;
-            border: none;
-            border-radius: 50%;
-            width: 28px;
-            height: 28px;
-            font-size: 1.2em;
-            margin-left: 10px;
+            background: #fff;
+            color: #495057;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 0.85em;
+            margin-left: 8px;
             cursor: pointer;
             align-self: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-weight: 500;
         }
         .btn-remover-filtro:hover {
-            background: #c0392b;
+            background: #f8f9fa;
+            color: #212529;
+            border-color: #adb5bd;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
-        .menu-adicionar-filtro {
-            min-width: 180px;
+        .btn-remover-filtro::before {
+            content: "×";
+            font-size: 1.1em;
+            font-weight: 600;
+            line-height: 1;
         }
         .filtro-extra-row {
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-bottom: 8px;
+            padding: 8px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+        .menu-adicionar-filtro {
+            min-width: 180px;
         }
     </style>
 
@@ -464,49 +483,76 @@ if ($tipo_relatorio === 'dispensas') {
             }
         }
 
+        function toggleDateFields(tipoRelatorio) {
+            const filtrosDatas = document.getElementById('filtrosDatas');
+            filtrosDatas.style.display = tipoRelatorio === 'pacientes' ? 'none' : 'flex';
+            
+            // Limpar filtros ativos ao mudar o tipo de relatório
+            filtrosAtivos = [];
+            renderFiltrosExtras();
+            
+            // Submit the form to apply the default filter
+            document.getElementById('filtrosForm').submit();
+        }
+
         // Filtros dinâmicos
-        const filtrosDisponiveis = [
-            { id: 'medicamento_id', label: 'Medicamento', html: `
-                <select id="medicamento_id" name="medicamento_id">
-                    <option value="">Todos</option>
-                    <?php foreach ($medicamentos as $med): ?>
-                        <option value="<?= $med['id'] ?>" <?= $med['id'] == $medicamento_id ? 'selected' : '' ?>><?= htmlspecialchars($med['nome']) ?></option>
-                    <?php endforeach; ?>
-                </select>
-            ` },
-            { id: 'operador_id', label: 'Usuário', html: `
-                <select id="operador_id" name="operador_id">
-                    <option value="">Todos</option>
-                    <?php foreach ($operadores as $op): ?>
-                        <option value="<?= $op['id'] ?>" <?= $op['id'] == $operador_id ? 'selected' : '' ?>><?= htmlspecialchars($op['nome']) ?> (<?= ucfirst($op['perfil']) ?>)</option>
-                    <?php endforeach; ?>
-                </select>
-            ` },
-            { id: 'paciente_id', label: 'Paciente', html: `
-                <select id="paciente_id" name="paciente_id">
-                    <option value="">Todos</option>
-                    <?php foreach ($pacientes as $pac): ?>
-                        <option value="<?= $pac['id'] ?>" <?= $pac['id'] == $paciente_id ? 'selected' : '' ?>><?= htmlspecialchars($pac['nome']) ?> (<?= formatarCPF($pac['cpf']) ?>)</option>
-                    <?php endforeach; ?>
-                </select>
-            ` },
-            { id: 'status_paciente', label: 'Status', html: `
-                <select id="status_paciente" name="status_paciente">
-                    <option value="">Todos</option>
-                    <option value="vencido" <?= $status_paciente === 'vencido' ? 'selected' : '' ?>>Vencido</option>
-                    <option value="a_vencer" <?= $status_paciente === 'a_vencer' ? 'selected' : '' ?>>A vencer (30 dias)</option>
-                    <option value="renovado" <?= $status_paciente === 'renovado' ? 'selected' : '' ?>>Renovado</option>
-                </select>
-            ` }
-        ];
+        const filtrosDisponiveis = {
+            dispensas: [
+                { id: 'medicamento_id', label: 'Medicamento', html: `
+                    <select id="medicamento_id" name="medicamento_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($medicamentos as $med): ?>
+                            <option value="<?= $med['id'] ?>" <?= $med['id'] == $medicamento_id ? 'selected' : '' ?>><?= htmlspecialchars($med['nome']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                ` },
+                { id: 'operador_id', label: 'Usuário', html: `
+                    <select id="operador_id" name="operador_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($operadores as $op): ?>
+                            <option value="<?= $op['id'] ?>" <?= $op['id'] == $operador_id ? 'selected' : '' ?>><?= htmlspecialchars($op['nome']) ?> (<?= ucfirst($op['perfil']) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
+                ` },
+                { id: 'paciente_id', label: 'Paciente', html: `
+                    <select id="paciente_id" name="paciente_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($pacientes as $pac): ?>
+                            <option value="<?= $pac['id'] ?>" <?= $pac['id'] == $paciente_id ? 'selected' : '' ?>><?= htmlspecialchars($pac['nome']) ?> (<?= formatarCPF($pac['cpf']) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
+                ` }
+            ],
+            pacientes: [
+                { id: 'status_paciente', label: 'Status', html: `
+                    <select id="status_paciente" name="status_paciente">
+                        <option value="">Todos</option>
+                        <option value="vencido" <?= $status_paciente === 'vencido' ? 'selected' : '' ?>>Vencido</option>
+                        <option value="a_vencer" <?= $status_paciente === 'a_vencer' ? 'selected' : '' ?>>A vencer (30 dias)</option>
+                        <option value="renovado" <?= $status_paciente === 'renovado' ? 'selected' : '' ?>>Renovado</option>
+                    </select>
+                ` },
+                { id: 'paciente_id', label: 'Paciente', html: `
+                    <select id="paciente_id" name="paciente_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($pacientes as $pac): ?>
+                            <option value="<?= $pac['id'] ?>" <?= $pac['id'] == $paciente_id ? 'selected' : '' ?>><?= htmlspecialchars($pac['nome']) ?> (<?= formatarCPF($pac['cpf']) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
+                ` }
+            ]
+        };
 
         let filtrosAtivos = [];
 
         function renderFiltrosExtras() {
             const container = document.getElementById('filtrosExtras');
             container.innerHTML = '';
+            const tipoRelatorio = document.getElementById('tipo_relatorio').value;
+            const filtrosDisponiveisParaTipo = filtrosDisponiveis[tipoRelatorio];
+            
             filtrosAtivos.forEach(filtroId => {
-                const filtro = filtrosDisponiveis.find(f => f.id === filtroId);
+                const filtro = filtrosDisponiveisParaTipo.find(f => f.id === filtroId);
                 if (filtro) {
                     const div = document.createElement('div');
                     div.className = 'form-row filtro-extra-row';
@@ -528,24 +574,27 @@ if ($tipo_relatorio === 'dispensas') {
         }
 
         document.getElementById('btnAdicionarFiltro').onclick = function() {
-            // Monta menu de seleção de filtro
-            const opcoes = filtrosDisponiveis.filter(f => !filtrosAtivos.includes(f.id));
+            const tipoRelatorio = document.getElementById('tipo_relatorio').value;
+            const opcoes = filtrosDisponiveis[tipoRelatorio].filter(f => !filtrosAtivos.includes(f.id));
             if (opcoes.length === 0) return;
+            
             let menu = document.createElement('div');
             menu.className = 'menu-adicionar-filtro';
             menu.style.position = 'absolute';
             menu.style.background = '#fff';
-            menu.style.border = '1px solid #ccc';
+            menu.style.border = '1px solid #ced4da';
             menu.style.zIndex = 1001;
             menu.style.padding = '8px 0';
             menu.style.borderRadius = '6px';
-            menu.style.boxShadow = '0 2px 8px rgba(0,0,0,0.08)';
+            menu.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
+            
             opcoes.forEach(filtro => {
                 let item = document.createElement('div');
                 item.textContent = filtro.label;
-                item.style.padding = '6px 18px';
+                item.style.padding = '8px 16px';
                 item.style.cursor = 'pointer';
-                item.onmouseover = () => item.style.background = '#f1f3f5';
+                item.style.transition = 'background-color 0.15s ease';
+                item.onmouseover = () => item.style.background = '#f8f9fa';
                 item.onmouseout = () => item.style.background = '';
                 item.onclick = () => {
                     filtrosAtivos.push(filtro.id);
@@ -554,16 +603,16 @@ if ($tipo_relatorio === 'dispensas') {
                 };
                 menu.appendChild(item);
             });
-            // Remove menu antigo se existir
+
             let oldMenu = document.querySelector('.menu-adicionar-filtro');
             if (oldMenu) document.body.removeChild(oldMenu);
-            // Posiciona menu abaixo do botão
+
             const btn = document.getElementById('btnAdicionarFiltro');
             const rect = btn.getBoundingClientRect();
             menu.style.left = rect.left + 'px';
             menu.style.top = (rect.bottom + window.scrollY) + 'px';
             document.body.appendChild(menu);
-            // Fecha menu ao clicar fora
+
             setTimeout(() => {
                 document.addEventListener('click', function handler(e) {
                     if (!menu.contains(e.target) && e.target !== btn) {
@@ -576,13 +625,16 @@ if ($tipo_relatorio === 'dispensas') {
 
         // Se algum filtro já veio preenchido via GET, adiciona automaticamente
         window.onload = function() {
-            <?php if (!empty($medicamento_id)): ?>filtrosAtivos.push('medicamento_id');<?php endif; ?>
-            <?php if (!empty($operador_id)): ?>filtrosAtivos.push('operador_id');<?php endif; ?>
-            <?php if (!empty($paciente_id)): ?>filtrosAtivos.push('paciente_id');<?php endif; ?>
-            <?php if (!empty($status_paciente)): ?>filtrosAtivos.push('status_paciente');<?php endif; ?>
-            <?php if ($tipo_relatorio === 'pacientes'): ?>
-                if (!filtrosAtivos.includes('status_paciente')) filtrosAtivos.push('status_paciente');
-            <?php endif; ?>
+            const tipoRelatorio = document.getElementById('tipo_relatorio').value;
+            const filtrosDisponiveisParaTipo = filtrosDisponiveis[tipoRelatorio];
+            
+            filtrosDisponiveisParaTipo.forEach(filtro => {
+                const valor = new URLSearchParams(window.location.search).get(filtro.id);
+                if (valor) {
+                    filtrosAtivos.push(filtro.id);
+                }
+            });
+            
             renderFiltrosExtras();
         };
     </script>

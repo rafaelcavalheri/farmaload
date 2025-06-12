@@ -11,6 +11,7 @@
 ## v.1.2025.1206.1648 (12/06/2025)
 ### Correções e Melhorias
 - Adicionado opção de extorno de medicamentos
+- Melhorias na visualização de relatórios e filtros
 
 
 ## v.1.2025.1206.1500 (12/06/2025)
