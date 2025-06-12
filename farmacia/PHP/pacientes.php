@@ -67,6 +67,216 @@ $stmt->execute($params);
     <link rel="icon" type="image/png" href="/images/fav.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <link rel="stylesheet" href="/css/style.css" />
+    <script>
+        function dispensarMedicamento(medicamentoId, pacienteId) {
+            const quantidade = document.querySelector(`#quantidade-${medicamentoId}`).value;
+            const observacao = document.querySelector('#observacao').value;
+            
+            if (!quantidade || quantidade <= 0) {
+                alert('Por favor, informe uma quantidade válida.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('medicamento_id', medicamentoId);
+            formData.append('paciente_id', pacienteId);
+            formData.append('quantidade', quantidade);
+            formData.append('observacao', observacao);
+
+            fetch('ajax_dispensar.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Medicamento dispensado com sucesso!');
+                    location.reload();
+                } else {
+                    alert('Erro: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Erro ao dispensar medicamento: ' + error.message);
+            });
+        }
+
+        function dispensarVariosMedicamentos(pacienteId) {
+            const observacao = document.querySelector('#observacao').value;
+            const medicamentos = document.querySelectorAll('.medicamento-dispensar');
+            const medicamentosParaDispensar = [];
+
+            console.log('Iniciando coleta de medicamentos...');
+            console.log('Total de medicamentos encontrados:', medicamentos.length);
+
+            medicamentos.forEach((med, index) => {
+                const input = med.querySelector('.quantidade-input');
+                const quantidade = parseInt(input.value);
+                console.log(`Medicamento ${index + 1}:`, {
+                    inputId: input.id,
+                    quantidade: quantidade
+                });
+
+                if (quantidade > 0) {
+                    const pmId = input.id.replace('quantidade-', '');
+                    console.log(`Adicionando medicamento ${index + 1} para dispensação:`, {
+                        pmId: pmId,
+                        quantidade: quantidade
+                    });
+                    
+                    medicamentosParaDispensar.push({
+                        medicamento_id: pmId,
+                        quantidade: quantidade
+                    });
+                }
+            });
+
+            console.log('Medicamentos para dispensar:', medicamentosParaDispensar);
+
+            if (medicamentosParaDispensar.length === 0) {
+                alert('Por favor, selecione pelo menos um medicamento para dispensar.');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('paciente_id', pacienteId);
+            formData.append('observacao', observacao);
+            formData.append('medicamentos', JSON.stringify(medicamentosParaDispensar));
+
+            console.log('Enviando dados para o servidor:', {
+                paciente_id: pacienteId,
+                observacao: observacao,
+                medicamentos: medicamentosParaDispensar
+            });
+
+            fetch('ajax_dispensar_varios.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Resposta do servidor:', data);
+                if (data.success) {
+                    alert('Medicamentos dispensados com sucesso!');
+                    location.reload();
+                } else {
+                    alert('Erro: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Erro na requisição:', error);
+                alert('Erro ao dispensar medicamentos: ' + error.message);
+            });
+        }
+
+        function abrirModalDispensar(pacienteId, pacienteNome) {
+            document.getElementById('modalDispensar').style.display = 'block';
+            document.getElementById('pacienteNome').textContent = 'Paciente: ' + pacienteNome;
+            
+            // Carregar medicamentos do paciente
+            fetch(`ajax_form_dispensar.php?paciente_id=${pacienteId}`)
+                .then(response => response.text())
+                .then(html => {
+                    document.getElementById('medicamentosDispensar').innerHTML = html;
+                    
+                    // Adicionar eventos aos inputs de quantidade
+                    document.querySelectorAll('.quantidade-input').forEach(input => {
+                        input.addEventListener('change', function() {
+                            const max = parseInt(this.getAttribute('max'));
+                            const value = parseInt(this.value);
+                            if (value > max) {
+                                this.value = max;
+                            } else if (value < 0) {
+                                this.value = 0;
+                            }
+                        });
+                    });
+                })
+                .catch(error => {
+                    document.getElementById('medicamentosDispensar').innerHTML = 
+                        `<div class='alert erro'>Erro ao carregar medicamentos: ${error.message}</div>`;
+                });
+        }
+
+        function fecharModalDispensar() {
+            document.getElementById('modalDispensar').style.display = 'none';
+            document.getElementById('medicamentosDispensar').innerHTML = '';
+        }
+
+        // Fechar modal ao clicar fora
+        window.onclick = function(event) {
+            const modal = document.getElementById('modalDispensar');
+            if (event.target == modal) {
+                fecharModalDispensar();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Função para ordenar a tabela
+            function ordenarTabela(coluna) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const ordemAtual = urlParams.get('ordem') || 'nome';
+                const direcaoAtual = urlParams.get('direcao') || 'ASC';
+                
+                // Alternar direção se clicar na mesma coluna
+                const novaDirecao = (ordemAtual === coluna && direcaoAtual === 'ASC') ? 'DESC' : 'ASC';
+                
+                // Atualizar parâmetros da URL
+                urlParams.set('ordem', coluna);
+                urlParams.set('direcao', novaDirecao);
+                
+                // Manter o parâmetro de busca se existir
+                const busca = urlParams.get('busca');
+                if (busca) {
+                    urlParams.set('busca', busca);
+                }
+                
+                // Redirecionar com os novos parâmetros
+                window.location.href = window.location.pathname + '?' + urlParams.toString();
+            }
+
+            // Adicionar eventos de clique nos cabeçalhos
+            document.querySelectorAll('th.sortable').forEach(th => {
+                th.addEventListener('click', () => {
+                    ordenarTabela(th.dataset.ordem);
+                });
+            });
+
+            // Marcar coluna atual como ordenada
+            const urlParams = new URLSearchParams(window.location.search);
+            const ordemAtual = urlParams.get('ordem') || 'nome';
+            const direcaoAtual = urlParams.get('direcao') || 'ASC';
+            
+            const thAtual = document.querySelector(`th[data-ordem="${ordemAtual}"]`);
+            if (thAtual) {
+                thAtual.classList.add(direcaoAtual.toLowerCase());
+            }
+
+            // Adicionar evento de clique para o botão "Ver"
+            document.querySelectorAll('.show-medicamentos').forEach(button => {
+                button.addEventListener('click', function() {
+                    const pacienteId = this.getAttribute('data-paciente');
+                    const medicamentosDiv = document.getElementById('medicamentos-' + pacienteId);
+                    
+                    if (medicamentosDiv.style.display === 'none' || !medicamentosDiv.style.display) {
+                        // Carregar medicamentos
+                        fetch('ajax_medicamentos_paciente.php?paciente_id=' + pacienteId)
+                            .then(response => response.text())
+                            .then(html => {
+                                medicamentosDiv.innerHTML = html;
+                                medicamentosDiv.style.display = 'block';
+                            })
+                            .catch(error => {
+                                medicamentosDiv.innerHTML = '<p class="alert erro">Erro ao carregar medicamentos: ' + error.message + '</p>';
+                                medicamentosDiv.style.display = 'block';
+                            });
+                    } else {
+                        medicamentosDiv.style.display = 'none';
+                    }
+                });
+            });
+        });
+    </script>
     <style>
         .header-actions {
             display: flex;
@@ -248,6 +458,34 @@ $stmt->execute($params);
         }
         .medicamento-info {
             display: none;
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+        }
+        .medicamento-info ul {
+            margin: 0;
+            padding: 0;
+        }
+        .medicamento-info li {
+            padding: 8px 0;
+            border-bottom: 1px solid #eee;
+        }
+        .medicamento-info li:last-child {
+            border-bottom: none;
+        }
+        .btn-link {
+            background: none;
+            border: none;
+            color: #0d6efd;
+            cursor: pointer;
+            padding: 0;
+            font: inherit;
+            text-decoration: underline;
+        }
+        .btn-link:hover {
+            color: #0a58ca;
         }
         .status-renovacao {
             display: flex;
@@ -423,149 +661,4 @@ $stmt->execute($params);
     </div>
 </div>
 
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    // Mostrar/ocultar medicamentos
-    document.querySelectorAll('.show-medicamentos').forEach(btn => {
-        btn.addEventListener('click', () => {
-            const id = btn.dataset.paciente;
-            const ctr = document.getElementById(`medicamentos-${id}`);
-            if (!ctr) return;
-
-            if (ctr.style.display === 'block') {
-                ctr.style.display = 'none';
-                return;
-            }
-
-            fetch(`ajax_medicamentos_paciente.php?paciente_id=${id}`)
-                .then(response => response.text())
-                .then(html => {
-                    ctr.innerHTML = html;
-                    ctr.style.display = 'block';
-                })
-                .catch(error => {
-                    ctr.innerHTML = `<div class='alert erro'>Erro: ${error.message}</div>`;
-                    ctr.style.display = 'block';
-                });
-        });
-    });
-});
-
-function abrirModalDispensar(pacienteId, pacienteNome) {
-    document.getElementById('modalDispensar').style.display = 'block';
-    document.getElementById('pacienteNome').textContent = 'Paciente: ' + pacienteNome;
-    
-    // Carregar medicamentos do paciente
-    fetch(`ajax_form_dispensar.php?paciente_id=${pacienteId}`)
-        .then(response => response.text())
-        .then(html => {
-            document.getElementById('medicamentosDispensar').innerHTML = html;
-            
-            // Adicionar eventos aos inputs de quantidade
-            document.querySelectorAll('.quantidade-input').forEach(input => {
-                input.addEventListener('change', function() {
-                    const max = parseInt(this.getAttribute('max'));
-                    const value = parseInt(this.value);
-                    if (value > max) {
-                        this.value = max;
-                    } else if (value < 0) {
-                        this.value = 0;
-                    }
-                });
-            });
-        })
-        .catch(error => {
-            document.getElementById('medicamentosDispensar').innerHTML = 
-                `<div class='alert erro'>Erro ao carregar medicamentos: ${error.message}</div>`;
-        });
-}
-
-function fecharModalDispensar() {
-    document.getElementById('modalDispensar').style.display = 'none';
-    document.getElementById('medicamentosDispensar').innerHTML = '';
-}
-
-function dispensarMedicamento(medicamentoId, pacienteId) {
-    const quantidade = document.querySelector(`#quantidade-${medicamentoId}`).value;
-    const observacao = document.querySelector('#observacao').value;
-    
-    if (!quantidade || quantidade <= 0) {
-        alert('Por favor, informe uma quantidade válida.');
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('medicamento_id', medicamentoId);
-    formData.append('paciente_id', pacienteId);
-    formData.append('quantidade', quantidade);
-    formData.append('observacao', observacao);
-
-    fetch('ajax_dispensar.php', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            alert('Medicamento dispensado com sucesso!');
-            location.reload(); // Recarrega a página para atualizar os dados
-        } else {
-            alert('Erro: ' + data.message);
-        }
-    })
-    .catch(error => {
-        alert('Erro ao dispensar medicamento: ' + error.message);
-    });
-}
-
-// Fechar modal ao clicar fora
-window.onclick = function(event) {
-    const modal = document.getElementById('modalDispensar');
-    if (event.target == modal) {
-        fecharModalDispensar();
-    }
-}
-
-document.addEventListener('DOMContentLoaded', function() {
-    // Função para ordenar a tabela
-    function ordenarTabela(coluna) {
-        const urlParams = new URLSearchParams(window.location.search);
-        const ordemAtual = urlParams.get('ordem') || 'nome';
-        const direcaoAtual = urlParams.get('direcao') || 'ASC';
-        
-        // Alternar direção se clicar na mesma coluna
-        const novaDirecao = (ordemAtual === coluna && direcaoAtual === 'ASC') ? 'DESC' : 'ASC';
-        
-        // Atualizar parâmetros da URL
-        urlParams.set('ordem', coluna);
-        urlParams.set('direcao', novaDirecao);
-        
-        // Manter o parâmetro de busca se existir
-        const busca = urlParams.get('busca');
-        if (busca) {
-            urlParams.set('busca', busca);
-        }
-        
-        // Redirecionar com os novos parâmetros
-        window.location.href = window.location.pathname + '?' + urlParams.toString();
-    }
-
-    // Adicionar eventos de clique nos cabeçalhos
-    document.querySelectorAll('th.sortable').forEach(th => {
-        th.addEventListener('click', () => {
-            ordenarTabela(th.dataset.ordem);
-        });
-    });
-
-    // Marcar coluna atual como ordenada
-    const urlParams = new URLSearchParams(window.location.search);
-    const ordemAtual = urlParams.get('ordem') || 'nome';
-    const direcaoAtual = urlParams.get('direcao') || 'ASC';
-    
-    const thAtual = document.querySelector(`th[data-ordem="${ordemAtual}"]`);
-    if (thAtual) {
-        thAtual.classList.add(direcaoAtual.toLowerCase());
-    }
-});
-</script>
 <?php include 'footer.php'; ?> 

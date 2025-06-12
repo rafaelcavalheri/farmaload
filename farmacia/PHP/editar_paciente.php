@@ -3,7 +3,16 @@ require __DIR__ . '/config.php';
 verificarAutenticacao(['admin', 'operador']);
 
 $medicamentos_disponiveis = $pdo->query("SELECT id, nome FROM medicamentos ORDER BY nome")->fetchAll();
-$medicos_disponiveis = $pdo->query("SELECT id, nome, CONCAT(crm_numero, ' ', crm_estado) as crm_completo FROM medicos WHERE ativo = 1 ORDER BY nome")->fetchAll();
+$medicos_disponiveis = $pdo->query("
+    SELECT id, nome, CONCAT(crm_numero, ' ', crm_estado) as identificacao, 'medico' as tipo 
+    FROM medicos 
+    WHERE ativo = 1 
+    UNION ALL 
+    SELECT id, nome, cnes as identificacao, 'instituicao' as tipo 
+    FROM instituicoes 
+    WHERE ativo = 1 
+    ORDER BY nome
+")->fetchAll();
 
 $erros = [];
 $valores = [
@@ -418,98 +427,104 @@ $(document).ready(function() {
         });
     }
 
-    function criarMedicamentoGroup(data = {}) {
-        const index = container.children('.medicamento-group').length;
+    function adicionarMedicamento(data = {}) {
+        const index = document.querySelectorAll('.medicamento-item').length;
         
+        // Formatar a data de renovação se existir
+        let dataRenovacao = '';
+        if (data.renovacao) {
+            // Tenta converter do formato DD/MM/YYYY
+            const partes = data.renovacao.split('/');
+            if (partes.length === 3) {
+                // Formato DD/MM/YYYY
+                const dataObj = new Date(partes[2], partes[1] - 1, partes[0]);
+                if (!isNaN(dataObj.getTime())) {
+                    dataRenovacao = dataObj.toISOString().split('T')[0];
+                }
+            } else {
+                // Tenta converter do formato ISO
+                const dataObj = new Date(data.renovacao);
+                if (!isNaN(dataObj.getTime())) {
+                    dataRenovacao = dataObj.toISOString().split('T')[0];
+                }
+            }
+        }
+
         const optionsMedicamentos = medicamentosDisponiveis.map(med =>
-            `<option value="${med.id}" ${med.id == data.medicamento_id ? 'selected' : ''}>${med.nome}</option>`
+            `<option value="${med.id}" ${med.id == data.medicamento_id ? 'selected' : ''}>
+                ${med.nome}
+            </option>`
         ).join('');
 
         const optionsMedicos = medicosDisponiveis.map(med =>
             `<option value="${med.id}" ${med.id == data.medico_id ? 'selected' : ''}>
-                ${med.nome} - ${med.crm_completo}
+                ${med.nome} (${med.tipo === 'medico' ? 'CRM: ' : 'CNES: '}${med.identificacao})
             </option>`
         ).join('');
 
-        // Formata a data de renovação antes de exibir
-        const dataRenovacao = data.renovacao ? formatarDataRenovacao(data.renovacao) : '';
-        const renovadoChecked = data.renovado === 1 ? 'checked' : '';
-
-        const grupo = $(`
-            <div class="medicamento-group" data-index="${index}">
-                <label>Medicamento *</label>
-                <select name="medicamento_id[]" required>
-                    <option value="">Selecione...</option>
-                    ${optionsMedicamentos}
-                </select>
-                <small class="erro medicamento-erro"></small>
-
-                <label>Quantidade Recebida *</label>
-                <input type="number" name="quantidade[]" min="1" value="${data.quantidade || ''}" required />
-                <small class="erro quantidade-erro"></small>
-
-                <label>Quantidade Solicitada *</label>
-                <input type="number" name="quantidade_solicitada[]" min="1" value="${data.quantidade_solicitada || data.quantidade || ''}" required />
-                <small class="erro quantidade-solicitada-erro"></small>
-
-                <label>CID</label>
-                <input type="text" name="cid[]" value="${data.cid || ''}" />
-
-                <label>Médico</label>
-                <div class="medico-group">
-                    <select name="medico_id[]">
-                        <option value="">Selecione um médico...</option>
-                        ${optionsMedicos}
-                    </select>
+        const template = `
+            <div class="medicamento-item">
+                <div class="medicamento-header">
+                    <h4>Medicamento ${index + 1}</h4>
+                    <button type="button" class="btn-remove" onclick="removerMedicamento(this)">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-
-                <div class="renovacao-container">
-                    <div class="renovacao-data">
-                        <label>Renovação (DD/MM/AAAA)</label>
-                        <div class="renovacao-linha">
-                            <input type="text" name="renovacao[]" class="input-data" placeholder="DD/MM/AAAA" value="${dataRenovacao}" />
-                            <div class="renovado-check">
-                                <input type="checkbox" name="renovado[]" id="renovado-${index}" value="1" ${renovadoChecked} />
-                                <label for="renovado-${index}">Renovação em andamento</label>
-                            </div>
+                <div class="medicamento-body">
+                    <div class="campo-form">
+                        <label>Medicamento</label>
+                        <select name="medicamento_id[]" required>
+                            <option value="">Selecione um medicamento...</option>
+                            ${optionsMedicamentos}
+                        </select>
+                    </div>
+                    <div class="campo-form">
+                        <label>Médico/Instituição</label>
+                        <select name="medico_id[]" class="medico-select">
+                            <option value="">Selecione...</option>
+                            ${optionsMedicos}
+                        </select>
+                    </div>
+                    <div class="campo-form">
+                        <label>Quantidade</label>
+                        <input type="number" name="quantidade[]" value="${data.quantidade || 1}" min="1" required>
+                    </div>
+                    <div class="campo-form">
+                        <label>Quantidade Solicitada</label>
+                        <input type="number" name="quantidade_solicitada[]" value="${data.quantidade_solicitada || data.quantidade || 1}" min="1" required>
+                    </div>
+                    <div class="campo-form">
+                        <label>CID</label>
+                        <input type="text" name="cid[]" value="${data.cid || ''}">
+                    </div>
+                    <div class="renovacao-group">
+                        <div class="campo-form">
+                            <label>Data de Renovação</label>
+                            <input type="date" name="renovacao[]" value="${dataRenovacao}">
+                        </div>
+                        <div class="campo-form checkbox-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="renovado[]" value="1" ${data.renovado ? 'checked' : ''}>
+                                <span>Renovado</span>
+                            </label>
                         </div>
                     </div>
                 </div>
-
-                <button type="button" class="btn-remove-medicamento" title="Remover"><i class="fas fa-trash-alt"></i></button>
-
-                <hr/>
             </div>
-        `);
+        `;
 
-        // Aplica máscara para DD/MM/AAAA
-        grupo.find('.input-data').on('input', function() {
-            let val = $(this).val();
-            val = val.replace(/[^\d]/g, '');
-            if(val.length > 4) {
-                val = val.slice(0, 2) + '/' + val.slice(2, 4) + '/' + val.slice(4, 8);
-            } else if(val.length > 2) {
-                val = val.slice(0, 2) + '/' + val.slice(2);
-            }
-            $(this).val(val);
-        });
-
-        grupo.find('.btn-remove-medicamento').click(function() {
-            grupo.remove();
-        });
-
-        container.append(grupo);
+        $('#medicamentos-container').append(template);
     }
 
     // Se já tem medicamentos, carrega eles, senão adiciona um vazio
     if(<?= json_encode(count($valores['medicamentos'])) ?> > 0) {
         const meds = <?= json_encode($valores['medicamentos']) ?>;
-        meds.forEach(med => criarMedicamentoGroup(med));
+        meds.forEach(med => adicionarMedicamento(med));
     } else {
-        criarMedicamentoGroup();
+        adicionarMedicamento();
     }
 
-    $('#btn-add-medicamento').click(() => criarMedicamentoGroup());
+    $('#btn-add-medicamento').click(() => adicionarMedicamento());
 
     // Formatação do CPF para pessoas autorizadas
     $('.cpf-mask').on('input', function(e) {
@@ -584,47 +599,77 @@ $(document).ready(function() {
             grid-template-columns: 1fr;
         }
     }
-    .renovacao-container {
-        margin-bottom: 15px;
-    }
-    .renovacao-data {
+    .renovacao-group {
         display: flex;
-        flex-direction: column;
-    }
-    .renovacao-linha {
-        display: flex;
-        align-items: center;
         gap: 20px;
+        align-items: flex-end;
     }
-    .renovacao-data input {
-        width: 150px;
-        height: 35px;
-        padding: 5px 10px;
-        box-sizing: border-box;
+    .checkbox-group {
+        margin-bottom: 0;
     }
-    .renovado-check {
+    .checkbox-label {
         display: flex;
         align-items: center;
         gap: 8px;
-    }
-    .renovado-check input[type="checkbox"] {
-        width: 16px;
-        height: 16px;
-        margin: 0;
         cursor: pointer;
     }
-    .renovado-check label {
+    .checkbox-label input[type="checkbox"] {
+        width: auto;
         margin: 0;
-        font-weight: normal;
-        white-space: nowrap;
-        cursor: pointer;
     }
-    @media (max-width: 768px) {
-        .renovacao-linha {
-            flex-direction: column;
-            align-items: flex-start;
-            gap: 10px;
-        }
+    .medicamento-body {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+    }
+    .medicamento-body .campo-form:last-child {
+        grid-column: 1 / -1;
+    }
+    .medicamento-body .renovacao-group {
+        grid-column: 1 / -1;
+    }
+    .medicamento-item {
+        background: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        position: relative;
+    }
+    .medicamento-item:not(:last-child)::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(to right, transparent, #ddd, transparent);
+    }
+    .medicamento-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+    }
+    .medicamento-header h4 {
+        margin: 0;
+        color: #333;
+        font-size: 1.1em;
+    }
+    .btn-remove {
+        background: none;
+        border: none;
+        color: #dc3545;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 4px;
+        transition: background-color 0.2s;
+    }
+    .btn-remove:hover {
+        background-color: #fff5f5;
     }
 </style>
 

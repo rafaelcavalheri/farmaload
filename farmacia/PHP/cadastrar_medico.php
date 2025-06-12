@@ -145,23 +145,24 @@ $estados = [
             </div>
 
             <div class="campo-form">
-                <label for="cns">CNS (Cartão Nacional de Saúde)</label>
+                <label for="cns">CNS (opcional)</label>
                 <input type="text" 
                        id="cns" 
                        name="cns" 
                        value="<?= htmlspecialchars($valores['cns']) ?>" 
-                       maxlength="15"
-                       placeholder="Digite apenas números">
+                       maxlength="15">
                 <?php if (isset($erros['cns'])): ?>
                     <span class="erro"><?= $erros['cns'] ?></span>
                 <?php endif; ?>
             </div>
 
-            <div class="acoes-form">
-                <a href="medicos.php" class="btn-secondary">Cancelar</a>
+            <div class="form-actions">
                 <button type="submit" class="btn-primary">
-                    <i class="fas fa-save"></i> Salvar
+                    <i class="fas fa-save"></i> Cadastrar Médico
                 </button>
+                <a href="medicos.php" class="btn-secondary">
+                    <i class="fas fa-times"></i> Cancelar
+                </a>
             </div>
         </form>
     </main>
@@ -169,18 +170,14 @@ $estados = [
     <?php include 'footer.php'; ?>
 
     <script>
-        // Formatação do número do CRM
+        // Formatar CRM (apenas números)
         document.getElementById('crm_numero').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 6) value = value.slice(0, 6);
-            e.target.value = value;
+            this.value = this.value.replace(/\D/g, '').slice(0, 6);
         });
 
-        // Formatação do CNS
+        // Formatar CNS (apenas números)
         document.getElementById('cns').addEventListener('input', function(e) {
-            let value = e.target.value.replace(/\D/g, '');
-            if (value.length > 15) value = value.slice(0, 15);
-            e.target.value = value;
+            this.value = this.value.replace(/\D/g, '').slice(0, 15);
         });
     </script>
 
@@ -188,11 +185,10 @@ $estados = [
         .form-padrao {
             max-width: 600px;
             margin: 0 auto;
-        }
-        .grupo-form {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 15px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
         .campo-form {
             margin-bottom: 15px;
@@ -200,7 +196,7 @@ $estados = [
         .campo-form label {
             display: block;
             margin-bottom: 5px;
-            font-weight: bold;
+            font-weight: 500;
         }
         .campo-form input,
         .campo-form select {
@@ -208,12 +204,48 @@ $estados = [
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            font-size: 1em;
         }
         .campo-form input:focus,
         .campo-form select:focus {
             border-color: #4a90e2;
             outline: none;
-            box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
+            box-shadow: 0 0 0 2px rgba(74,144,226,0.2);
+        }
+        .grupo-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .btn-primary, .btn-secondary {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1em;
+            text-decoration: none;
+        }
+        .btn-primary {
+            background-color: #4a90e2;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #357abd;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
         }
         .erro {
             color: #dc3545;
@@ -221,16 +253,15 @@ $estados = [
             margin-top: 5px;
             display: block;
         }
-        .acoes-form {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
+        .alert {
+            padding: 10px;
+            border-radius: 4px;
+            margin-bottom: 20px;
         }
-        @media (max-width: 600px) {
-            .grupo-form {
-                grid-template-columns: 1fr;
-            }
+        .alert.erro {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
     </style>
 </body>

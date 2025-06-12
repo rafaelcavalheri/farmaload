@@ -14,13 +14,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Alternar status (ativar/desativar)
     if (isset($_POST['alternar_status'])) {
         $id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
-        if ($id) {
+        $tipo = $_POST['tipo'] ?? '';
+        
+        if ($id && $tipo) {
             try {
-                $stmt = $pdo->prepare("UPDATE medicos SET ativo = NOT ativo WHERE id = ?");
+                if ($tipo === 'medico') {
+                    $stmt = $pdo->prepare("UPDATE medicos SET ativo = NOT ativo WHERE id = ?");
+                } else {
+                    $stmt = $pdo->prepare("UPDATE instituicoes SET ativo = NOT ativo WHERE id = ?");
+                }
                 $stmt->execute([$id]);
-                $mensagem = '<div class="alert sucesso">Status do médico alterado com sucesso!</div>';
+                $mensagem = '<div class="alert sucesso">Status alterado com sucesso!</div>';
             } catch (Exception $e) {
-                $mensagem = '<div class="alert erro">Erro ao alterar status do médico.</div>';
+                $mensagem = '<div class="alert erro">Erro ao alterar status.</div>';
             }
         }
     }
@@ -33,12 +39,16 @@ if (isset($_GET['busca'])) {
     $busca = trim($_GET['busca']);
     if (strlen($busca) >= 3) {
         $where .= " AND (
-            nome LIKE ? OR 
-            crm_numero LIKE ? OR 
-            crm_completo LIKE ? OR
-            cns LIKE ?
+            m.nome LIKE ? OR 
+            m.crm_numero LIKE ? OR 
+            m.crm_estado LIKE ? OR
+            m.cns LIKE ? OR
+            i.nome LIKE ? OR
+            i.cnes LIKE ?
         )";
         $params = [
+            "%$busca%",
+            "%$busca%",
             "%$busca%",
             "%$busca%",
             "%$busca%",
@@ -55,23 +65,40 @@ $pagina = filter_input(INPUT_GET, 'pagina', FILTER_VALIDATE_INT) ?: 1;
 $offset = ($pagina - 1) * $por_pagina;
 
 // Total de registros
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM medicos WHERE $where");
+$stmt = $pdo->prepare("
+    SELECT COUNT(*) 
+    FROM (
+        SELECT m.id, m.nome, m.crm_numero, m.crm_estado, m.ativo, m.data_cadastro, 'medico' as tipo
+        FROM medicos m 
+        WHERE $where
+        UNION ALL
+        SELECT id, nome, cnes as crm_numero, '' as crm_estado, ativo, data_cadastro, 'instituicao' as tipo
+        FROM instituicoes i
+        WHERE $where
+    ) as registros
+");
 $stmt->execute($params);
 $total_registros = $stmt->fetchColumn();
 $total_paginas = ceil($total_registros / $por_pagina);
 
-// Buscar médicos
+// Buscar registros
 $stmt = $pdo->prepare("
-    SELECT * 
-    FROM medicos 
-    WHERE $where 
-    ORDER BY nome 
+    SELECT * FROM (
+        SELECT m.id, m.nome, m.crm_numero, m.crm_estado, m.ativo, m.data_cadastro, 'medico' as tipo
+        FROM medicos m 
+        WHERE $where
+        UNION ALL
+        SELECT id, nome, cnes as crm_numero, '' as crm_estado, ativo, data_cadastro, 'instituicao' as tipo
+        FROM instituicoes i
+        WHERE $where
+    ) as registros
+    ORDER BY nome
     LIMIT ? OFFSET ?
 ");
 $params[] = $por_pagina;
 $params[] = $offset;
 $stmt->execute($params);
-$medicos = $stmt->fetchAll();
+$registros = $stmt->fetchAll();
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -88,10 +115,15 @@ $medicos = $stmt->fetchAll();
     
     <main class="container">
         <div class="top-bar">
-            <h2><i class="fas fa-user-md"></i> Gerenciar Médicos</h2>
-            <a href="cadastrar_medico.php" class="btn-primary">
-                <i class="fas fa-plus"></i> Novo Médico
-            </a>
+            <h2><i class="fas fa-user-md"></i> Médicos e Instituições</h2>
+            <div class="actions">
+                <a href="cadastrar_medico.php" class="btn-primary">
+                    <i class="fas fa-user-md"></i> Novo Médico
+                </a>
+                <a href="cadastrar_instituicao.php" class="btn-primary">
+                    <i class="fas fa-hospital"></i> Nova Instituição
+                </a>
+            </div>
         </div>
 
         <?= $mensagem ?>
@@ -102,7 +134,7 @@ $medicos = $stmt->fetchAll();
                 <input type="text" 
                        name="busca" 
                        value="<?= htmlspecialchars($busca) ?>" 
-                       placeholder="Buscar por nome, CRM ou CNS..."
+                       placeholder="Buscar por nome, CRM, CNS, CNES ou instituição..."
                        minlength="3">
                 <button type="submit">
                     <i class="fas fa-search"></i>
@@ -116,41 +148,59 @@ $medicos = $stmt->fetchAll();
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>CRM</th>
-                        <th>CNS</th>
+                        <th>CRM/CNES</th>
                         <th>Status</th>
                         <th>Cadastro</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php foreach ($medicos as $medico): ?>
-                        <tr class="<?= $medico['ativo'] ? '' : 'inativo' ?>">
-                            <td><?= htmlspecialchars($medico['nome']) ?></td>
-                            <td><?= htmlspecialchars($medico['crm_completo']) ?></td>
-                            <td><?= !empty($medico['cns']) ? htmlspecialchars($medico['cns']) : '<span class="nao-informado">Não informado</span>' ?></td>
+                    <?php foreach ($registros as $registro): ?>
+                        <tr class="<?= $registro['ativo'] ? '' : 'inativo' ?>">
                             <td>
-                                <span class="status-badge <?= $medico['ativo'] ? 'ativo' : 'inativo' ?>">
-                                    <?= $medico['ativo'] ? 'Ativo' : 'Inativo' ?>
+                                <?= htmlspecialchars($registro['nome']) ?>
+                                <?php if ($registro['tipo'] === 'instituicao'): ?>
+                                    <span class="badge badge-info">Instituição</span>
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <?php if ($registro['tipo'] === 'medico'): ?>
+                                    <?= htmlspecialchars($registro['crm_numero'] . '/' . $registro['crm_estado']) ?>
+                                <?php else: ?>
+                                    <?= htmlspecialchars($registro['crm_numero']) ?> (CNES)
+                                <?php endif; ?>
+                            </td>
+                            <td>
+                                <span class="status-badge <?= $registro['ativo'] ? 'ativo' : 'inativo' ?>">
+                                    <?= $registro['ativo'] ? 'Ativo' : 'Inativo' ?>
                                 </span>
                             </td>
-                            <td><?= date('d/m/Y', strtotime($medico['data_cadastro'])) ?></td>
+                            <td><?= date('d/m/Y', strtotime($registro['data_cadastro'])) ?></td>
                             <td class="acoes">
                                 <div class="action-buttons">
-                                    <a href="editar_medico.php?id=<?= $medico['id'] ?>" 
-                                       class="btn-secondary" 
-                                       title="Editar">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
+                                    <?php if ($registro['tipo'] === 'medico'): ?>
+                                        <a href="editar_medico.php?id=<?= $registro['id'] ?>" 
+                                           class="btn-secondary" 
+                                           title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    <?php else: ?>
+                                        <a href="editar_instituicao.php?id=<?= $registro['id'] ?>" 
+                                           class="btn-secondary" 
+                                           title="Editar">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    <?php endif; ?>
                                     <form method="POST" style="display: inline;">
                                         <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>">
-                                        <input type="hidden" name="id" value="<?= $medico['id'] ?>">
+                                        <input type="hidden" name="id" value="<?= $registro['id'] ?>">
+                                        <input type="hidden" name="tipo" value="<?= $registro['tipo'] ?>">
                                         <button type="submit" 
                                                 name="alternar_status" 
                                                 class="btn-secondary" 
-                                                title="<?= $medico['ativo'] ? 'Desativar' : 'Ativar' ?>"
-                                                onclick="return confirm('Tem certeza que deseja <?= $medico['ativo'] ? 'desativar' : 'ativar' ?> este médico?')">
-                                            <i class="fas fa-<?= $medico['ativo'] ? 'times' : 'check' ?>"></i>
+                                                title="<?= $registro['ativo'] ? 'Desativar' : 'Ativar' ?>"
+                                                onclick="return confirm('Tem certeza que deseja <?= $registro['ativo'] ? 'desativar' : 'ativar' ?> este registro?')">
+                                            <i class="fas fa-<?= $registro['ativo'] ? 'times' : 'check' ?>"></i>
                                         </button>
                                     </form>
                                 </div>
@@ -158,9 +208,9 @@ $medicos = $stmt->fetchAll();
                         </tr>
                     <?php endforeach; ?>
                     
-                    <?php if (empty($medicos)): ?>
+                    <?php if (empty($registros)): ?>
                         <tr>
-                            <td colspan="5" class="text-center">Nenhum médico encontrado.</td>
+                            <td colspan="5" class="text-center">Nenhum registro encontrado.</td>
                         </tr>
                     <?php endif; ?>
                 </tbody>
@@ -297,15 +347,54 @@ $medicos = $stmt->fetchAll();
         .campo-busca button:hover {
             background-color: #357abd;
         }
-
-        /* Estilos para o CNS */
-        td:nth-child(3) {
-            font-family: monospace;
-            letter-spacing: 1px;
+        /* Estilos para o dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
         }
-        .nao-informado {
-            color: #6c757d;
-            font-style: italic;
+        .dropdown-toggle {
+            position: relative;
+            padding-right: 30px;
+        }
+        .dropdown-toggle::after {
+            content: '';
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            border-left: 5px solid transparent;
+            border-right: 5px solid transparent;
+            border-top: 5px solid white;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 200px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            border-radius: 4px;
+            z-index: 1000;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block;
+        }
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            transition: background-color 0.2s;
+        }
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #007bff;
+        }
+        .dropdown-item i {
+            width: 20px;
+            text-align: center;
         }
         @media (max-width: 768px) {
             .table-responsive {
@@ -314,6 +403,25 @@ $medicos = $stmt->fetchAll();
             table {
                 min-width: 800px;
             }
+        }
+        .badge {
+            display: inline-block;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-left: 5px;
+        }
+        .badge-info {
+            background-color: #17a2b8;
+            color: white;
+        }
+        .badge-success {
+            background-color: #28a745;
+            color: white;
+        }
+        .badge-danger {
+            background-color: #dc3545;
+            color: white;
         }
     </style>
 </body>

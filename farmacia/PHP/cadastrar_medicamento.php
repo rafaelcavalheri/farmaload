@@ -17,7 +17,6 @@ $valores = [
     'quantidade' => '',
     'lote' => '',
     'apresentacao' => '',
-    'codigo' => '',
     'miligramas' => '',
     'validade' => ''
 ];
@@ -29,13 +28,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'quantidade' => trim($_POST['quantidade'] ?? ''),
         'lote' => trim($_POST['lote'] ?? ''),
         'apresentacao' => trim($_POST['apresentacao'] ?? ''),
-        'codigo' => trim($_POST['codigo'] ?? ''),
         'miligramas' => trim($_POST['miligramas'] ?? ''),
         'validade' => trim($_POST['validade'] ?? '')
     ];
 
     // Validações
-    $camposObrigatorios = ['nome', 'quantidade', 'lote', 'apresentacao', 'codigo'];
+    $camposObrigatorios = ['nome', 'quantidade', 'lote', 'apresentacao'];
     foreach ($camposObrigatorios as $campo) {
         if (empty($valores[$campo])) {
             $erros[$campo] = "Campo obrigatório";
@@ -48,36 +46,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (empty($erros)) {
         try {
-            // Buscar por nome+lote
-            $stmt = $pdo->prepare("SELECT id, quantidade, validade FROM medicamentos WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?)) AND lote = ?");
-            $stmt->execute([trim($valores['nome']), $valores['lote']]);
+            // Buscar por nome
+            $stmt = $pdo->prepare("SELECT id FROM medicamentos WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?))");
+            $stmt->execute([trim($valores['nome'])]);
             $medicamentoExistente = $stmt->fetch(PDO::FETCH_ASSOC);
+            
             if ($medicamentoExistente) {
-                // Somar quantidade
-                $novaQuantidade = $medicamentoExistente['quantidade'] + $valores['quantidade'];
-                // Atualizar validade se a nova for maior
-                $dataExistente = DateTime::createFromFormat('Y-m-d', $medicamentoExistente['validade']);
-                $dataNovo = !empty($valores['validade']) ? DateTime::createFromFormat('Y-m-d', date('Y-m-d', strtotime($valores['validade']))) : false;
-                if ($dataExistente && $dataNovo && $dataNovo > $dataExistente) {
-                    $validade = $dataNovo->format('Y-m-d');
+                // Buscar lote existente
+                $stmt = $pdo->prepare("SELECT id, quantidade, validade FROM lotes_medicamentos WHERE medicamento_id = ? AND lote = ?");
+                $stmt->execute([$medicamentoExistente['id'], $valores['lote']]);
+                $loteExistente = $stmt->fetch(PDO::FETCH_ASSOC);
+                
+                if ($loteExistente) {
+                    // Atualizar lote existente
+                    $novaQuantidade = $loteExistente['quantidade'] + $valores['quantidade'];
+                    
+                    // Verificar validade
+                    $dataExistente = DateTime::createFromFormat('Y-m-d', $loteExistente['validade']);
+                    $dataNovo = !empty($valores['validade']) ? DateTime::createFromFormat('Y-m-d', date('Y-m-d', strtotime($valores['validade']))) : false;
+                    
+                    if ($dataExistente && $dataNovo && $dataNovo > $dataExistente) {
+                        $validade = $dataNovo->format('Y-m-d');
+                    } else {
+                        $validade = $dataExistente ? $dataExistente->format('Y-m-d') : (!empty($valores['validade']) ? date('Y-m-d', strtotime($valores['validade'])) : null);
+                    }
+                    
+                    $stmt = $pdo->prepare("UPDATE lotes_medicamentos SET quantidade = ?, validade = STR_TO_DATE(?, '%Y-%m-%d') WHERE id = ?");
+                    $stmt->execute([$novaQuantidade, $validade, $loteExistente['id']]);
                 } else {
-                    $validade = $dataExistente ? $dataExistente->format('Y-m-d') : (!empty($valores['validade']) ? date('Y-m-d', strtotime($valores['validade'])) : null);
+                    // Inserir novo lote
+                    $validade = !empty($valores['validade']) ? date('Y-m-d', strtotime($valores['validade'])) : null;
+                    $stmt = $pdo->prepare("INSERT INTO lotes_medicamentos (medicamento_id, lote, quantidade, validade) VALUES (?, ?, ?, STR_TO_DATE(?, '%Y-%m-%d'))");
+                    $stmt->execute([$medicamentoExistente['id'], $valores['lote'], $valores['quantidade'], $validade]);
                 }
-                $stmt = $pdo->prepare("UPDATE medicamentos SET quantidade = ?, validade = ? WHERE id = ?");
-                $stmt->execute([$novaQuantidade, $validade, $medicamentoExistente['id']]);
+                
                 header('Location: medicamentos.php?sucesso=Medicamento atualizado com sucesso');
                 exit();
             } else {
-                $stmt = $pdo->prepare("INSERT INTO medicamentos (nome, quantidade, lote, apresentacao, codigo, miligramas, validade) VALUES (?, ?, ?, ?, ?, ?, ?)");
+                // Gerar código automático
+                $stmt = $pdo->prepare("SELECT MAX(CAST(SUBSTRING(codigo, 4) AS UNSIGNED)) as ultimo_codigo FROM medicamentos WHERE codigo LIKE 'MED%'");
+                $stmt->execute();
+                $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+                $proximoNumero = ($resultado['ultimo_codigo'] ?? 0) + 1;
+                $codigo = 'MED' . str_pad($proximoNumero, 5, '0', STR_PAD_LEFT);
+
+                // Inserir medicamento
+                $stmt = $pdo->prepare("INSERT INTO medicamentos (nome, apresentacao, codigo, miligramas) VALUES (?, ?, ?, ?)");
                 $stmt->execute([
                     $valores['nome'],
-                    $valores['quantidade'],
-                    $valores['lote'],
                     $valores['apresentacao'],
-                    $valores['codigo'],
-                    $valores['miligramas'],
-                    !empty($valores['validade']) ? date('Y-m-d', strtotime($valores['validade'])) : null
+                    $codigo,
+                    $valores['miligramas']
                 ]);
+                
+                $medicamentoId = $pdo->lastInsertId();
+                
+                // Inserir o lote com a validade
+                $validade = !empty($valores['validade']) ? date('Y-m-d', strtotime($valores['validade'])) : null;
+                $stmt = $pdo->prepare("INSERT INTO lotes_medicamentos (medicamento_id, lote, quantidade, validade) VALUES (?, ?, ?, STR_TO_DATE(?, '%Y-%m-%d'))");
+                $stmt->execute([
+                    $medicamentoId,
+                    $valores['lote'],
+                    $valores['quantidade'],
+                    $validade
+                ]);
+                
                 header('Location: medicamentos.php?sucesso=Medicamento cadastrado com sucesso');
                 exit();
             }
@@ -146,12 +179,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                     ?>
                 </select>
-            </div>
-
-            <div class="form-group">
-                <label>Código Interno*</label>
-                <input type="text" name="codigo" 
-                       value="<?= htmlspecialchars($valores['codigo']) ?>" required>
             </div>
 
             <div class="form-group">

@@ -87,13 +87,17 @@ $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </div>
 <?php endforeach; ?>
 
+<!-- Adicionar botão para dispensar vários -->
+<div class="dispensar-varios-container">
+    <button type="button" class="btn-dispensar-varios" onclick="dispensarVariosMedicamentos(<?= $paciente_id ?>)">
+        <i class="fas fa-box"></i> Dispensar Medicamentos Selecionados
+    </button>
+</div>
+
 <script>
 function dispensarMedicamento(pmId, pacienteId) {
     const quantidade = document.querySelector(`#quantidade-${pmId}`).value;
     const observacao = document.querySelector('#observacao').value;
-    
-    // Debug log
-    console.log('Observação a ser enviada:', observacao);
     
     if (!quantidade || quantidade <= 0) {
         alert('Por favor, informe uma quantidade válida.');
@@ -105,9 +109,6 @@ function dispensarMedicamento(pmId, pacienteId) {
     formData.append('paciente_id', pacienteId);
     formData.append('quantidade', quantidade);
     formData.append('observacao', observacao);
-
-    // Debug log
-    console.log('FormData observação:', formData.get('observacao'));
 
     fetch('ajax_dispensar.php', {
         method: 'POST',
@@ -124,6 +125,52 @@ function dispensarMedicamento(pmId, pacienteId) {
     })
     .catch(error => {
         alert('Erro ao dispensar medicamento: ' + error.message);
+    });
+}
+
+function dispensarVariosMedicamentos(pacienteId) {
+    const observacao = document.querySelector('#observacao').value;
+    const medicamentos = document.querySelectorAll('.medicamento-dispensar');
+    const medicamentosParaDispensar = [];
+
+    medicamentos.forEach((med) => {
+        const input = med.querySelector('.quantidade-input');
+        const quantidade = parseInt(input.value);
+
+        if (quantidade > 0) {
+            const pmId = input.id.replace('quantidade-', '');
+            medicamentosParaDispensar.push({
+                medicamento_id: pmId,
+                quantidade: quantidade
+            });
+        }
+    });
+
+    if (medicamentosParaDispensar.length === 0) {
+        alert('Por favor, selecione pelo menos um medicamento para dispensar.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('paciente_id', pacienteId);
+    formData.append('observacao', observacao);
+    formData.append('medicamentos', JSON.stringify(medicamentosParaDispensar));
+
+    fetch('ajax_dispensar_varios.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Medicamentos dispensados com sucesso!');
+            location.reload();
+        } else {
+            alert('Erro: ' + data.message);
+        }
+    })
+    .catch(error => {
+        alert('Erro ao dispensar medicamentos: ' + error.message);
     });
 }
 </script>
@@ -154,5 +201,29 @@ function dispensarMedicamento(pmId, pacienteId) {
     border-color: #4a90e2;
     outline: none;
     box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
+}
+.dispensar-varios-container {
+    margin-top: 20px;
+    text-align: center;
+    padding: 15px;
+    border-top: 1px solid #e9ecef;
+}
+.btn-dispensar-varios {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+.btn-dispensar-varios:hover {
+    background-color: #218838;
+}
+.btn-dispensar-varios i {
+    font-size: 1.1em;
 }
 </style>

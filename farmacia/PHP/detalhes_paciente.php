@@ -76,8 +76,34 @@ try {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Detalhes do Paciente</title>
+    <link rel="icon" type="image/png" href="/images/fav.png">
     <link rel="stylesheet" href="/css/style.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+    <script>
+        // Definir as funções globalmente antes de qualquer uso
+        function mostrarObservacoes(button) {
+            const cell = button.closest('.observacoes-cell');
+            let content = cell.querySelector('.observacoes-content').value || '';
+            content = content.replace(/^\s+/, ''); // Remove espaços extras no início
+            const modal = document.getElementById('modalObservacoes');
+            const modalContent = modal.querySelector('.observacoes-content');
+            modalContent.textContent = content;
+            modal.style.display = 'block';
+        }
+
+        function fecharModal() {
+            const modal = document.getElementById('modalObservacoes');
+            modal.style.display = 'none';
+        }
+
+        // Fechar modal ao clicar fora dele
+        window.onclick = function(event) {
+            const modal = document.getElementById('modalObservacoes');
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+        }
+    </script>
     <style>
         .medicamentos-atuais {
             margin: 20px 0;
@@ -180,6 +206,69 @@ try {
             color: #212529;
             line-height: 1.5;
         }
+        .observacoes-cell {
+            max-width: 300px;
+            min-width: 200px;
+            padding: 8px;
+            position: relative;
+        }
+        .observacoes-cell .observacoes-content {
+            font-size: 12px;
+        }
+        .observacoes-content {
+            border: none;
+            background: transparent;
+            box-shadow: none;
+            outline: none;
+        }
+        .btn-ver-mais {
+            background: none;
+            border: none;
+            color: #007bff;
+            cursor: pointer;
+            padding: 2px 5px;
+            font-size: 0.9em;
+            margin-top: 5px;
+        }
+        .btn-ver-mais:hover {
+            text-decoration: underline;
+        }
+        .modal-observacoes {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        .modal-content {
+            position: relative;
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            width: 50%;
+            max-width: 600px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .modal-content .observacoes-content {
+            text-align: left;
+            white-space: pre-wrap;
+            margin-top: 10px;
+        }
+        .close-modal {
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+        }
+        .close-modal:hover {
+            color: #000;
+        }
     </style>
 </head>
 <body>
@@ -211,12 +300,6 @@ try {
                     }
                 ?>
             </p>
-            <?php if (!empty($paciente['observacao'])): ?>
-            <div class="observacao-box">
-                <h4><i class="fas fa-sticky-note"></i> Observações:</h4>
-                <p class="observacao-content"><?= nl2br(sanitizar($paciente['observacao'])) ?></p>
-            </div>
-            <?php endif; ?>
         </div>
 
         <div class="medicamentos-atuais">
@@ -304,6 +387,7 @@ try {
                             <th>Medicamento</th>
                             <th>Quantidade</th>
                             <th>Data</th>
+                            <th>Observações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -312,6 +396,15 @@ try {
                                 <td><?= sanitizar($registro['medicamento']) ?></td>
                                 <td><?= sanitizar($registro['quantidade']) ?></td>
                                 <td><?= date('d/m/Y H:i', strtotime($registro['data'])) ?></td>
+                                <td class="observacoes-cell">
+                                    <input type="text" class="observacoes-content" value="<?= htmlspecialchars(trim(preg_replace('/\s+/', ' ', $registro['observacoes'] ?? ''))) ?>" readonly>
+                                    <?php 
+                                        $obs = $registro['observacoes'] ?? '';
+                                        if (!empty($obs)):
+                                    ?>
+                                        <button class="btn-ver-mais" onclick="mostrarObservacoes(this)">Ver mais</button>
+                                    <?php endif; ?>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                     </tbody>
@@ -325,6 +418,15 @@ try {
              <a href="pacientes.php" class="btn btn-secondary">Voltar para a Lista</a>
         </div>
     </main>
+
+    <!-- Modal para observações -->
+    <div id="modalObservacoes" class="modal-observacoes">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModal()">&times;</span>
+            <h3>Observações</h3>
+            <div class="observacoes-content"></div>
+        </div>
+    </div>
 
     <?php include __DIR__ . '/footer.php'; ?>
 </body>

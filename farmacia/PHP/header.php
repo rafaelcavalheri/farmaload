@@ -28,7 +28,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <li><a href="relatorios.php"><i class="fas fa-chart-bar"></i> Relatórios</a></li>
                     <?php if ($_SESSION['usuario']['perfil'] === 'admin'): ?>
                         <li><a href="medicamentos.php"><i class="fas fa-capsules"></i> Medicamentos</a></li>
-                        <li><a href="medicos.php"><i class="fas fa-user-md"></i> Médicos</a></li>
+                        <li><a href="medicos.php"><i class="fas fa-user-md"></i> Médicos/Instituições</a></li>
                         <li><a href="usuarios.php"><i class="fas fa-user-cog"></i> Usuários</a></li>
                         <li><a href="gerenciar_dados.php"><i class="fas fa-database"></i> Gerenciar Dados</a></li>
                     <?php endif; ?>

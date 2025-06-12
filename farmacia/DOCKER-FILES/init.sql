@@ -212,13 +212,11 @@ CREATE TABLE IF NOT EXISTS medicos (
 
     nome VARCHAR(100) NOT NULL,
 
-    crm_numero VARCHAR(6) NOT NULL,
+    crm_numero VARCHAR(20) NOT NULL,
 
     crm_estado CHAR(2) NOT NULL,
 
-    crm_completo VARCHAR(20) GENERATED ALWAYS AS (CONCAT('CRM/', crm_estado, ' ', crm_numero)) STORED UNIQUE,
-
-    cns CHAR(15),
+    cns VARCHAR(15),
 
     ativo TINYINT(1) NOT NULL DEFAULT 1,
 
@@ -226,6 +224,20 @@ CREATE TABLE IF NOT EXISTS medicos (
 
     data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 
+) ENGINE=InnoDB;
+
+
+-- Tabela de instituições de saúde
+CREATE TABLE IF NOT EXISTS instituicoes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cnes VARCHAR(7) NOT NULL UNIQUE,
+    endereco VARCHAR(200),
+    telefone VARCHAR(15),
+    email VARCHAR(100),
+    ativo TINYINT(1) NOT NULL DEFAULT 1,
+    data_cadastro TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    data_atualizacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB;
 
 

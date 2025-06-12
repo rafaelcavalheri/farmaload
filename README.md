@@ -1,12 +1,25 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.1006.0850
-**Data:** 10/06/2025
+**Versão:** v.1.2025.1206.1014
+**Data:** 12/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.1206.1014 (12/06/2025)
+### Correções e Melhorias
+- Correção do erro ao cadastrar medicamento
+- Implementação da funcionalidade de dispensar vários medicamentos simultaneamente
+- Adicionado campo de observação no histórico na página de detalhes do paciente
+- Melhorias na visualização de medicamentos no botão "Ver":
+  - Exibição do nome do medicamento
+  - Quantidade solicitada
+  - CID
+  - Data de renovação
+- Implementação do cadastro de instituição com validação de 7 números no CNES
+- Correção de exibição das datas de renovação
 
 ## v.1.2025.1006.0850 (10/06/2025)
 ### Melhorias de Visualização
