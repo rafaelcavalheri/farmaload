@@ -88,6 +88,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajustar_estoque'])) {
     $diferenca = $estoque_correto - $estoque_atual;
     if ($diferenca !== 0) {
         try {
+            // Iniciar transação
+            $pdo->beginTransaction();
+
+            // Registrar a movimentação
             $stmt = $pdo->prepare("
                 INSERT INTO movimentacoes (
                     medicamento_id, tipo, quantidade, quantidade_anterior, quantidade_nova, data, observacao
@@ -100,9 +104,55 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['ajustar_estoque'])) {
                 $estoque_correto,
                 'Ajuste manual de estoque via edição do medicamento'
             ]);
+
+            // Atualizar os lotes
+            if ($diferenca > 0) {
+                // Se a diferença é positiva, adicionar ao primeiro lote com validade mais próxima
+                $stmt = $pdo->prepare("
+                    UPDATE lotes_medicamentos 
+                    SET quantidade = quantidade + ? 
+                    WHERE medicamento_id = ? 
+                    AND validade = (
+                        SELECT validade 
+                        FROM (
+                            SELECT validade 
+                            FROM lotes_medicamentos 
+                            WHERE medicamento_id = ? 
+                            AND quantidade > 0 
+                            ORDER BY validade ASC 
+                            LIMIT 1
+                        ) as temp
+                    )
+                ");
+                $stmt->execute([$diferenca, $medicamento['id'], $medicamento['id']]);
+            } else {
+                // Se a diferença é negativa, remover dos lotes mais antigos primeiro
+                $stmt = $pdo->prepare("
+                    UPDATE lotes_medicamentos 
+                    SET quantidade = GREATEST(0, quantidade + ?) 
+                    WHERE medicamento_id = ? 
+                    AND validade = (
+                        SELECT validade 
+                        FROM (
+                            SELECT validade 
+                            FROM lotes_medicamentos 
+                            WHERE medicamento_id = ? 
+                            AND quantidade > 0 
+                            ORDER BY validade ASC 
+                            LIMIT 1
+                        ) as temp
+                    )
+                ");
+                $stmt->execute([$diferenca, $medicamento['id'], $medicamento['id']]);
+            }
+
+            // Confirmar transação
+            $pdo->commit();
             header('Location: editar_medicamento.php?id=' . $_GET['id'] . '&ajuste=ok');
             exit();
         } catch (PDOException $e) {
+            // Em caso de erro, desfazer a transação
+            $pdo->rollBack();
             $ajuste_msg = '<div class="erro">Erro ao ajustar estoque: ' . htmlspecialchars($e->getMessage()) . '</div>';
         }
     } else {

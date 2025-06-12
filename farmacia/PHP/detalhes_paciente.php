@@ -1,5 +1,6 @@
 <?php
 require __DIR__ . '/config.php';
+include 'funcoes_estoque.php';
 verificarAutenticacao(['admin', 'operador']);
 
 function safe_strtotime($datetime) {
@@ -43,6 +44,7 @@ try {
     $stmtMedicamentos = $pdo->prepare("
         SELECT 
             pm.id,
+            m.id as medicamento_id,
             m.nome AS medicamento,
             pm.quantidade as quantidade_recebida,
             COALESCE(pm.quantidade_solicitada, pm.quantidade) as quantidade_solicitada,
@@ -55,7 +57,7 @@ try {
             pm.renovado,
             pm.renovacao,
             med.nome AS medico,
-            med.crm_completo
+            CONCAT(med.crm_numero, ' ', med.crm_estado) as crm_completo
         FROM paciente_medicamentos pm
         JOIN medicamentos m ON m.id = pm.medicamento_id
         JOIN pacientes p ON p.id = pm.paciente_id
@@ -65,6 +67,15 @@ try {
     ");
     $stmtMedicamentos->execute([$idPaciente]);
     $medicamentos = $stmtMedicamentos->fetchAll(PDO::FETCH_ASSOC);
+
+    // Calcular quantidade disponível para cada medicamento
+    foreach ($medicamentos as &$med) {
+        $estoque_atual = calcularEstoqueAtual($pdo, $med['medicamento_id']);
+        $quantidade_disponivel = max(0, (int)$med['quantidade_solicitada'] - (int)$med['quantidade_entregue']);
+        $med['quantidade_disponivel'] = min($quantidade_disponivel, $estoque_atual);
+        $med['estoque_atual'] = $estoque_atual;
+    }
+    unset($med); // Limpar referência do foreach
 
 } catch (Exception $e) {
     $erro = "Erro ao carregar dados: " . sanitizar($e->getMessage());
@@ -81,19 +92,61 @@ try {
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
     <script>
         // Definir as funções globalmente antes de qualquer uso
-        function mostrarObservacoes(button) {
-            const cell = button.closest('.observacoes-cell');
-            let content = cell.querySelector('.observacoes-content').value || '';
-            content = content.replace(/^\s+/, ''); // Remove espaços extras no início
-            const modal = document.getElementById('modalObservacoes');
-            const modalContent = modal.querySelector('.observacoes-content');
-            modalContent.textContent = content;
-            modal.style.display = 'block';
+        function editarObservacoes(button) {
+            const observacaoCell = button.closest('td');
+            const observacao = observacaoCell.querySelector('.observacao-texto').textContent;
+            const transacaoId = observacaoCell.getAttribute('data-transacao-id');
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h3>Observação</h3>
+                    <textarea id="observacaoEdit" rows="4">${observacao}</textarea>
+                    <div class="modal-actions">
+                        <button onclick="salvarObservacoes(this, ${transacaoId})" class="btn-primary">Salvar</button>
+                        <button onclick="fecharModal()" class="btn-secondary">Fechar</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function salvarObservacoes(button, transacaoId) {
+            const observacao = document.getElementById('observacaoEdit').value;
+            
+            fetch('ajax_atualizar_observacao.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    observacao: observacao,
+                    transacao_id: transacaoId
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const observacaoCell = document.querySelector(`td[data-transacao-id="${transacaoId}"]`);
+                    if (observacaoCell) {
+                        observacaoCell.querySelector('.observacao-texto').textContent = observacao;
+                    }
+                    fecharModal();
+                } else {
+                    alert('Erro ao atualizar observação: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Erro ao atualizar observação: ' + error.message);
+            });
         }
 
         function fecharModal() {
-            const modal = document.getElementById('modalObservacoes');
-            modal.style.display = 'none';
+            const modal = document.querySelector('.modal');
+            if (modal) {
+                modal.remove();
+            }
         }
 
         // Fechar modal ao clicar fora dele
@@ -269,6 +322,108 @@ try {
         .close-modal:hover {
             color: #000;
         }
+        .btn-editar {
+            background: none;
+            border: none;
+            color: #28a745;
+            cursor: pointer;
+            padding: 2px 5px;
+            font-size: 0.9em;
+            margin-top: 5px;
+            margin-left: 10px;
+        }
+        .btn-editar:hover {
+            text-decoration: underline;
+        }
+        .observacoes-editor {
+            width: 100%;
+            min-height: 150px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            font-family: inherit;
+            font-size: inherit;
+            resize: vertical;
+        }
+        .modal-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 15px;
+        }
+        .btn-primary, .btn-secondary {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 1em;
+        }
+        .btn-primary {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #218838;
+        }
+        .btn-secondary {
+            background-color: #6c757d;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #5a6268;
+        }
+        .modal {
+            display: block;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 500px;
+            position: relative;
+        }
+        .modal-actions {
+            margin-top: 15px;
+            text-align: right;
+        }
+        .modal-actions button {
+            margin-left: 10px;
+        }
+        .observacao {
+            position: relative;
+        }
+        .observacao-texto {
+            margin-bottom: 5px;
+        }
+        .observacao-actions {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-link {
+            background: none;
+            border: none;
+            color: #0d6efd;
+            cursor: pointer;
+            padding: 0;
+            font: inherit;
+            text-decoration: underline;
+        }
+        .btn-link:hover {
+            color: #0a58ca;
+        }
     </style>
 </head>
 <body>
@@ -320,6 +475,14 @@ try {
                                 <span class="info-item">
                                     <i class="fas fa-box"></i>
                                     Entregue: <?= sanitizar($med['quantidade_entregue']) ?>
+                                </span>
+                                <span class="info-item">
+                                    <i class="fas fa-check-circle"></i>
+                                    Disponível: <?= sanitizar($med['quantidade_disponivel']) ?>
+                                </span>
+                                <span class="info-item">
+                                    <i class="fas fa-warehouse"></i>
+                                    Estoque: <?= sanitizar($med['estoque_atual']) ?>
                                 </span>
                                 <?php
                                 $hoje = new DateTime();
@@ -396,14 +559,11 @@ try {
                                 <td><?= sanitizar($registro['medicamento']) ?></td>
                                 <td><?= sanitizar($registro['quantidade']) ?></td>
                                 <td><?= date('d/m/Y H:i', strtotime($registro['data'])) ?></td>
-                                <td class="observacoes-cell">
-                                    <input type="text" class="observacoes-content" value="<?= htmlspecialchars(trim(preg_replace('/\s+/', ' ', $registro['observacoes'] ?? ''))) ?>" readonly>
-                                    <?php 
-                                        $obs = $registro['observacoes'] ?? '';
-                                        if (!empty($obs)):
-                                    ?>
-                                        <button class="btn-ver-mais" onclick="mostrarObservacoes(this)">Ver mais</button>
-                                    <?php endif; ?>
+                                <td class="observacao" data-transacao-id="<?= $registro['id'] ?>">
+                                    <div class="observacao-texto"><?= htmlspecialchars(trim(preg_replace('/\s+/', ' ', $registro['observacoes'] ?? ''))) ?></div>
+                                    <div class="observacao-actions">
+                                        <button onclick="editarObservacoes(this)" class="btn-link"><i class="fas fa-eye"></i> Ver mais</button>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>

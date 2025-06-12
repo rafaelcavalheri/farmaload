@@ -69,20 +69,38 @@ $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             $quantidade_disponivel = max(0, (int)$med['quantidade_solicitada'] - (int)$med['quantidade_entregue']);
             $max_disponivel = min($quantidade_disponivel, $estoque_atual);
             ?>
-            <label>Quantidade disponível: <?= $quantidade_disponivel ?></label>
-            <label>Estoque atual: <?= $estoque_atual ?></label>
-            <input type="number" 
-                   id="quantidade-<?= $med['id'] ?>" 
-                   class="quantidade-input"
-                   min="0" 
-                   max="<?= $max_disponivel ?>" 
-                   value="0">
-            <button type="button" 
-                    class="btn-dispensar" 
-                    onclick="dispensarMedicamento(<?= $med['id'] ?>, <?= $paciente_id ?>)"
-                    <?= $quantidade_disponivel == 0 ? 'disabled' : '' ?>>
-                Dispensar
-            </button>
+            <div class="quantidade-info-horizontal">
+                <div class="info-item">
+                    <i class="fas fa-pills"></i>
+                    <span>Solicitado: <?= $med['quantidade_solicitada'] ?></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-box"></i>
+                    <span>Entregue: <?= $med['quantidade_entregue'] ?></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-check-circle"></i>
+                    <span>Disponível: <?= $quantidade_disponivel ?></span>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-warehouse"></i>
+                    <span>Estoque: <?= $estoque_atual ?></span>
+                </div>
+            </div>
+            <div class="quantidade-input-container">
+                <input type="number" 
+                       id="quantidade-<?= $med['id'] ?>" 
+                       class="quantidade-input"
+                       min="0" 
+                       max="<?= $max_disponivel ?>" 
+                       value="0">
+                <button type="button" 
+                        class="btn-dispensar" 
+                        onclick="dispensarMedicamento(<?= $med['id'] ?>, <?= $paciente_id ?>)"
+                        <?= $quantidade_disponivel == 0 ? 'disabled' : '' ?>>
+                    Dispensar
+                </button>
+            </div>
         </div>
     </div>
 <?php endforeach; ?>
@@ -182,6 +200,7 @@ function dispensarVariosMedicamentos(pacienteId) {
     background-color: #f8f9fa;
     border: 1px solid #e9ecef;
     border-radius: 4px;
+    max-width: 100%;
 }
 .observacao-header {
     margin-bottom: 10px;
@@ -202,6 +221,101 @@ function dispensarVariosMedicamentos(pacienteId) {
     outline: none;
     box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
 }
+.medicamento-dispensar {
+    background: white;
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    max-width: 100%;
+}
+.medicamento-dispensar h4 {
+    margin: 0 0 10px 0;
+    color: #333;
+    font-size: 1.1em;
+}
+.status-renovacao {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    align-items: center;
+}
+.badge.renovado {
+    background-color: #ffc107;
+    color: #000;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.data {
+    color: #666;
+    font-size: 0.9em;
+}
+.quantidade-info-horizontal {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-bottom: 15px;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 4px;
+    align-items: center;
+    justify-content: space-between;
+}
+.quantidade-info-horizontal .info-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 1em;
+    white-space: nowrap;
+    min-width: 150px;
+}
+.quantidade-info-horizontal .info-item i {
+    color: #495057;
+    width: 16px;
+}
+.quantidade-input-container {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin-top: 10px;
+}
+.quantidade-input {
+    width: 120px;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+}
+.quantidade-input:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
+}
+.btn-dispensar {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 1em;
+    min-width: 120px;
+    justify-content: center;
+}
+.btn-dispensar:hover {
+    background-color: #218838;
+}
+.btn-dispensar:disabled {
+    background-color: #6c757d;
+    cursor: not-allowed;
+}
 .dispensar-varios-container {
     margin-top: 20px;
     text-align: center;
@@ -211,7 +325,7 @@ function dispensarVariosMedicamentos(pacienteId) {
 .btn-dispensar-varios {
     background-color: #28a745;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 24px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -219,6 +333,8 @@ function dispensarVariosMedicamentos(pacienteId) {
     display: inline-flex;
     align-items: center;
     gap: 8px;
+    min-width: 250px;
+    justify-content: center;
 }
 .btn-dispensar-varios:hover {
     background-color: #218838;
