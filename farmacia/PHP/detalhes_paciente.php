@@ -156,6 +156,29 @@ try {
                 modal.style.display = 'none';
             }
         }
+
+        function extornarTransacao(transacaoId, medicamentoNome, quantidade) {
+            if (!confirm(`Tem certeza que deseja extornar ${quantidade} unidade(s) de ${medicamentoNome}?`)) {
+                return;
+            }
+            fetch('ajax_extornar_transacao.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ transacao_id: transacaoId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Extorno realizado com sucesso!');
+                    location.reload();
+                } else {
+                    alert('Erro: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Erro ao extornar: ' + error.message);
+            });
+        }
     </script>
     <style>
         .medicamentos-atuais {
@@ -563,6 +586,9 @@ try {
                                     <div class="observacao-texto"><?= htmlspecialchars(trim(preg_replace('/\s+/', ' ', $registro['observacoes'] ?? ''))) ?></div>
                                     <div class="observacao-actions">
                                         <button onclick="editarObservacoes(this)" class="btn-link"><i class="fas fa-eye"></i> Ver mais</button>
+                                        <?php if ($registro['quantidade'] > 0): ?>
+                                            <button onclick="extornarTransacao(<?= $registro['id'] ?>, '<?= htmlspecialchars($registro['medicamento'], ENT_QUOTES) ?>', <?= $registro['quantidade'] ?>)" class="btn-extornar"><i class="fas fa-undo"></i> Extornar</button>
+                                        <?php endif; ?>
                                     </div>
                                 </td>
                             </tr>

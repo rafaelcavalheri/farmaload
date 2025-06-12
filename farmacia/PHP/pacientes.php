@@ -101,6 +101,43 @@ $stmt->execute($params);
             });
         }
 
+        function extornarMedicamento(pmId, pacienteId) {
+            const quantidade = document.querySelector(`#quantidade-${pmId}`).value;
+            const observacao = document.querySelector('#observacao').value;
+            
+            if (!quantidade || quantidade <= 0) {
+                alert('Por favor, informe uma quantidade válida para extornar.');
+                return;
+            }
+
+            if (!confirm('Tem certeza que deseja extornar esta quantidade?')) {
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('medicamento_id', pmId);
+            formData.append('paciente_id', pacienteId);
+            formData.append('quantidade', quantidade);
+            formData.append('observacao', observacao);
+
+            fetch('ajax_extornar.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Extorno realizado com sucesso!');
+                    location.reload();
+                } else {
+                    alert('Erro: ' + data.message);
+                }
+            })
+            .catch(error => {
+                alert('Erro ao extornar medicamento: ' + error.message);
+            });
+        }
+
         function dispensarVariosMedicamentos(pacienteId) {
             const observacao = document.querySelector('#observacao').value;
             const medicamentos = document.querySelectorAll('.medicamento-dispensar');
