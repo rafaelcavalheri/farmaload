@@ -1,12 +1,19 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.1306.1350
+**Versão:** v.1.2025.1306.1458
 **Data:** 13/06/2025
 
 ---
 
 # Histórico de versões
+
+### Correções e Melhorias
+
+## v.1.2025.1306.1458 (13/06/2025)
+
+- Correção de filtros de relatório na pagina relatórios
+- Melhorias visuais na página relatórios
 
 ## v.1.2025.1306.1350 (13/06/2025)
 
@@ -16,6 +23,8 @@
 Agora o arquivo de backup não inclui colunas do tipo GENERATED, como crm_completo na tabela medicos, evitando erro 3105 ao restaurar o banco de dados.
 - Correção na data de movimentação:
 - Corrigido comportamento onde a data das movimentações era sobrescrita pela data da restauração do backup. Agora, a data original da transação é preservada corretamente.
+- Correção de filtros de relatório na pagina relatórios
+- Melhorias visuais na página relatórios
 
 ## v.1.2025.1206.1648 (12/06/2025)
 ### Correções e Melhorias

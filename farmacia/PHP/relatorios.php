@@ -83,25 +83,41 @@ if ($tipo_relatorio === 'dispensas') {
         die("Erro na consulta: " . $e->getMessage());
     }
 } else {
-    // Relatório de pacientes
+    // Relatório de pacientes - Foco nos medicamentos com status específico
     $sql = "SELECT p.id, p.nome, p.cpf, p.telefone, 
-                   pm.renovacao as data_renovacao, pm.medicamento_id, m.nome as medicamento_nome
+                   pm.renovacao as data_renovacao, 
+                   m.nome as medicamento_nome
             FROM pacientes p
-            LEFT JOIN paciente_medicamentos pm ON p.id = pm.paciente_id
-            LEFT JOIN medicamentos m ON pm.medicamento_id = m.id
+            INNER JOIN paciente_medicamentos pm ON p.id = pm.paciente_id
+            INNER JOIN medicamentos m ON pm.medicamento_id = m.id
             WHERE p.ativo = 1";
+    
     $params = [];
-    // Filtro de status
+    $today = (new DateTime())->format('Y-m-d'); // Data atual em formato ISO
+    
+    // Ajuste crucial: Filtro aplicado APENAS aos medicamentos do status selecionado
     if (!empty($status_paciente)) {
         if ($status_paciente === 'vencido') {
-            $sql .= " AND pm.renovacao < CURDATE()";
+            $sql .= " AND pm.renovacao < :hoje";
+            $params[':hoje'] = $today;
         } elseif ($status_paciente === 'a_vencer') {
-            $sql .= " AND pm.renovacao >= CURDATE() AND pm.renovacao <= DATE_ADD(CURDATE(), INTERVAL 30 DAY)";
+            $sql .= " AND pm.renovacao BETWEEN :hoje_inicio AND :hoje_fim";
+            $params[':hoje_inicio'] = $today;
+            $params[':hoje_fim'] = (new DateTime($today))->modify('+30 days')->format('Y-m-d');
         } elseif ($status_paciente === 'renovado') {
-            $sql .= " AND pm.renovacao > CURDATE()";
+            $sql .= " AND pm.renovacao > DATE_ADD(:hoje, INTERVAL 30 DAY)";
+            $params[':hoje'] = $today;
         }
     }
+    
+    // Filtro de paciente mantido
+    if (!empty($paciente_id)) {
+        $sql .= " AND p.id = :paciente_id";
+        $params[':paciente_id'] = $paciente_id;
+    }
+    
     $sql .= " ORDER BY p.nome, m.nome";
+    
     try {
         $stmt = $pdo->prepare($sql);
         $stmt->execute($params);
@@ -246,34 +262,38 @@ if ($tipo_relatorio === 'dispensas') {
                         <tbody>
                             <?php foreach ($resultados_pacientes as $pac): ?>
                                 <?php
-                                    $hoje = new DateTime();
-                                    $data_renovacao = null;
-                                    if ($pac['data_renovacao']) {
-                                        if (strpos($pac['data_renovacao'], '/') !== false) {
-                                            // Formato brasileiro
-                                            $data_renovacao = DateTime::createFromFormat('d/m/Y', $pac['data_renovacao']);
-                                        } else {
-                                            // Formato ISO
-                                            $data_renovacao = new DateTime($pac['data_renovacao']);
+                                    $hoje = new DateTime('today');
+                                    $data_formatada = '-';
+                                    $status = 'Sem renovação';
+                                    $cor_status = '#6c757d'; // Cinza
+
+                                    if (!empty($pac['data_renovacao'])) {
+                                        try {
+                                            $data_renovacao = preg_match('/^\d{4}-\d{2}-\d{2}$/', $pac['data_renovacao'])
+                                                ? new DateTime($pac['data_renovacao'])
+                                                : DateTime::createFromFormat('d/m/Y', $pac['data_renovacao']);
+                                            
+                                            if ($data_renovacao) {
+                                                $data_formatada = $data_renovacao->format('d/m/Y');
+                                                $data_renovacao->setTime(0,0,0); // Normaliza hora
+                                                
+                                                $diff = $hoje->diff($data_renovacao)->days;
+                                                $is_past = $data_renovacao < $hoje;
+
+                                                if ($is_past) {
+                                                    $status = 'Vencido';
+                                                    $cor_status = '#dc3545';
+                                                } elseif ($diff <= 30) {
+                                                    $status = 'A vencer';
+                                                    $cor_status = '#ffc107';
+                                                } else {
+                                                    $status = 'Válido';
+                                                    $cor_status = '#28a745';
+                                                }
+                                            }
+                                        } catch (Exception $e) {
+                                            // Mantém status padrão em caso de erro
                                         }
-                                    }
-                                    $status = '';
-                                    $cor_status = '';
-                                    
-                                    if ($data_renovacao) {
-                                        if ($data_renovacao < $hoje) {
-                                            $status = 'Vencido';
-                                            $cor_status = '#dc3545'; // Vermelho
-                                        } elseif ($data_renovacao <= (clone $hoje)->modify('+30 days')) {
-                                            $status = 'A vencer';
-                                            $cor_status = '#ffc107'; // Amarelo
-                                        } else {
-                                            $status = 'Válido';
-                                            $cor_status = '#28a745'; // Verde
-                                        }
-                                    } else {
-                                        $status = 'Sem renovação';
-                                        $cor_status = '#6c757d'; // Cinza
                                     }
                                 ?>
                                 <tr>
@@ -281,7 +301,7 @@ if ($tipo_relatorio === 'dispensas') {
                                     <td><?= htmlspecialchars($pac['cpf']) ?></td>
                                     <td><?= htmlspecialchars($pac['telefone']) ?></td>
                                     <td><?= htmlspecialchars($pac['medicamento_nome'] ?? '-') ?></td>
-                                    <td><?= $data_renovacao ? $data_renovacao->format('d/m/Y') : '-' ?></td>
+                                    <td><?= $data_formatada ?></td>
                                     <td style="color: <?= $cor_status ?>; font-weight: bold;"><?= $status ?></td>
                                 </tr>
                             <?php endforeach; ?>
@@ -317,15 +337,123 @@ if ($tipo_relatorio === 'dispensas') {
             display: flex;
             gap: 10px;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
         
         .form-actions .btn-secondary {
             display: inline-flex;
             align-items: center;
             gap: 5px;
+            padding: 8px 16px;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+        }
+        
+        .form-actions .btn-secondary:hover {
+            background-color: #e9ecef;
         }
         
         .form-actions .btn-secondary i {
+            font-size: 1.1em;
+        }
+
+        .filtro-extra-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            padding: 12px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+            transition: all 0.2s ease;
+        }
+
+        .filtro-extra-row:hover {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .btn-remover-filtro {
+            background: #fff;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-size: 0.85em;
+            cursor: pointer;
+            align-self: center;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.15s ease;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+            font-weight: 500;
+            min-width: 32px;
+            justify-content: center;
+        }
+
+        .btn-remover-filtro:hover {
+            background: #dc3545;
+            color: #fff;
+            border-color: #dc3545;
+        }
+
+        .btn-remover-filtro::before {
+            content: "×";
+            font-size: 1.2em;
+            font-weight: 600;
+            line-height: 1;
+        }
+
+        .menu-adicionar-filtro {
+            min-width: 200px;
+            background: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 8px 0;
+            z-index: 1001;
+        }
+
+        .menu-adicionar-filtro div {
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .menu-adicionar-filtro div:hover {
+            background: #f8f9fa;
+            color: #0d6efd;
+        }
+
+        .menu-adicionar-filtro div i {
+            width: 16px;
+            text-align: center;
+        }
+
+        .btn-adicionar-filtro {
+            background: #fff;
+            color: #0d6efd;
+            border: 1px solid #0d6efd;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.15s ease;
+        }
+
+        .btn-adicionar-filtro:hover {
+            background: #0d6efd;
+            color: #fff;
+        }
+
+        .btn-adicionar-filtro i {
             font-size: 1.1em;
         }
 
@@ -402,51 +530,6 @@ if ($tipo_relatorio === 'dispensas') {
 
         .close-modal:hover {
             color: #000;
-        }
-
-        /* Ajusta o tamanho das outras colunas */
-        /* Removido para permitir que o CSS global controle a largura e quebra de linha */
-        .btn-remover-filtro {
-            background: #fff;
-            color: #495057;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            padding: 6px 12px;
-            font-size: 0.85em;
-            margin-left: 8px;
-            cursor: pointer;
-            align-self: center;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.15s ease;
-            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-            font-weight: 500;
-        }
-        .btn-remover-filtro:hover {
-            background: #f8f9fa;
-            color: #212529;
-            border-color: #adb5bd;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-        .btn-remover-filtro::before {
-            content: "×";
-            font-size: 1.1em;
-            font-weight: 600;
-            line-height: 1;
-        }
-        .filtro-extra-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 8px;
-            padding: 8px;
-            background: #f8f9fa;
-            border-radius: 6px;
-            border: 1px solid #e9ecef;
-        }
-        .menu-adicionar-filtro {
-            min-width: 180px;
         }
     </style>
 
@@ -557,11 +640,11 @@ if ($tipo_relatorio === 'dispensas') {
                     const div = document.createElement('div');
                     div.className = 'form-row filtro-extra-row';
                     div.innerHTML = `
-                        <div class="form-group">
+                        <div class="form-group" style="flex: 1;">
                             <label for="${filtro.id}">${filtro.label}:</label>
                             ${filtro.html}
                         </div>
-                        <button type="button" class="btn-remover-filtro" onclick="removerFiltro('${filtro.id}')">&times;</button>
+                        <button type="button" class="btn-remover-filtro" onclick="removerFiltro('${filtro.id}')" title="Remover filtro"></button>
                     `;
                     container.appendChild(div);
                 }
@@ -581,21 +664,10 @@ if ($tipo_relatorio === 'dispensas') {
             let menu = document.createElement('div');
             menu.className = 'menu-adicionar-filtro';
             menu.style.position = 'absolute';
-            menu.style.background = '#fff';
-            menu.style.border = '1px solid #ced4da';
-            menu.style.zIndex = 1001;
-            menu.style.padding = '8px 0';
-            menu.style.borderRadius = '6px';
-            menu.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
             
             opcoes.forEach(filtro => {
                 let item = document.createElement('div');
-                item.textContent = filtro.label;
-                item.style.padding = '8px 16px';
-                item.style.cursor = 'pointer';
-                item.style.transition = 'background-color 0.15s ease';
-                item.onmouseover = () => item.style.background = '#f8f9fa';
-                item.onmouseout = () => item.style.background = '';
+                item.innerHTML = `<i class="fas fa-plus"></i> ${filtro.label}`;
                 item.onclick = () => {
                     filtrosAtivos.push(filtro.id);
                     renderFiltrosExtras();
