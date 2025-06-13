@@ -1,12 +1,18 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.1306.1538
+**Versão:** v.1.2025.1306.1616
 **Data:** 13/06/2025
 
 ---
 
 # Histórico de versões
+
+### Correções e Melhorias
+
+## v.1.2025.1306.1616 (13/06/2025)
+
+- Correção no código dos medicamentos e na importação
 
 ### Correções e Melhorias
 
