@@ -216,6 +216,7 @@ if ($tipo_relatorio === 'dispensas') {
                                     <td><?= htmlspecialchars($dispensa['paciente_telefone']) ?></td>
                                     <td class="observacoes-cell">
                                         <input type="text" class="observacoes-content" value="<?= htmlspecialchars(trim(preg_replace('/\s+/', ' ', $dispensa['observacoes'] ?? ''))) ?>" readonly>
+                                        <span class="observacoes-print"><?= htmlspecialchars(trim(preg_replace('/\s+/', ' ', $dispensa['observacoes'] ?? ''))) ?></span>
                                         <?php 
                                             $obs = $dispensa['observacoes'] ?? '';
                                             if (!empty($obs)):
@@ -239,7 +240,7 @@ if ($tipo_relatorio === 'dispensas') {
             <h3>Resultados (<?= count($resultados_pacientes ?? []) ?> pacientes)</h3>
             <?php if (!empty($resultados_pacientes)): ?>
                 <div class="form-actions" style="margin-bottom: 15px;">
-                    <a href="exportar_relatorio_pacientes.php?<?= http_build_query($_GET) ?>" 
+                    <a href="exportar_relatorio.php?<?= http_build_query(array_merge($_GET, ['tipo_relatorio' => 'pacientes'])) ?>" 
                        class="btn-secondary" target="_blank">
                         <i class="fas fa-file-excel"></i> Exportar Excel
                     </a>
@@ -329,8 +330,24 @@ if ($tipo_relatorio === 'dispensas') {
             }
             table {
                 width: 100% !important;
-                font-size: 12px !important;
+                font-size: 9px !important;
+                table-layout: fixed !important;
+                word-break: break-word !important;
             }
+            th, td {
+                padding: 1px 2px !important;
+                white-space: normal !important;
+            }
+            /* Ajuste especial para a coluna de Observações */
+            td.observacoes-cell, th.observacoes-cell {
+                min-width: 120px !important;
+                max-width: 260px !important;
+                width: 22% !important;
+                word-break: break-word !important;
+                white-space: pre-line !important;
+            }
+            .observacoes-content, .btn-ver-mais { display: none !important; }
+            .observacoes-print { display: block !important; white-space: pre-line !important; }
         }
         
         .form-actions {
@@ -531,6 +548,8 @@ if ($tipo_relatorio === 'dispensas') {
         .close-modal:hover {
             color: #000;
         }
+
+        .observacoes-print { display: none; }
     </style>
 
     <!-- Modal para observações -->
