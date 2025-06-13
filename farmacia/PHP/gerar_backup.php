@@ -17,6 +17,18 @@ function gerarBackup($pdo, $tipo_backup = 'completo', $tabelas_especificas = [])
     // Adicionar comandos para desabilitar foreign keys
     $backup .= "SET FOREIGN_KEY_CHECKS=0;\n\n";
     
+    // Função para obter colunas não geradas
+    function getNonGeneratedColumns($pdo, $table) {
+        $columns = [];
+        $stmt = $pdo->query("SHOW FULL COLUMNS FROM `$table`");
+        while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+            if (stripos($row['Extra'], 'VIRTUAL') === false && stripos($row['Extra'], 'STORED') === false) {
+                $columns[] = "`" . $row['Field'] . "`";
+            }
+        }
+        return $columns;
+    }
+    
     // Definir tabelas baseadas no tipo de backup
     $tabelas = [];
     switch ($tipo_backup) {
@@ -51,14 +63,18 @@ function gerarBackup($pdo, $tipo_backup = 'completo', $tabelas_especificas = [])
         $createTable = $pdo->query("SHOW CREATE TABLE `$table`")->fetch(PDO::FETCH_ASSOC);
         $backup .= $createTable['Create Table'] . ";\n\n";
         
-        $rows = $pdo->query("SELECT * FROM `$table`")->fetchAll(PDO::FETCH_ASSOC);
+        // Obter apenas colunas não geradas
+        $columns = getNonGeneratedColumns($pdo, $table);
+        $columnsStr = implode(', ', $columns);
+        
+        $rows = $pdo->query("SELECT $columnsStr FROM `$table`")->fetchAll(PDO::FETCH_ASSOC);
         foreach ($rows as $row) {
             $values = array_map(function($value) use ($pdo) {
                 if ($value === null) return 'NULL';
                 return $pdo->quote($value);
             }, $row);
             
-            $backup .= "INSERT INTO `$table` VALUES (" . implode(', ', $values) . ");\n";
+            $backup .= "INSERT INTO `$table` ($columnsStr) VALUES (" . implode(', ', $values) . ");\n";
         }
         $backup .= "\n";
     }
