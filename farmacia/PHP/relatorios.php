@@ -327,28 +327,86 @@ if ($tipo_relatorio === 'dispensas') {
                 width: 100% !important;
                 margin: 0 !important;
                 padding: 0 !important;
+                max-width: none !important;
+            }
+            .table-responsive {
+                width: 100% !important;
+                overflow: visible !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             table {
                 width: 100% !important;
-                font-size: 9px !important;
-                table-layout: fixed !important;
-                word-break: break-word !important;
+                min-width: auto !important;
+                max-width: none !important;
+                table-layout: auto !important;
+                font-size: 8px !important;
+                margin: 0 !important;
+                padding: 0 !important;
             }
             th, td {
-                padding: 1px 2px !important;
+                padding: 2px 4px !important;
                 white-space: normal !important;
+                word-break: break-word !important;
+                page-break-inside: avoid !important;
             }
             /* Ajuste especial para a coluna de Observações */
             td.observacoes-cell, th.observacoes-cell {
-                min-width: 120px !important;
-                max-width: 260px !important;
-                width: 22% !important;
+                min-width: 100px !important;
+                max-width: none !important;
+                width: auto !important;
                 word-break: break-word !important;
                 white-space: pre-line !important;
             }
             .observacoes-content, .btn-ver-mais { display: none !important; }
-            .observacoes-print { display: block !important; white-space: pre-line !important; }
+            .observacoes-print { 
+                display: block !important; 
+                white-space: pre-line !important;
+                font-size: 8px !important;
+            }
+            /* Forçar orientação paisagem */
+            @page {
+                size: landscape;
+                margin: 0.5cm;
+            }
         }
+        
+        /* Ajustes para aumentar a largura da página */
+        .container {
+            max-width: 95% !important;
+            margin: 0 auto !important;
+            padding: 20px !important;
+        }
+
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            margin: 0;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            min-width: 1200px;
+            table-layout: fixed;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        /* Ajuste das larguras das colunas */
+        th:nth-child(1), td:nth-child(1) { width: 10%; } /* Data */
+        th:nth-child(2), td:nth-child(2) { width: 15%; } /* Medicamento */
+        th:nth-child(3), td:nth-child(3) { width: 8%; }  /* Quantidade */
+        th:nth-child(4), td:nth-child(4) { width: 12%; } /* Operador */
+        th:nth-child(5), td:nth-child(5) { width: 15%; } /* Paciente */
+        th:nth-child(6), td:nth-child(6) { width: 12%; } /* CPF */
+        th:nth-child(7), td:nth-child(7) { width: 10%; } /* Telefone */
+        th:nth-child(8), td:nth-child(8) { width: 18%; } /* Observações */
         
         .form-actions {
             display: flex;
