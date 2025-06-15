@@ -16,9 +16,18 @@ switch ($_SERVER['REQUEST_METHOD']) {
             $stmt = $pdo->query($sql);
             $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             
-            // Calculate current stock for each medication
+            // Calculate current stock and get lots for each medication
             foreach ($medicamentos as &$medicamento) {
                 $medicamento['quantidade'] = calcularEstoqueAtual($pdo, $medicamento['id']);
+                
+                // Get lots for this medication
+                $sql_lotes = "SELECT id, lote as numero, quantidade, DATE_FORMAT(validade, '%Y-%m-%d') as validade 
+                             FROM lotes_medicamentos 
+                             WHERE medicamento_id = ? AND quantidade > 0 
+                             ORDER BY validade ASC";
+                $stmt_lotes = $pdo->prepare($sql_lotes);
+                $stmt_lotes->execute([$medicamento['id']]);
+                $medicamento['lotes'] = $stmt_lotes->fetchAll(PDO::FETCH_ASSOC);
             }
             unset($medicamento);
             
@@ -42,25 +51,41 @@ switch ($_SERVER['REQUEST_METHOD']) {
         }
         $id = $data['id'];
         $quantidade = $data['quantidade'];
+        $lotes = $data['lotes'] ?? [];
+        
         try {
-            $sql = "UPDATE medicamentos SET quantidade = :quantidade WHERE id = :id";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindParam(':quantidade', $quantidade, PDO::PARAM_INT);
-            $stmt->bindParam(':id', $id, PDO::PARAM_INT);
-            if ($stmt->execute()) {
-                echo json_encode([
-                    'success' => true,
-                    'message' => 'Medicamento atualizado com sucesso'
-                ]);
-                exit;
-            } else {
-                echo json_encode([
-                    'success' => false,
-                    'message' => 'Erro ao atualizar medicamento'
-                ]);
-                exit;
+            $pdo->beginTransaction();
+            
+            // Update lots
+            if (!empty($lotes)) {
+                foreach ($lotes as $lote) {
+                    if (isset($lote['id'])) {
+                        // Update existing lot
+                        $sql_lote = "UPDATE lotes_medicamentos 
+                                   SET lote = :numero, 
+                                       quantidade = :quantidade, 
+                                       validade = :validade 
+                                   WHERE id = :id AND medicamento_id = :medicamento_id";
+                        $stmt_lote = $pdo->prepare($sql_lote);
+                        $stmt_lote->execute([
+                            ':numero' => $lote['numero'],
+                            ':quantidade' => $lote['quantidade'],
+                            ':validade' => $lote['validade'],
+                            ':id' => $lote['id'],
+                            ':medicamento_id' => $id
+                        ]);
+                    }
+                }
             }
+            
+            $pdo->commit();
+            echo json_encode([
+                'success' => true,
+                'message' => 'Medicamento atualizado com sucesso'
+            ]);
+            exit;
         } catch (PDOException $e) {
+            $pdo->rollBack();
             echo json_encode([
                 'success' => false,
                 'message' => 'Erro ao atualizar medicamento: ' . $e->getMessage()
