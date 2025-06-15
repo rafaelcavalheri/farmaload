@@ -7,13 +7,21 @@ header('Access-Control-Allow-Methods: GET, PUT');
 header('Access-Control-Allow-Headers: Content-Type');
 
 require_once 'config.php';
+require_once 'funcoes_estoque.php';
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':
         try {
-            $sql = "SELECT id, nome, apresentacao, codigo, miligramas, quantidade, ativo FROM medicamentos WHERE ativo = 1 ORDER BY nome";
+            $sql = "SELECT id, nome, apresentacao, codigo, miligramas, ativo FROM medicamentos WHERE ativo = 1 ORDER BY nome";
             $stmt = $pdo->query($sql);
             $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            
+            // Calculate current stock for each medication
+            foreach ($medicamentos as &$medicamento) {
+                $medicamento['quantidade'] = calcularEstoqueAtual($pdo, $medicamento['id']);
+            }
+            unset($medicamento);
+            
             echo json_encode($medicamentos);
             exit;
         } catch (PDOException $e) {
