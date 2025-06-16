@@ -10,6 +10,10 @@
 
 ### Correções e Melhorias
 
+## v.1.2025.1606.1400 (16/06/2025)
+
+- Implementação de API para aplicativos móveis
+
 ## v.1.2025.1306.1616 (13/06/2025)
 
 - Correção no código dos medicamentos e na importação
