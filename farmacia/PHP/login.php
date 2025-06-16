@@ -155,8 +155,46 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 function authenticateADUser($username, $password, $ldapServer, $ldapDomain, $ldapBaseDn) {
-    // ... (mantém a função igual ao seu código)
-    // (copie a função completa do seu código original aqui)
+    // Remove o domínio do username se estiver presente
+    $username = str_replace('@' . $ldapDomain, '', $username);
+    
+    // Conecta ao servidor LDAP
+    $ldapConn = ldap_connect($ldapServer);
+    if (!$ldapConn) {
+        error_log("Falha ao conectar ao servidor LDAP: " . $ldapServer);
+        return false;
+    }
+
+    // Configura opções LDAP
+    ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
+    ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
+
+    try {
+        // Tenta fazer bind com as credenciais do usuário
+        $userDn = $username . '@' . $ldapDomain;
+        if (@ldap_bind($ldapConn, $userDn, $password)) {
+            // Busca informações do usuário
+            $filter = "(sAMAccountName=$username)";
+            $result = ldap_search($ldapConn, $ldapBaseDn, $filter);
+            
+            if ($result) {
+                $entries = ldap_get_entries($ldapConn, $result);
+                if ($entries['count'] > 0) {
+                    ldap_unbind($ldapConn);
+                    return true;
+                }
+            }
+        }
+        
+        ldap_unbind($ldapConn);
+        return false;
+    } catch (Exception $e) {
+        error_log("Erro na autenticação LDAP: " . $e->getMessage());
+        if (isset($ldapConn)) {
+            ldap_unbind($ldapConn);
+        }
+        return false;
+    }
 }
 ?>
 <!DOCTYPE html>
