@@ -4,7 +4,7 @@ header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
-require_once 'CONFIG/config.php';
+require_once 'config.php';
 
 // Recebe os dados do CSV
 $csvData = file_get_contents('php://input');
