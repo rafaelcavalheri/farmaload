@@ -496,6 +496,31 @@ if (isset($_POST['import']) && isset($_FILES['arquivo'])) {
         .info-box i {
             margin-right: 5px;
         }
+
+        .api-result {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: #f5f5f5;
+            border-radius: 4px;
+        }
+        
+        .api-result pre {
+            margin: 0;
+            padding: 1rem;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+        }
+        
+        .api-result pre.success {
+            border-left: 4px solid #28a745;
+        }
+        
+        .api-result pre.error {
+            border-left: 4px solid #dc3545;
+        }
     </style>
 
     <script>

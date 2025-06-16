@@ -1,10 +1,8 @@
 <?php
-session_start();
-include 'config.php';
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
-$erro = '';
-
-// Detecta se é uma requisição JSON (API)
+// Detecta se é uma requisição da API
 $isApi = (
     isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false
 ) || (
@@ -13,10 +11,68 @@ $isApi = (
 
 if ($isApi) {
     header('Content-Type: application/json');
+    header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Allow-Methods: POST, OPTIONS');
+    header('Access-Control-Allow-Headers: Content-Type, Authorization, Accept');
+    header('Access-Control-Allow-Credentials: true');
+}
+
+// Inicia a sessão se ainda não estiver iniciada
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+error_log("Iniciando processo de login");
+error_log("Session ID: " . session_id());
+error_log("Conteúdo da sessão antes do login: " . print_r($_SESSION, true));
+
+// Corrigindo os caminhos dos arquivos
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/ldap_settings.php';
+
+// Função para autenticar usuário no AD
+function authenticateADUser($email, $senha, $ldapServer, $ldapDomain, $ldapBaseDn) {
+    error_log("Tentando autenticar usuário LDAP: " . $email);
+    error_log("Configurações LDAP: Server=$ldapServer, Domain=$ldapDomain, BaseDN=$ldapBaseDn");
+    
+    // Remove o domínio do email se existir
+    $sAMAccountName = strstr($email, '@', true) ?: $email;
+    $userPrincipalName = $sAMAccountName . '@' . $ldapDomain;
+    
+    error_log("Tentando conectar ao servidor LDAP: " . $ldapServer);
+    $ldap = ldap_connect($ldapServer);
+    
+    if (!$ldap) {
+        error_log("Falha ao conectar ao servidor LDAP");
+        return false;
+    }
+    
+    ldap_set_option($ldap, LDAP_OPT_PROTOCOL_VERSION, 3);
+    ldap_set_option($ldap, LDAP_OPT_REFERRALS, 0);
+    
+    error_log("Tentando bind com: " . $userPrincipalName);
+    $bind = @ldap_bind($ldap, $userPrincipalName, $senha);
+    
+    if (!$bind) {
+        error_log("Falha no bind LDAP: " . ldap_error($ldap));
+        return false;
+    }
+    
+    error_log("Bind LDAP bem sucedido");
+    ldap_close($ldap);
+    return true;
+}
+
+// Se for uma requisição da API
+if ($isApi) {
     $data = json_decode(file_get_contents('php://input'), true);
+    error_log("Dados recebidos da API: " . print_r($data, true));
 
     if (!isset($data['email']) || !isset($data['senha'])) {
-        echo json_encode(['success' => false, 'message' => 'Email e senha são obrigatórios']);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Email e senha são obrigatórios'
+        ]);
         exit;
     }
 
@@ -27,28 +83,26 @@ if ($isApi) {
     try {
         if ($loginType === 'ldap') {
             // Autenticação LDAP
-            $ldapConfig = null;
-            $configFile = __DIR__ . '/ldap_settings.php';
-            if (file_exists($configFile)) {
-                $ldapConfig = include $configFile;
-            }
-            if (!$ldapConfig) {
-                echo json_encode(['success' => false, 'message' => 'Configurações LDAP não encontradas.']);
-                exit;
-            }
-            $ldapServer = $ldapConfig['ldap_server'];
-            $ldapDomain = $ldapConfig['ldap_domain'];
-            $ldapBaseDn = $ldapConfig['ldap_base_dn'];
             $ldapResult = authenticateADUser($email, $senha, $ldapServer, $ldapDomain, $ldapBaseDn);
             if ($ldapResult === true) {
                 $sAMAccountName = strstr($email, '@', true) ?: $email;
                 $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email LIKE ? AND auth_type = 'ldap'");
                 $stmt->execute([$sAMAccountName . '%']);
                 $usuario = $stmt->fetch();
+                
                 if ($usuario) {
+                    $token = bin2hex(random_bytes(32));
+                    $_SESSION['api_tokens'][$token] = [
+                        'user_id' => $usuario['id'],
+                        'created_at' => time()
+                    ];
+                    
+                    error_log("Token gerado para usuário LDAP: " . $usuario['id']);
+                    error_log("Token armazenado: " . $token);
+                    
                     echo json_encode([
                         'success' => true,
-                        'token' => bin2hex(random_bytes(32)),
+                        'token' => $token,
                         'message' => 'Login realizado com sucesso (LDAP)'
                     ]);
                 } else {
@@ -62,43 +116,40 @@ if ($isApi) {
             $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = ? AND auth_type = 'local'");
             $stmt->execute([$email]);
             $usuario = $stmt->fetch();
+            
             if ($usuario && password_verify($senha, $usuario['senha'])) {
+                $token = bin2hex(random_bytes(32));
+                $_SESSION['api_tokens'][$token] = [
+                    'user_id' => $usuario['id'],
+                    'created_at' => time()
+                ];
+                
+                error_log("Token gerado para usuário local: " . $usuario['id']);
+                error_log("Token armazenado: " . $token);
+                
                 echo json_encode([
                     'success' => true,
-                    'token' => bin2hex(random_bytes(32)),
+                    'token' => $token,
                     'message' => 'Login realizado com sucesso'
                 ]);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Credenciais inválidas']);
             }
         }
-    } catch (PDOException $e) {
-        echo json_encode(['success' => false, 'message' => 'Erro no banco de dados: ' . $e->getMessage()]);
     } catch (Exception $e) {
+        error_log("Erro durante login: " . $e->getMessage());
         echo json_encode(['success' => false, 'message' => 'Erro: ' . $e->getMessage()]);
     }
     exit;
 }
 
-// --- Código tradicional para acesso via navegador (formulário HTML) ---
-
-// Carregar configurações LDAP
-$ldapConfig = null;
-$configFile = __DIR__ . '/ldap_settings.php';
-if (file_exists($configFile)) {
-    $ldapConfig = include $configFile;
-}
-if (!$ldapConfig) {
-    throw new Exception("Configurações LDAP não encontradas. Por favor, configure o LDAP primeiro.");
-}
-$ldapServer = $ldapConfig['ldap_server'];
-$ldapDomain = $ldapConfig['ldap_domain'];
-$ldapBaseDn = $ldapConfig['ldap_base_dn'];
-
+// Se não for API, mostra o formulário HTML
+$erro = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = trim($_POST['email'] ?? '');
     $senha = $_POST['senha'] ?? '';
     $loginType = $_POST['login_type'] ?? 'local';
+    
     try {
         if ($loginType === 'ldap') {
             $ldapResult = authenticateADUser($email, $senha, $ldapServer, $ldapDomain, $ldapBaseDn);
@@ -107,6 +158,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email LIKE ? AND auth_type = 'ldap'");
                 $stmt->execute([$sAMAccountName . '%']);
                 $usuario = $stmt->fetch();
+                
                 if ($usuario) {
                     $_SESSION['usuario'] = [
                         'id'      => $usuario['id'],
@@ -126,6 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare("SELECT * FROM usuarios WHERE email = ? AND auth_type = 'local'");
             $stmt->execute([$email]);
             $usuario = $stmt->fetch();
+            
             if ($usuario && password_verify($senha, $usuario['senha'])) {
                 $_SESSION['usuario'] = [
                     'id'      => $usuario['id'],
@@ -139,61 +192,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $erro = "E-mail ou senha inválidos.";
             }
         }
-    } catch (PDOException $e) {
-        if (ENVIRONMENT === 'development') {
-            $erro = "Erro no banco de dados: " . $e->getMessage();
-        } else {
-            $erro = "Erro no sistema. Tente novamente mais tarde.";
-        }
     } catch (Exception $e) {
-        if (ENVIRONMENT === 'development') {
-            $erro = "Erro: " . $e->getMessage();
-        } else {
-            $erro = "Erro no sistema. Tente novamente mais tarde.";
-        }
-    }
-}
-
-function authenticateADUser($username, $password, $ldapServer, $ldapDomain, $ldapBaseDn) {
-    // Remove o domínio do username se estiver presente
-    $username = str_replace('@' . $ldapDomain, '', $username);
-    
-    // Conecta ao servidor LDAP
-    $ldapConn = ldap_connect($ldapServer);
-    if (!$ldapConn) {
-        error_log("Falha ao conectar ao servidor LDAP: " . $ldapServer);
-        return false;
-    }
-
-    // Configura opções LDAP
-    ldap_set_option($ldapConn, LDAP_OPT_PROTOCOL_VERSION, 3);
-    ldap_set_option($ldapConn, LDAP_OPT_REFERRALS, 0);
-
-    try {
-        // Tenta fazer bind com as credenciais do usuário
-        $userDn = $username . '@' . $ldapDomain;
-        if (@ldap_bind($ldapConn, $userDn, $password)) {
-            // Busca informações do usuário
-            $filter = "(sAMAccountName=$username)";
-            $result = ldap_search($ldapConn, $ldapBaseDn, $filter);
-            
-            if ($result) {
-                $entries = ldap_get_entries($ldapConn, $result);
-                if ($entries['count'] > 0) {
-                    ldap_unbind($ldapConn);
-                    return true;
-                }
-            }
-        }
-        
-        ldap_unbind($ldapConn);
-        return false;
-    } catch (Exception $e) {
-        error_log("Erro na autenticação LDAP: " . $e->getMessage());
-        if (isset($ldapConn)) {
-            ldap_unbind($ldapConn);
-        }
-        return false;
+        $erro = "Erro no sistema. Tente novamente mais tarde.";
+        error_log("Erro durante login: " . $e->getMessage());
     }
 }
 ?>
