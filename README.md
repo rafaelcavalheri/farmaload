@@ -1,8 +1,8 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.1306.1616
-**Data:** 13/06/2025
+**Versão:** v.1.2025.1606.1400
+**Data:** 14/06/2025
 
 ---
 
