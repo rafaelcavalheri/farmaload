@@ -41,7 +41,8 @@ RUN mkdir -p /var/www/html/vendor && \
 
 # Instalar PHPSpreadsheet como www-data
 USER www-data
-RUN composer require phpoffice/phpspreadsheet
+RUN composer require phpoffice/phpspreadsheet && \
+    composer require firebase/php-jwt
 USER root
 
 # Configuração do Apache

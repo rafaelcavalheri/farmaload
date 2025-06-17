@@ -39,6 +39,8 @@ services:
 
       - TZ=America/Sao_Paulo
 
+      - JWT_SECRET_KEY=bb46a51fd2a57d09a415c11803f1176a6dbb362b3d59dc42985d424d5121b03ccf4c5671cb203bc81e1dd51cb2111a0a5ea80e6b660a3a1a24940c68813b13f0
+
     depends_on:
 
       db:

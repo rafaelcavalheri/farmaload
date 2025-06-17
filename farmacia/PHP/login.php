@@ -29,6 +29,7 @@ error_log("Conteúdo da sessão antes do login: " . print_r($_SESSION, true));
 // Corrigindo os caminhos dos arquivos
 require_once __DIR__ . '/config.php';
 require_once __DIR__ . '/ldap_settings.php';
+require_once __DIR__ . '/jwt_auth.php';
 
 // Função para autenticar usuário no AD
 function authenticateADUser($email, $senha, $ldapServer, $ldapDomain, $ldapBaseDn) {
@@ -91,19 +92,22 @@ if ($isApi) {
                 $usuario = $stmt->fetch();
                 
                 if ($usuario) {
-                    $token = bin2hex(random_bytes(32));
-                    $_SESSION['api_tokens'][$token] = [
-                        'user_id' => $usuario['id'],
-                        'created_at' => time()
+                    // Gerar token JWT
+                    $userData = [
+                        'id' => $usuario['id'],
+                        'nome' => $usuario['nome'],
+                        'email' => $usuario['email'],
+                        'perfil' => $usuario['perfil']
                     ];
+                    $token = JWTAuth::generateToken($usuario['id'], $userData);
                     
-                    error_log("Token gerado para usuário LDAP: " . $usuario['id']);
-                    error_log("Token armazenado: " . $token);
+                    error_log("Token JWT gerado para usuário LDAP: " . $usuario['id']);
                     
                     echo json_encode([
                         'success' => true,
                         'token' => $token,
-                        'message' => 'Login realizado com sucesso (LDAP)'
+                        'message' => 'Login realizado com sucesso (LDAP)',
+                        'user' => $userData
                     ]);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Usuário LDAP não cadastrado no sistema.']);
@@ -118,19 +122,22 @@ if ($isApi) {
             $usuario = $stmt->fetch();
             
             if ($usuario && password_verify($senha, $usuario['senha'])) {
-                $token = bin2hex(random_bytes(32));
-                $_SESSION['api_tokens'][$token] = [
-                    'user_id' => $usuario['id'],
-                    'created_at' => time()
+                // Gerar token JWT
+                $userData = [
+                    'id' => $usuario['id'],
+                    'nome' => $usuario['nome'],
+                    'email' => $usuario['email'],
+                    'perfil' => $usuario['perfil']
                 ];
+                $token = JWTAuth::generateToken($usuario['id'], $userData);
                 
-                error_log("Token gerado para usuário local: " . $usuario['id']);
-                error_log("Token armazenado: " . $token);
+                error_log("Token JWT gerado para usuário local: " . $usuario['id']);
                 
                 echo json_encode([
                     'success' => true,
                     'token' => $token,
-                    'message' => 'Login realizado com sucesso'
+                    'message' => 'Login realizado com sucesso',
+                    'user' => $userData
                 ]);
             } else {
                 echo json_encode(['success' => false, 'message' => 'Credenciais inválidas']);

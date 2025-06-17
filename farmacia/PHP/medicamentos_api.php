@@ -4,10 +4,15 @@ ini_set('display_errors', 0);
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, PUT');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization');
 
 require_once 'config.php';
 require_once 'funcoes_estoque.php';
+require_once 'jwt_auth.php';
+
+// Verificar autenticação JWT
+$auth = JWTAuth::requireAuth();
+$userId = $auth->uid;
 
 switch ($_SERVER['REQUEST_METHOD']) {
     case 'GET':

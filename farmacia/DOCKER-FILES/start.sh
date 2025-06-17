@@ -16,5 +16,11 @@ if [ ! -d /var/www/html/vendor/phpoffice ]; then
     su -s /bin/bash -c "composer require phpoffice/phpspreadsheet" www-data
 fi
 
+# Instalar JWT se necessário
+if [ ! -d /var/www/html/vendor/firebase ]; then
+    cd /var/www/html && \
+    su -s /bin/bash -c "composer require firebase/php-jwt" www-data
+fi
+
 # Iniciar Apache
 apache2-foreground

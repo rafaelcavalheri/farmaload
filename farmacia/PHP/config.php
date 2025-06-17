@@ -35,6 +35,7 @@ if (ENVIRONMENT === 'development') {
     ini_set('error_log', __DIR__ . '/logs/erro_prod.log');
 }
 
+/* ===================== CONFIGURAÇÕES DO BANCO DE DADOS ===================== */
 $dbConfig = [
     'host'      => getenv('DB_HOST') ?: 'db',
     'database'  => getenv('DB_NAME') ?: 'farmacia',
@@ -48,6 +49,11 @@ $dbConfig = [
         PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8mb4 COLLATE utf8mb4_unicode_ci"
     ]
 ];
+
+/* ===================== CONFIGURAÇÕES JWT ===================== */
+define('JWT_SECRET_KEY', getenv('JWT_SECRET_KEY') ?: 'CHAVE-MUITO-SEGURA-AQUI-ALTERE-ISSO');
+define('JWT_ISSUER', 'farmacia.mogimirim.sp.gov.br');
+define('JWT_EXPIRY', 3600); // 1 hour in seconds
 
 try {
     $dsn = "mysql:host={$dbConfig['host']};dbname={$dbConfig['database']};charset={$dbConfig['charset']}";
@@ -104,7 +110,7 @@ function validarTokenCsrf($token) {
     return hash_equals($_SESSION['csrf_token'] ?? '', $token);
 }
 
-// Formatação de CPF (Função faltante)
+// Formatação de CPF
 function formatarCPF($cpf) {
     $cpf = preg_replace('/[^0-9]/', '', $cpf);
     if (strlen($cpf) !== 11) return 'Inválido';
