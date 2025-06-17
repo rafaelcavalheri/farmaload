@@ -1,12 +1,30 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.1606.1400
-**Data:** 14/06/2025
+**Versão:** v.1.2025.1706.0840
+**Data:** 17/06/2025
 
 ---
 
 # Histórico de versões
+
+### Correções e Melhorias
+
+## v.1.2025.1706.0840 (17/06/2025)
+
+### Implementação de Autenticação JWT
+- Adicionada autenticação JWT para maior segurança
+- Implementado sistema de tokens para API
+- Integração com autenticação LDAP existente
+- Proteção de endpoints da API
+- Atualização do aplicativo Android para suporte JWT
+
+### Melhorias de Segurança
+- Implementação de headers de segurança
+- Proteção contra SQL Injection
+- Validação de entrada de dados
+- Logs de auditoria
+- Configuração CORS
 
 ### Correções e Melhorias
 
