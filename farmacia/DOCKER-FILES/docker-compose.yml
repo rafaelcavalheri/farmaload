@@ -23,7 +23,6 @@ services:
       - ../CSS:/var/www/html/css
       - ../LOG:/var/www/html/logs
       - ../images:/var/www/html/images
-      - vendor-data:/var/www/html/vendor
       - php-sessions:/var/lib/php/sessions
       - apache-logs:/var/log/apache2
 
@@ -100,10 +99,6 @@ services:
 volumes:
 
   db_data:
-
-    driver: local
-
-  vendor-data:
 
     driver: local
 
