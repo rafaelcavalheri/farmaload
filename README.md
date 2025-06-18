@@ -10,7 +10,7 @@
 
 ### Correções e Melhorias
 
-## v.1.2025.1806.0800 (17/06/2025)
+## v.1.2025.1806.0800 (18/06/2025)
 
 ### Implementação de Autenticação JWT
 - Adicionada autenticação JWT para maior segurança
