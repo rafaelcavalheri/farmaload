@@ -20,6 +20,25 @@ $paciente = null;
 $medicamentos = [];
 $pacientes = []; // Array para armazenar resultados da busca por nome
 
+// Array de observações padrão
+$observacoes_padrao = [
+    'Retirado pelo próprio paciente',
+    'Retirado por pessoa autorizada',
+    'Avisado para trazer renovação',
+    'Cobrado renovação',
+    'Não agendado. Aguardando renovação',
+    'Trouxe renovação OK',
+    'Trouxe renovação AT',
+    'Trouxe renovação com Alteração',
+    'Fornecido para 1 mês',
+    'Fornecido para 2 meses',
+    'Medicamento em falta',
+    'Doação',
+    'Vai pegar pela Farmácia Popular',
+    'Suspenso',
+    'Fora da data agendada, oriento.'
+];
+
 // Buscar paciente
 if (isset($_POST['buscar'])) {
     $busca = trim($_POST['busca'] ?? '');
@@ -174,6 +193,12 @@ if (isset($_POST['dispensar'])) {
     $paciente_id = (int)$_POST['paciente_id'];
     $nova_observacao = trim($_POST['observacao'] ?? '');
     $observacao_original = trim($_POST['observacao_original'] ?? '');
+    $observacao_padrao = trim($_POST['observacao_padrao'] ?? '');
+
+    // Se uma observação padrão foi selecionada, usa ela
+    if (!empty($observacao_padrao)) {
+        $nova_observacao = $observacao_padrao;
+    }
 
     $stmt = $pdo->prepare("SELECT id, observacao FROM pacientes WHERE id = ?");
     $stmt->execute([$paciente_id]);
@@ -632,14 +657,17 @@ if (isset($_POST['atualizar_observacao'])) {
                         <input type="hidden" name="observacao_original" value="<?= htmlspecialchars($paciente['observacao']) ?>">
                     <?php endif; ?>
                     
-                    <?php if (!empty($paciente['observacao']) || true): ?>
-                        <div class="observacao-box">
-                            <div class="observacao-header">
-                                <strong>Observações:</strong>
-                            </div>
-                            <textarea name="observacao" class="observacao-editor" rows="4"><?= htmlspecialchars($paciente['observacao'] ?? '') ?></textarea>
-                        </div>
-                    <?php endif; ?>
+                    <div class="form-group">
+                        <label for="observacao">Observações:</label>
+                        <select name="observacao_padrao" id="observacao_padrao" class="form-control" onchange="atualizarObservacao(this.value)">
+                            <option value="">Selecione uma observação padrão</option>
+                            <?php foreach ($observacoes_padrao as $obs): ?>
+                                <option value="<?php echo htmlspecialchars($obs); ?>"><?php echo htmlspecialchars($obs); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <textarea name="observacao" id="observacao" class="form-control" rows="3"><?php echo htmlspecialchars($paciente['observacao'] ?? ''); ?></textarea>
+                        <input type="hidden" name="observacao_original" value="<?php echo htmlspecialchars($paciente['observacao'] ?? ''); ?>">
+                    </div>
 
                     <table>
                         <thead>
@@ -753,6 +781,12 @@ if (isset($_POST['atualizar_observacao'])) {
             thAtual.classList.add(direcaoAtual.toLowerCase());
         }
     });
+
+    function atualizarObservacao(valor) {
+        if (valor) {
+            document.getElementById('observacao').value = valor;
+        }
+    }
     </script>
 </body>
 </html>
