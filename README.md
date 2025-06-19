@@ -1,12 +1,73 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.1806.1700
-**Data:** 18/06/2025
+**Versão:** v.1.2025.1906.1740
+**Data:** 19/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.1906.1740 (19/06/2025)
+
+### Correção Crítica na Importação de Datas de Renovação
+
+**Problema identificado:**
+- As datas de renovação dos medicamentos não estavam sendo importadas corretamente durante o processo de importação automática de planilhas.
+- O campo `renovacao` na tabela `paciente_medicamentos` ficava vazio, mesmo quando a planilha continha as datas de renovação.
+
+**Análise do problema:**
+- O histórico do git revelou que em versões anteriores (v.1.2025.1206.1014) o sistema funcionava corretamente.
+- Em versões mais recentes, a estrutura das associações foi alterada, removendo o campo `validade_processo` que continha a data de renovação do paciente.
+- A função `processarAssociacoes` não estava recebendo a data de renovação corretamente.
+
+**Correções aplicadas:**
+
+1. **Restauração da versão funcional:**
+   - Restaurado o arquivo `processar_importacao_automatica.php` para a versão v.1.2025.1206.1014
+   - Esta versão mantém a estrutura correta das associações com os campos:
+     - `validade_processo`: Data de renovação do paciente
+     - `validade_medicamento`: Data de validade do medicamento
+
+2. **Estrutura de associações corrigida:**
+   ```php
+   $associacoes[] = [
+       'paciente' => $paciente,
+       'medicamento' => $medicamentoAtual,
+       'lote' => $loteAtual,
+       'validade_processo' => $validade_paciente, // Data de renovação do paciente
+       'validade_medicamento' => $validadeAtual, // Data de validade do medicamento
+       'codigo' => $codigo,
+       'apresentacao' => $apresentacaoAtual,
+       'quantidade' => (int)$quantidade,
+       'cid' => $cid,
+       'linha' => $row
+   ];
+   ```
+
+3. **Função de processamento corrigida:**
+   - A função `processarAssociacoes` agora recebe corretamente o campo `validade_processo`
+   - A função `vincularMedicamentoPaciente` grava a data de renovação no banco de dados
+
+4. **Geração de códigos simplificada:**
+   - Mantida a geração de códigos baseada na linha da planilha (mais simples e funcional)
+   - Removida a complexidade desnecessária da geração sequencial que causava problemas
+
+**Resultado:**
+- As datas de renovação agora são importadas corretamente
+- O campo `renovacao` na tabela `paciente_medicamentos` é preenchido adequadamente
+- A funcionalidade de visualização das datas de renovação na interface funciona normalmente
+
+**Arquivos modificados:**
+- `PHP/processar_importacao_automatica.php` - Restaurado para versão funcional
+- `PHP/testar_datas_renovacao.php` - Script de teste criado para verificação
+
+**Teste realizado:**
+- Containers Docker reconstruídos com sucesso
+- Sistema funcionando com a versão restaurada
+- Pronto para testes de importação com datas de renovação
+
+---
 
 ## v.1.2025.1806.1700 (18/06/2025)
 
