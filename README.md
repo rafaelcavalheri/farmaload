@@ -1,12 +1,64 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.1906.1800
+**Versão:** v.1.2025.1906.1920
 **Data:** 19/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.1906.1920 (19/06/2025)
+
+### Implementação de Observações Padrão no Modal de Dispensação
+
+**Funcionalidade implementada:**
+- Adicionada funcionalidade de observações padrão no modal de dispensação da página `pacientes.php`
+- Sistema idêntico ao já existente na página `dispensar.php`
+- Melhoria na experiência do usuário com seleção rápida de observações comuns
+
+**Detalhes técnicos:**
+
+1. **Array de observações padrão:**
+   - Implementado array com 15 observações padrão pré-definidas
+   - Mesmas opções disponíveis na página `dispensar.php`
+   - Observações incluem: "Retirado pelo próprio paciente", "Retirado por pessoa autorizada", "Avisado para trazer renovação", etc.
+
+2. **Interface do modal:**
+   - Adicionado select para escolha de observações padrão
+   - Textarea para observações com placeholder explicativo
+   - Labels claros e dica de uso para o usuário
+   - Layout responsivo e bem estilizado
+
+3. **Funcionalidade JavaScript:**
+   - Atualização instantânea do textarea ao selecionar observação padrão
+   - Mudança visual (cor de fundo) quando observação é selecionada
+   - Possibilidade de edição manual do textarea
+   - Limpeza automática do select quando texto é editado manualmente
+   - Sistema robusto com retry para garantir inicialização dos eventos
+
+4. **Sistema de inicialização:**
+   - Controle centralizado na página `pacientes.php`
+   - Sistema de retry para garantir que elementos sejam encontrados após carregamento AJAX
+   - Logs de debug para facilitar troubleshooting
+   - Busca específica dentro do container do modal
+
+**Arquivos modificados:**
+- `PHP/ajax_form_dispensar.php` - Adicionado array de observações padrão e interface
+- `PHP/pacientes.php` - Implementado JavaScript para controle dos eventos
+
+**Resultado:**
+- Funcionalidade de observações padrão disponível em ambas as interfaces
+- Experiência consistente entre página `dispensar.php` e modal de dispensação
+- Sistema robusto e confiável
+- Interface intuitiva e responsiva
+
+**Teste realizado:**
+- Funcionalidade testada e funcionando perfeitamente
+- Sistema de retry funcionando corretamente
+- Compatibilidade mantida com funções existentes de dispensação
+
+---
 
 ## v.1.2025.1906.1800 (19/06/2025)
 

@@ -216,6 +216,9 @@ $stmt->execute($params);
                 .then(html => {
                     document.getElementById('medicamentosDispensar').innerHTML = html;
                     
+                    // Inicializar eventos de observação padrão
+                    inicializarObservacaoPadraoModal();
+                    
                     // Adicionar eventos aos inputs de quantidade
                     document.querySelectorAll('.quantidade-input').forEach(input => {
                         input.addEventListener('change', function() {
@@ -233,6 +236,80 @@ $stmt->execute($params);
                     document.getElementById('medicamentosDispensar').innerHTML = 
                         `<div class='alert erro'>Erro ao carregar medicamentos: ${error.message}</div>`;
                 });
+        }
+
+        // Função para inicializar observação padrão no modal
+        function inicializarObservacaoPadraoModal() {
+            console.log('Inicializando observação padrão no modal...');
+            
+            // Função para tentar inicializar
+            function tentarInicializar() {
+                const modalContainer = document.getElementById('medicamentosDispensar');
+                const textarea = modalContainer.querySelector('#observacao');
+                const select = modalContainer.querySelector('#observacao_padrao');
+                
+                console.log('Procurando elementos no modal:');
+                console.log('Modal container:', modalContainer);
+                console.log('Textarea encontrado:', textarea);
+                console.log('Select encontrado:', select);
+                
+                if (textarea && select) {
+                    console.log('Elementos de observação encontrados no modal, configurando eventos...');
+                    
+                    // Adicionar evento de mudança ao select
+                    select.addEventListener('change', function() {
+                        console.log('Select alterado para:', this.value);
+                        atualizarObservacaoModal(this.value);
+                    });
+                    
+                    // Permitir edição manual do textarea
+                    textarea.addEventListener('input', function() {
+                        console.log('Textarea editado manualmente:', this.value);
+                        if (this.value !== select.value) {
+                            select.value = '';
+                        }
+                    });
+                    
+                    console.log('Eventos de observação configurados no modal');
+                    return true;
+                } else {
+                    console.log('Elementos ainda não encontrados, tentando novamente...');
+                    return false;
+                }
+            }
+            
+            // Tentar inicializar com retry
+            let tentativas = 0;
+            const maxTentativas = 10;
+            
+            function tentarComRetry() {
+                if (tentarInicializar() || tentativas >= maxTentativas) {
+                    if (tentativas >= maxTentativas) {
+                        console.error('Falha ao inicializar observação padrão após', maxTentativas, 'tentativas');
+                    }
+                    return;
+                }
+                
+                tentativas++;
+                setTimeout(tentarComRetry, 200);
+            }
+            
+            // Iniciar tentativas
+            setTimeout(tentarComRetry, 100);
+        }
+
+        // Função para atualizar observação no modal
+        function atualizarObservacaoModal(valor) {
+            console.log('Atualizando observação no modal com valor:', valor);
+            const modalContainer = document.getElementById('medicamentosDispensar');
+            const textarea = modalContainer.querySelector('#observacao');
+            if (textarea) {
+                textarea.value = valor || '';
+                textarea.style.backgroundColor = valor ? '#e8f5e8' : '#fff';
+                console.log('Textarea do modal atualizado com sucesso');
+            } else {
+                console.error('Textarea do modal não encontrado');
+            }
         }
 
         function fecharModalDispensar() {

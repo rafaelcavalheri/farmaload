@@ -8,6 +8,25 @@ if (!$paciente_id) {
     die("ID de paciente inválido");
 }
 
+// Array de observações padrão (mesmo da página dispensar.php)
+$observacoes_padrao = [
+    'Retirado pelo próprio paciente',
+    'Retirado por pessoa autorizada',
+    'Avisado para trazer renovação',
+    'Cobrado renovação',
+    'Não agendado. Aguardando renovação',
+    'Trouxe renovação OK',
+    'Trouxe renovação AT',
+    'Trouxe renovação com Alteração',
+    'Fornecido para 1 mês',
+    'Fornecido para 2 meses',
+    'Medicamento em falta',
+    'Doação',
+    'Vai pegar pela Farmácia Popular',
+    'Suspenso',
+    'Fora da data agendada, oriento.'
+];
+
 // Buscar dados do paciente para obter a observação
 $stmt = $pdo->prepare("SELECT observacao FROM pacientes WHERE id = ?");
 $stmt->execute([$paciente_id]);
@@ -37,13 +56,35 @@ $stmt = $pdo->prepare("
 $stmt->execute([$paciente_id]);
 $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Adicionar campo de observação no início
+// Adicionar campo de observação no início com select de observações padrão
 ?>
 <div class="observacao-box">
     <div class="observacao-header">
         <strong>Observações:</strong>
     </div>
-    <textarea id="observacao" class="observacao-editor" rows="4"><?= htmlspecialchars($paciente['observacao'] ?? '') ?></textarea>
+    
+    <!-- Select para observações padrão -->
+    <div class="observacao-padrao-container">
+        <label for="observacao_padrao">Observações Padrão:</label>
+        <select name="observacao_padrao" id="observacao_padrao" class="observacao-padrao-select">
+            <option value="">Selecione uma observação padrão (opcional)</option>
+            <?php foreach ($observacoes_padrao as $obs): ?>
+                <option value="<?php echo htmlspecialchars($obs); ?>"><?php echo htmlspecialchars($obs); ?></option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    
+    <!-- Textarea para observações -->
+    <div class="observacao-textarea-container">
+        <label for="observacao">Observações (será aplicada na transação):</label>
+        <textarea id="observacao" class="observacao-editor" rows="4" 
+                  placeholder="Digite as observações ou selecione uma opção padrão acima..."><?= htmlspecialchars($paciente['observacao'] ?? '') ?></textarea>
+    </div>
+    
+    <small style="color: #666; margin-top: 5px; display: block;">
+        <i class="fas fa-info-circle"></i> 
+        Dica: Selecione uma observação padrão para preenchimento automático, ou digite sua própria observação.
+    </small>
 </div>
 
 <?php foreach ($medicamentos as $med): ?>
@@ -203,7 +244,40 @@ function dispensarVariosMedicamentos(pacienteId) {
     max-width: 100%;
 }
 .observacao-header {
+    margin-bottom: 15px;
+}
+.observacao-padrao-container {
+    margin-bottom: 15px;
+}
+.observacao-padrao-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #495057;
+}
+.observacao-padrao-select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #fff;
+    font-family: inherit;
+    font-size: inherit;
     margin-bottom: 10px;
+}
+.observacao-padrao-select:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
+}
+.observacao-textarea-container {
+    margin-bottom: 10px;
+}
+.observacao-textarea-container label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #495057;
 }
 .observacao-editor {
     width: 100%;
