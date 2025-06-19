@@ -1155,7 +1155,32 @@ function importarReliniFim($spreadsheet, $logFile = null) {
                         fwrite($logFile, "Criando novo lote: $medicamentoAtual | Lote: $loteAtual | Quantidade: $quantidade\n");
                     }
                 }
+
+                // Criar associação entre paciente e medicamento
+                $associacoes[] = [
+                    'paciente' => $paciente,
+                    'medicamento' => $medicamentoAtual,
+                    'lote' => $loteAtual,
+                    'validade_processo' => $validade_paciente,
+                    'validade_medicamento' => $validadeAtual,
+                    'codigo' => $codigo,
+                    'apresentacao' => $apresentacaoAtual,
+                    'quantidade' => (int)$quantidade,
+                    'cid' => $cid,
+                    'linha' => $row
+                ];
+
+                if ($logFile) {
+                    fwrite($logFile, "Criada associação: Paciente $paciente -> Medicamento $medicamentoAtual (Qtd: $quantidade)\n");
+                }
             }
+        }
+
+        if ($logFile) {
+            fwrite($logFile, "\n=== RESUMO DA IMPORTAÇÃO RELINI_FIM ===\n");
+            fwrite($logFile, "Total de medicamentos: " . count($medicamentosUnicos) . "\n");
+            fwrite($logFile, "Total de pacientes: " . count($pacientes) . "\n");
+            fwrite($logFile, "Total de associações: " . count($associacoes) . "\n");
         }
 
         return [

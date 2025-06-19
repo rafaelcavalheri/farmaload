@@ -218,5 +218,19 @@ melhorando a experiência visual e a organização da tabela.
 #### 6. Configuração de Servidor LDAP
 - Adicionada página para configuração dos parâmetros do servidor LDAP, permitindo integração e autenticação centralizada.
 
+## v.1.2025.1906.1740 (19/06/2025)
+
+### Correção Crítica na Importação de Pacientes e Medicamentos
+
+- Corrigido bug na importação automática de planilhas (`modelo_importacao.xls`) que impedia a criação dos vínculos entre pacientes e medicamentos.
+- Agora, ao importar, as associações entre pacientes e medicamentos são corretamente criadas na tabela `paciente_medicamentos`.
+- Adicionado log de resumo ao final da importação, facilitando o diagnóstico de futuras importações.
+- Criado script de limpeza de dados para facilitar testes e manutenção.
+
 ---
+**Resumo técnico:**  
+O problema estava na função `importarReliniFim` (`processar_importacao_automatica.php`), que não preenchia o array de associações. Isso impedia que os medicamentos fossem vinculados aos pacientes durante a importação. O código foi ajustado para garantir que as associações sejam criadas corretamente.
+
+---
+
 **Equipe responsável:** Rafael Cavalheri
