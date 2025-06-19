@@ -299,10 +299,10 @@ if (isset($_POST['atualizar_observacao'])) {
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <title>Dispensa de Medicamentos</title>
+    <title>Dispensar Medicamentos - Farmaload</title>
     <link rel="icon" type="image/png" href="/images/fav.png">
     <link rel="stylesheet" href="/css/style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
         .search-container {
             margin-bottom: 20px;
@@ -550,6 +550,90 @@ if (isset($_POST['atualizar_observacao'])) {
         .resultados-busca th:nth-child(6), 
         .resultados-busca td:nth-child(6) { width: 15%; } /* Ações */
     </style>
+    <script>
+    // Função para atualizar observação - definida no head para estar disponível imediatamente
+    function atualizarObservacao(valor) {
+        console.log('Função atualizarObservacao chamada com valor:', valor);
+        const textarea = document.getElementById('observacao');
+        if (textarea) {
+            textarea.value = valor || '';
+            textarea.style.backgroundColor = valor ? '#e8f5e8' : '#fff';
+            console.log('Textarea atualizado com sucesso');
+        } else {
+            console.error('Textarea não encontrado');
+        }
+    }
+
+    // Função para inicializar quando a página carregar
+    function inicializarObservacao() {
+        console.log('Inicializando sistema de observação...');
+        const textarea = document.getElementById('observacao');
+        const select = document.getElementById('observacao_padrao');
+        
+        if (textarea && select) {
+            console.log('Elementos encontrados, configurando eventos...');
+            
+            // Adicionar evento de mudança ao select
+            select.addEventListener('change', function() {
+                atualizarObservacao(this.value);
+            });
+            
+            // Permitir edição manual do textarea
+            textarea.addEventListener('input', function() {
+                if (this.value !== select.value) {
+                    select.value = '';
+                }
+            });
+            
+            console.log('Eventos configurados com sucesso');
+        } else {
+            // Elementos não existem ainda (página inicial sem paciente selecionado)
+            console.log('Elementos de observação não encontrados - aguardando seleção de paciente...');
+        }
+
+        // Observar mudanças no DOM para quando um paciente for selecionado
+        const observer = new MutationObserver(function(mutations) {
+            mutations.forEach(function(mutation) {
+                if (mutation.type === 'childList') {
+                    const textarea = document.getElementById('observacao');
+                    const select = document.getElementById('observacao_padrao');
+                    
+                    if (textarea && select && !select.hasAttribute('data-initialized')) {
+                        console.log('Elementos de observação detectados após mudança no DOM, configurando...');
+                        select.setAttribute('data-initialized', 'true');
+                        
+                        // Adicionar evento de mudança ao select
+                        select.addEventListener('change', function() {
+                            atualizarObservacao(this.value);
+                        });
+                        
+                        // Permitir edição manual do textarea
+                        textarea.addEventListener('input', function() {
+                            if (this.value !== select.value) {
+                                select.value = '';
+                            }
+                        });
+                        
+                        console.log('Eventos configurados após detecção dinâmica');
+                    }
+                }
+            });
+        });
+
+        // Iniciar observação do DOM
+        observer.observe(document.body, {
+            childList: true,
+            subtree: true
+        });
+    }
+
+    // Executar quando o DOM estiver pronto
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', inicializarObservacao);
+    } else {
+        inicializarObservacao();
+    }
+    </script>
 </head>
 <body>
     <?php include 'header.php'; ?>
@@ -658,15 +742,23 @@ if (isset($_POST['atualizar_observacao'])) {
                     <?php endif; ?>
                     
                     <div class="form-group">
-                        <label for="observacao">Observações:</label>
-                        <select name="observacao_padrao" id="observacao_padrao" class="form-control" onchange="atualizarObservacao(this.value)">
-                            <option value="">Selecione uma observação padrão</option>
+                        <label for="observacao_padrao">Observações Padrão:</label>
+                        <select name="observacao_padrao" id="observacao_padrao" class="form-control">
+                            <option value="">Selecione uma observação padrão (opcional)</option>
                             <?php foreach ($observacoes_padrao as $obs): ?>
                                 <option value="<?php echo htmlspecialchars($obs); ?>"><?php echo htmlspecialchars($obs); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <textarea name="observacao" id="observacao" class="form-control" rows="3"><?php echo htmlspecialchars($paciente['observacao'] ?? ''); ?></textarea>
+                        
+                        <label for="observacao" style="margin-top: 15px;">Observações (será aplicada na transação):</label>
+                        <textarea name="observacao" id="observacao" class="form-control" rows="3" 
+                                  placeholder="Digite as observações ou selecione uma opção padrão acima..."><?php echo htmlspecialchars($paciente['observacao'] ?? ''); ?></textarea>
                         <input type="hidden" name="observacao_original" value="<?php echo htmlspecialchars($paciente['observacao'] ?? ''); ?>">
+                        
+                        <small style="color: #666; margin-top: 5px; display: block;">
+                            <i class="fas fa-info-circle"></i> 
+                            Dica: Selecione uma observação padrão para preenchimento automático, ou digite sua própria observação.
+                        </small>
                     </div>
 
                     <table>
@@ -728,65 +820,5 @@ if (isset($_POST['atualizar_observacao'])) {
         <?php endif; ?>
     </main>
     <?php include 'footer.php'; ?>
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Função para ordenar a tabela
-        function ordenarTabela(coluna) {
-            const form = document.querySelector('form');
-            const ordemInput = document.createElement('input');
-            ordemInput.type = 'hidden';
-            ordemInput.name = 'ordem';
-            ordemInput.value = coluna;
-
-            const direcaoInput = document.createElement('input');
-            direcaoInput.type = 'hidden';
-            direcaoInput.name = 'direcao';
-            
-            const ordemAtual = form.querySelector('input[name="ordem"]')?.value || 'nome';
-            const direcaoAtual = form.querySelector('input[name="direcao"]')?.value || 'ASC';
-            
-            direcaoInput.value = (ordemAtual === coluna && direcaoAtual === 'ASC') ? 'DESC' : 'ASC';
-
-            // Remover inputs antigos se existirem
-            form.querySelectorAll('input[name="ordem"], input[name="direcao"]').forEach(input => input.remove());
-            
-            // Adicionar novos inputs
-            form.appendChild(ordemInput);
-            form.appendChild(direcaoInput);
-            
-            // Manter o valor da busca
-            const buscaInput = form.querySelector('input[name="busca"]');
-            if (buscaInput) {
-                buscaInput.value = buscaInput.value;
-            }
-            
-            // Submeter o formulário
-            form.submit();
-        }
-
-        // Adicionar eventos de clique nos cabeçalhos
-        document.querySelectorAll('th.sortable').forEach(th => {
-            th.addEventListener('click', () => {
-                ordenarTabela(th.dataset.ordem);
-            });
-        });
-
-        // Marcar coluna atual como ordenada
-        const form = document.querySelector('form');
-        const ordemAtual = form.querySelector('input[name="ordem"]')?.value || 'nome';
-        const direcaoAtual = form.querySelector('input[name="direcao"]')?.value || 'ASC';
-        
-        const thAtual = document.querySelector(`th[data-ordem="${ordemAtual}"]`);
-        if (thAtual) {
-            thAtual.classList.add(direcaoAtual.toLowerCase());
-        }
-    });
-
-    function atualizarObservacao(valor) {
-        if (valor) {
-            document.getElementById('observacao').value = valor;
-        }
-    }
-    </script>
 </body>
 </html>

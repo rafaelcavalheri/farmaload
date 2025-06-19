@@ -1,12 +1,81 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.1906.1740
+**Versão:** v.1.2025.1906.1800
 **Data:** 19/06/2025
 
 ---
 
 # Histórico de versões
+
+## v.1.2025.1906.1800 (19/06/2025)
+
+### Correção do Sistema de Observações na Página de Dispensa
+
+**Problema identificado:**
+- O sistema de observações padrão na página `dispensar.php` não estava funcionando corretamente
+- Erro JavaScript: "Uncaught ReferenceError: atualizarObservacao is not defined"
+- O textarea de observações não atualizava imediatamente ao selecionar uma observação padrão
+- A funcionalidade só funcionava após dispensar e recarregar a página
+
+**Análise do problema:**
+- A função JavaScript `atualizarObservacao` estava sendo chamada antes de ser definida
+- O script estava posicionado no final da página, mas o elemento HTML tentava usar a função via atributo `onchange`
+- Falta de sincronização entre o carregamento do DOM e a inicialização dos eventos
+
+**Correções aplicadas:**
+
+1. **Reposicionamento do JavaScript:**
+   - Movido todo o código JavaScript para a seção `<head>` da página
+   - Garantido que a função esteja disponível antes de qualquer elemento HTML tentar usá-la
+
+2. **Melhoria no sistema de eventos:**
+   - Removido o atributo `onchange` inline do elemento `<select>`
+   - Implementado sistema de event listeners via JavaScript
+   - Adicionado MutationObserver para detectar quando elementos são criados dinamicamente
+
+3. **Inicialização robusta:**
+   - Verificação do estado do DOM (`document.readyState`)
+   - Inicialização automática quando elementos são detectados
+   - Prevenção de duplicação de event listeners
+
+4. **Melhorias na experiência do usuário:**
+   - Feedback visual: textarea muda de cor quando observação é selecionada
+   - Possibilidade de edição manual do textarea
+   - Limpeza automática do dropdown quando texto é editado manualmente
+
+**Código JavaScript implementado:**
+```javascript
+function atualizarObservacao(valor) {
+    const textarea = document.getElementById('observacao');
+    if (textarea) {
+        textarea.value = valor || '';
+        textarea.style.backgroundColor = valor ? '#e8f5e8' : '#fff';
+    }
+}
+
+// Sistema de inicialização com MutationObserver
+const observer = new MutationObserver(function(mutations) {
+    // Detecta quando elementos são criados e configura eventos
+});
+```
+
+**Resultado:**
+- Sistema de observações funciona perfeitamente
+- Atualização imediata do textarea ao selecionar observação padrão
+- Sem erros JavaScript no console
+- Experiência do usuário melhorada com feedback visual
+- Compatibilidade com edição manual de observações
+
+**Arquivos modificados:**
+- `PHP/dispensar.php` - Reposicionamento e melhoria do JavaScript
+
+**Teste realizado:**
+- Funcionalidade testada e funcionando perfeitamente
+- Console limpo sem erros JavaScript
+- Sistema responsivo e intuitivo
+
+---
 
 ## v.1.2025.1906.1740 (19/06/2025)
 
