@@ -40,6 +40,12 @@
 
 # Histórico de versões
 
+## v.1.2025.2306.0950
+
+### Adicionado função de incluir mais de uma observação padrão e botão apagar observações.
+
+# Histórico de versões
+
 ## v.1.2025.1906.1920
 
 ### Implementação de Observações Padrão no Modal de Dispensação
