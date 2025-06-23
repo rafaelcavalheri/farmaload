@@ -1,5 +1,5 @@
 <?php
-ob_start(); // Evita erro de headers
+ob_start(); // Evita erros de headers
 include 'config.php'; // Supondo que inicia sessão e conecta ao banco
 include 'funcoes_estoque.php';
 
