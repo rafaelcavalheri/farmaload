@@ -514,6 +514,192 @@ if (isset($_POST['atualizar_observacao'])) {
             content: '↓';
             color: #333;
         }
+        .observacoes-checkbox-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 10px;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            margin-bottom: 15px;
+        }
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #dee2e6;
+            transition: box-shadow 0.2s;
+        }
+        .checkbox-item:hover {
+            box-shadow: 0 2px 5px rgba(0,0,0,0.08);
+        }
+        .checkbox-item input[type="checkbox"] {
+            margin-right: 12px;
+            cursor: pointer;
+            transform: scale(1.1);
+        }
+        .checkbox-item label {
+            cursor: pointer;
+            flex-grow: 1;
+            color: #495057;
+            font-size: 0.95em;
+        }
+        .observacao-container {
+            position: relative;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .observacao-textarea {
+            flex: 1;
+        }
+        .btn-add-observacao {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+        .btn-add-observacao:hover {
+            background-color: #218838;
+        }
+        .btn-clear-observacao {
+            background-color: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.2s;
+            flex-shrink: 0;
+            margin-top: 5px;
+        }
+        .btn-clear-observacao:hover {
+            background-color: #c82333;
+        }
+        .modal-observacoes {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        .modal-observacoes-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 25px;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-observacoes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #dee2e6;
+            padding-bottom: 15px;
+        }
+        .modal-observacoes-header h3 {
+            margin: 0;
+            color: #495057;
+        }
+        .close-modal {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 0;
+        }
+        .close-modal:hover {
+            color: #000;
+        }
+        .observacoes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .observacao-checkbox {
+            display: flex;
+            align-items: center;
+            background-color: #fff;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .observacao-checkbox:hover {
+            border-color: #4a90e2;
+            background-color: #f8f9fa;
+        }
+        .observacao-checkbox input[type="checkbox"] {
+            margin-right: 12px;
+            transform: scale(1.1);
+        }
+        .observacao-checkbox label {
+            cursor: pointer;
+            flex-grow: 1;
+            color: #495057;
+            font-size: 0.9em;
+            line-height: 1.4;
+        }
+        .modal-observacoes-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            border-top: 1px solid #dee2e6;
+            padding-top: 15px;
+        }
+        .btn-selecionar-observacoes {
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-selecionar-observacoes:hover {
+            background-color: #357abd;
+        }
+        .btn-cancelar {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-cancelar:hover {
+            background-color: #5a6268;
+        }
         .resultados-busca {
             width: 100%;
             border-collapse: collapse;
@@ -551,88 +737,90 @@ if (isset($_POST['atualizar_observacao'])) {
         .resultados-busca td:nth-child(6) { width: 15%; } /* Ações */
     </style>
     <script>
-    // Função para atualizar observação - definida no head para estar disponível imediatamente
-    function atualizarObservacao(valor) {
-        console.log('Função atualizarObservacao chamada com valor:', valor);
+    // Função para abrir o modal de observações
+    function abrirModalObservacoes() {
+        const modal = document.getElementById('modalObservacoes');
+        if (modal) {
+            modal.style.display = 'block';
+            // Limpar seleções anteriores
+            document.querySelectorAll('.observacao-checkbox input[type="checkbox"]').forEach(cb => {
+                cb.checked = false;
+            });
+        }
+    }
+
+    // Função para fechar o modal
+    function fecharModalObservacoes() {
+        const modal = document.getElementById('modalObservacoes');
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+
+    // Função para adicionar observações selecionadas ao textarea
+    function adicionarObservacoesSelecionadas() {
+        const textarea = document.getElementById('observacao');
+        const checkboxes = document.querySelectorAll('.observacao-checkbox input[type="checkbox"]:checked');
+        
+        if (checkboxes.length === 0) {
+            alert('Selecione pelo menos uma observação.');
+            return;
+        }
+
+        const observacoesSelecionadas = Array.from(checkboxes).map(cb => cb.value);
+        const textoAtual = textarea.value.trim();
+        
+        // Se já há texto, adiciona uma vírgula e espaço antes das novas observações
+        const novoTexto = textoAtual ? 
+            textoAtual + ', ' + observacoesSelecionadas.join(', ') : 
+            observacoesSelecionadas.join(', ');
+        
+        textarea.value = novoTexto;
+        fecharModalObservacoes();
+    }
+
+    // Função para limpar as observações
+    function limparObservacoes() {
         const textarea = document.getElementById('observacao');
         if (textarea) {
-            textarea.value = valor || '';
-            textarea.style.backgroundColor = valor ? '#e8f5e8' : '#fff';
-            console.log('Textarea atualizado com sucesso');
-        } else {
-            console.error('Textarea não encontrado');
+            if (textarea.value.trim() === '') {
+                alert('A caixa de observações já está vazia.');
+                return;
+            }
+            
+            if (confirm('Tem certeza que deseja limpar todas as observações?')) {
+                textarea.value = '';
+            }
         }
     }
 
-    // Função para inicializar quando a página carregar
-    function inicializarObservacao() {
-        console.log('Inicializando sistema de observação...');
-        const textarea = document.getElementById('observacao');
-        const select = document.getElementById('observacao_padrao');
-        
-        if (textarea && select) {
-            console.log('Elementos encontrados, configurando eventos...');
-            
-            // Adicionar evento de mudança ao select
-            select.addEventListener('change', function() {
-                atualizarObservacao(this.value);
-            });
-            
-            // Permitir edição manual do textarea
-            textarea.addEventListener('input', function() {
-                if (this.value !== select.value) {
-                    select.value = '';
-                }
-            });
-            
-            console.log('Eventos configurados com sucesso');
-        } else {
-            // Elementos não existem ainda (página inicial sem paciente selecionado)
-            console.log('Elementos de observação não encontrados - aguardando seleção de paciente...');
+    // Fechar modal ao clicar fora dele
+    window.onclick = function(event) {
+        const modal = document.getElementById('modalObservacoes');
+        if (event.target === modal) {
+            fecharModalObservacoes();
         }
+    }
 
-        // Observar mudanças no DOM para quando um paciente for selecionado
-        const observer = new MutationObserver(function(mutations) {
-            mutations.forEach(function(mutation) {
-                if (mutation.type === 'childList') {
-                    const textarea = document.getElementById('observacao');
-                    const select = document.getElementById('observacao_padrao');
-                    
-                    if (textarea && select && !select.hasAttribute('data-initialized')) {
-                        console.log('Elementos de observação detectados após mudança no DOM, configurando...');
-                        select.setAttribute('data-initialized', 'true');
-                        
-                        // Adicionar evento de mudança ao select
-                        select.addEventListener('change', function() {
-                            atualizarObservacao(this.value);
-                        });
-                        
-                        // Permitir edição manual do textarea
-                        textarea.addEventListener('input', function() {
-                            if (this.value !== select.value) {
-                                select.value = '';
-                            }
-                        });
-                        
-                        console.log('Eventos configurados após detecção dinâmica');
-                    }
+    // Fechar modal com ESC
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape') {
+            fecharModalObservacoes();
+        }
+    });
+
+    // Inicializar quando o DOM estiver pronto
+    document.addEventListener('DOMContentLoaded', function() {
+        // Configurar eventos para checkboxes no modal
+        document.querySelectorAll('.observacao-checkbox').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (e.target.type !== 'checkbox') {
+                    const checkbox = this.querySelector('input[type="checkbox"]');
+                    checkbox.checked = !checkbox.checked;
                 }
             });
         });
-
-        // Iniciar observação do DOM
-        observer.observe(document.body, {
-            childList: true,
-            subtree: true
-        });
-    }
-
-    // Executar quando o DOM estiver pronto
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', inicializarObservacao);
-    } else {
-        inicializarObservacao();
-    }
+    });
     </script>
 </head>
 <body>
@@ -737,88 +925,137 @@ if (isset($_POST['atualizar_observacao'])) {
             <?php if ($medicamentos): ?>
                 <form method="POST">
                     <input type="hidden" name="paciente_id" value="<?= $paciente['id'] ?>">
-                    <?php if (isset($paciente['observacao'])): ?>
-                        <input type="hidden" name="observacao_original" value="<?= htmlspecialchars($paciente['observacao']) ?>">
-                    <?php endif; ?>
                     
                     <div class="form-group">
-                        <label for="observacao_padrao">Observações Padrão:</label>
-                        <select name="observacao_padrao" id="observacao_padrao" class="form-control">
-                            <option value="">Selecione uma observação padrão (opcional)</option>
-                            <?php foreach ($observacoes_padrao as $obs): ?>
-                                <option value="<?php echo htmlspecialchars($obs); ?>"><?php echo htmlspecialchars($obs); ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                        
-                        <label for="observacao" style="margin-top: 15px;">Observações (será aplicada na transação):</label>
-                        <textarea name="observacao" id="observacao" class="form-control" rows="3" 
-                                  placeholder="Digite as observações ou selecione uma opção padrão acima..."><?php echo htmlspecialchars($paciente['observacao'] ?? ''); ?></textarea>
-                        <input type="hidden" name="observacao_original" value="<?php echo htmlspecialchars($paciente['observacao'] ?? ''); ?>">
-                        
-                        <small style="color: #666; margin-top: 5px; display: block;">
-                            <i class="fas fa-info-circle"></i> 
-                            Dica: Selecione uma observação padrão para preenchimento automático, ou digite sua própria observação.
-                        </small>
+                        <label for="observacao">Observações Finais:</label>
+                        <input type="hidden" name="observacao_original" value="<?= htmlspecialchars($paciente['observacao'] ?? '') ?>">
+                        <div class="observacao-container">
+                            <textarea name="observacao" id="observacao" rows="4" class="form-control observacao-textarea" 
+                                      placeholder="Digite as observações ou clique no botão + para adicionar observações padrão..."><?= htmlspecialchars($paciente['observacao'] ?? '') ?></textarea>
+                            <div style="display: flex; flex-direction: column; gap: 5px;">
+                                <button type="button" class="btn-add-observacao" onclick="abrirModalObservacoes()" title="Adicionar observação padrão">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                                <button type="button" class="btn-clear-observacao" onclick="limparObservacoes()" title="Limpar observações">
+                                    <i class="fas fa-eraser"></i>
+                                </button>
+                            </div>
+                        </div>
                     </div>
 
-                    <table>
-                        <thead>
-                            <tr>
-                                <th>Medicamento</th>
-                                <th>Estoque Total</th>
-                                <th>Qtde Recebida</th>
-                                <th>Qtde Solicitada</th>
-                                <th>Qtde Entregue</th>
-                                <th>Qtde Disponível</th>
-                                <th>Status Renovação</th>
-                                <th>Data Renovação</th>
-                                <th>Dispensar</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($medicamentos as $med): ?>
+                    <!-- Modal de Observações -->
+                    <div id="modalObservacoes" class="modal-observacoes">
+                        <div class="modal-observacoes-content">
+                            <div class="modal-observacoes-header">
+                                <h3><i class="fas fa-list"></i> Selecionar Observações Padrão</h3>
+                                <button type="button" class="close-modal" onclick="fecharModalObservacoes()">&times;</button>
+                            </div>
+                            
+                            <div class="observacoes-grid">
+                                <?php foreach ($observacoes_padrao as $obs): ?>
+                                    <div class="observacao-checkbox">
+                                        <input type="checkbox" id="obs_<?php echo md5($obs); ?>" 
+                                               value="<?php echo htmlspecialchars($obs); ?>">
+                                        <label for="obs_<?php echo md5($obs); ?>"><?php echo htmlspecialchars($obs); ?></label>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            
+                            <div class="modal-observacoes-footer">
+                                <button type="button" class="btn-cancelar" onclick="fecharModalObservacoes()">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </button>
+                                <button type="button" class="btn-selecionar-observacoes" onclick="adicionarObservacoesSelecionadas()">
+                                    <i class="fas fa-check"></i> Adicionar Selecionadas
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table class="tabela-medicamentos">
+                            <thead>
                                 <tr>
-                                    <td><?= htmlspecialchars($med['nome']) ?></td>
-                                    <td><?= calcularEstoqueAtual($pdo, $med['medicamento_id']) ?></td>
-                                    <td><?= (int)$med['quantidade_recebida'] ?></td>
-                                    <td><?= (int)$med['quantidade_solicitada'] ?></td>
-                                    <td><?= (int)$med['quantidade_entregue'] ?></td>
-                                    <td><?= (int)$med['quantidade_disponivel'] ?></td>
-                                    <td>
-                                        <?php if ((int)$med['renovado'] === 1): ?>
-                                            <span class="badge renovado"><i class="fas fa-sync-alt"></i> Renovação em Andamento</span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php if (!empty($med['validade_formatada'])): ?>
-                                            <span class="<?= ((int)$med['renovado'] === 1) ? 'badge renovado' : '' ?>">
-                                                <?= htmlspecialchars($med['validade_formatada']) ?>
-                                            </span>
-                                        <?php endif; ?>
-                                    </td>
-                                    <td>
-                                        <?php 
-                                        $max_disponivel = min((int)$med['quantidade_disponivel'], calcularEstoqueAtual($pdo, $med['medicamento_id']));
-                                        ?>
-                                        <input type="number" name="dispensa[<?= $med['id'] ?>]"
-                                               min="0" 
-                                               max="<?= $max_disponivel ?>"
-                                               value="0" required>
-                                        <small>Máx: <?= $max_disponivel ?></small>
-                                    </td>
+                                    <th>Medicamento</th>
+                                    <th>Estoque Total</th>
+                                    <th>Qtde Recebida</th>
+                                    <th>Qtde Solicitada</th>
+                                    <th>Qtde Entregue</th>
+                                    <th>Qtde Disponível</th>
+                                    <th>Status Renovação</th>
+                                    <th>Data Renovação</th>
+                                    <th style="width: 15%;">Qtd a Dispensar</th>
                                 </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
-                    <button type="submit" name="dispensar" class="btn-primary">
-                        <i class="fas fa-check"></i> Dispensar
+                            </thead>
+                            <tbody>
+                                <?php if (empty($medicamentos)): ?>
+                                    <tr>
+                                        <td colspan="5">Nenhum medicamento encontrado para este paciente.</td>
+                                    </tr>
+                                <?php else: ?>
+                                    <?php foreach ($medicamentos as $medicamento): ?>
+                                        <tr>
+                                            <td>
+                                                <?= htmlspecialchars($medicamento['nome']) ?>
+                                                <?php
+                                                // Verifica se a quantidade em estoque é menor ou igual a 5
+                                                if ($medicamento['quantidade_estoque'] <= 5) {
+                                                    echo '<span class="badge-estoque-baixo" title="Estoque baixo!"><i class="fas fa-exclamation-triangle"></i></span>';
+                                                }
+                                                ?>
+                                            </td>
+                                            <td><?= $medicamento['quantidade_solicitada'] ?? 'N/A' ?></td>
+                                            <td><?= $medicamento['quantidade_disponivel'] ?? 'N/A' ?></td>
+                                            <td><?= $medicamento['quantidade_estoque'] ?></td>
+                                            <td>
+                                                <input type="number" name="dispensa[<?= $medicamento['id'] ?>]" 
+                                                       class="form-control" 
+                                                       value="0"
+                                                       min="0"
+                                                       max="<?= $medicamento['quantidade_disponivel'] ?>">
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <button type="submit" name="dispensar" class="btn btn-primary">
+                        <i class="fas fa-check"></i> Dispensar Selecionados
                     </button>
                 </form>
             <?php else: ?>
-                <div class="alert"><i class="fas fa-info-circle"></i> Nenhum medicamento cadastrado para este paciente.</div>
+                <p>Nenhum medicamento encontrado para este paciente.</p>
             <?php endif; ?>
         <?php endif; ?>
     </main>
     <?php include 'footer.php'; ?>
+    <script>
+    // Script para ordenação da tabela de busca
+    document.querySelectorAll('.sortable').forEach(header => {
+        header.addEventListener('click', () => {
+            const ordemAtual = '<?= $_POST['ordem'] ?? 'nome' ?>';
+            const direcaoAtual = '<?= $_POST['direcao'] ?? 'ASC' ?>';
+            const novaOrdem = header.dataset.ordem;
+            let novaDirecao = 'ASC';
+
+            if (novaOrdem === ordemAtual && direcaoAtual === 'ASC') {
+                novaDirecao = 'DESC';
+            }
+
+            // Submete o formulário com os novos parâmetros de ordenação
+            const form = document.querySelector('form.form-group');
+            form.insertAdjacentHTML('beforeend', `<input type="hidden" name="ordem" value="${novaOrdem}">`);
+            form.insertAdjacentHTML('beforeend', `<input type="hidden" name="direcao" value="${novaDirecao}">`);
+            form.submit();
+        });
+
+        // Adiciona classe para indicar ordenação atual
+        if (header.dataset.ordem === '<?= $_POST['ordem'] ?? '' ?>') {
+            header.classList.add('<?= strtolower($_POST['direcao'] ?? '') ?>');
+        }
+    });
+    </script>
 </body>
 </html>
