@@ -38,11 +38,42 @@
 
 ---
 
-# Histórico de versões
+## v.1.2025.2306.0950 (23/06/2025)
 
-## v.1.2025.2306.0950
+### Implementação de Sistema Avançado de Observações Padrão
 
-### Adicionado função de incluir mais de uma observação padrão e botão apagar observações.
+**Nova Funcionalidade: Sistema de Observações Múltiplas**
+- **Interface Melhorada:** Substituído o sistema simples de dropdown por um modal elegante com seleção múltipla de observações.
+- **Botão Adicionar:** Implementado botão "+" verde para abrir o seletor de observações padrão.
+- **Botão Limpar:** Adicionado botão com ícone de borracha (fa-eraser) para limpar todas as observações de uma vez.
+- **Seleção Múltipla:** Possibilidade de selecionar várias observações simultaneamente através de checkboxes.
+- **Formatação Inteligente:** Observações são automaticamente separadas por vírgulas para melhor legibilidade.
+
+**Funcionalidades Implementadas:**
+- **Modal de Observações:** Interface elegante com lista de 15 observações padrão pré-definidas.
+- **Confirmação de Limpeza:** Sistema de confirmação antes de limpar as observações.
+- **Validação:** Verificação se o campo já está vazio antes de tentar limpar.
+- **Edição Manual:** Possibilidade de editar o texto manualmente a qualquer momento.
+- **Integração Completa:** Sistema implementado tanto na página `dispensar.php` quanto no modal de dispensação da página `pacientes.php`.
+
+**Detalhes Técnicos:**
+- **CSS Responsivo:** Estilos adaptáveis para diferentes tamanhos de tela.
+- **JavaScript Robusto:** Sistema de eventos com retry para garantir funcionamento após carregamento AJAX.
+- **UX Otimizada:** Feedback visual e confirmações para melhor experiência do usuário.
+- **Compatibilidade:** Mantida compatibilidade com funcionalidades existentes.
+
+**Arquivos Modificados:**
+- `PHP/dispensar.php` - Implementação do novo sistema de observações
+- `PHP/pacientes.php` - Integração do sistema no modal de dispensação
+- `PHP/ajax_form_dispensar.php` - Atualização do HTML gerado para o modal
+
+**Resultado:**
+- Interface mais profissional e intuitiva para gestão de observações.
+- Controle total sobre as observações: adicionar múltiplas, limpar todas ou editar manualmente.
+- Experiência consistente entre diferentes páginas do sistema.
+- Sistema robusto e confiável para uso em produção.
+
+---
 
 # Histórico de versões
 
