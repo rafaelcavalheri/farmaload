@@ -568,8 +568,8 @@ function registrarDetalhesImportacao($pdo, $logImportacaoId, $dados) {
             foreach ($dados['medicamentos'] as $medicamento) {
                 $stmt = $pdo->prepare("
                     INSERT INTO logs_importacao_detalhes (
-                        log_importacao_id, medicamento_nome, quantidade, lote, validade, observacao
-                    ) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%d/%m/%Y'), ?)
+                        log_importacao_id, tipo, nome, quantidade, lote, validade, observacoes
+                    ) VALUES (?, 'medicamento', ?, ?, ?, ?, ?)
                 ");
                 $stmt->execute([
                     $logImportacaoId,
@@ -587,12 +587,13 @@ function registrarDetalhesImportacao($pdo, $logImportacaoId, $dados) {
             foreach ($dados['pacientes'] as $paciente) {
                 $stmt = $pdo->prepare("
                     INSERT INTO logs_importacao_detalhes (
-                        log_importacao_id, paciente_nome, observacao
-                    ) VALUES (?, ?, ?)
+                        log_importacao_id, tipo, nome, cpf, observacoes
+                    ) VALUES (?, 'paciente', ?, ?, ?)
                 ");
                 $stmt->execute([
                     $logImportacaoId,
                     $paciente['nome'],
+                    $paciente['cpf'] ?? null,
                     'Paciente importado da linha ' . ($paciente['linha'] ?? 'N/A')
                 ]);
             }

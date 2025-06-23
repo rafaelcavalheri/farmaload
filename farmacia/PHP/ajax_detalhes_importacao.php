@@ -27,20 +27,20 @@ $log_id = intval($_GET['log_id']);
 try {
     // Buscar detalhes dos medicamentos importados
     $stmt = $pdo->prepare("
-        SELECT medicamento_nome as nome, quantidade, lote, validade, observacao as observacoes
+        SELECT nome, quantidade, lote, validade, observacoes
         FROM logs_importacao_detalhes
-        WHERE log_importacao_id = ? AND medicamento_nome IS NOT NULL
-        ORDER BY medicamento_nome
+        WHERE log_importacao_id = ? AND tipo = 'medicamento'
+        ORDER BY nome
     ");
     $stmt->execute([$log_id]);
     $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Buscar detalhes dos pacientes importados
     $stmt = $pdo->prepare("
-        SELECT paciente_nome as nome, observacao as observacoes
+        SELECT nome, cpf, observacoes
         FROM logs_importacao_detalhes
-        WHERE log_importacao_id = ? AND paciente_nome IS NOT NULL
-        ORDER BY paciente_nome
+        WHERE log_importacao_id = ? AND tipo = 'paciente'
+        ORDER BY nome
     ");
     $stmt->execute([$log_id]);
     $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
