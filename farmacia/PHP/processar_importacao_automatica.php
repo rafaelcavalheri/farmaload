@@ -560,6 +560,52 @@ function converterFormatoLivre_Modificado($spreadsheet) {
     ];
 }
 
+// Função para registrar detalhes da importação
+function registrarDetalhesImportacao($pdo, $logImportacaoId, $dados) {
+    try {
+        // Registrar medicamentos importados
+        if (isset($dados['medicamentos'])) {
+            foreach ($dados['medicamentos'] as $medicamento) {
+                $stmt = $pdo->prepare("
+                    INSERT INTO logs_importacao_detalhes (
+                        log_importacao_id, medicamento_nome, quantidade, lote, validade, observacao
+                    ) VALUES (?, ?, ?, ?, STR_TO_DATE(?, '%d/%m/%Y'), ?)
+                ");
+                $stmt->execute([
+                    $logImportacaoId,
+                    $medicamento['nome'],
+                    $medicamento['quantidade'],
+                    $medicamento['lote'],
+                    $medicamento['validade'],
+                    'Código: ' . ($medicamento['codigo'] ?? 'N/A') . ', Apresentação: ' . ($medicamento['apresentacao'] ?? 'N/A')
+                ]);
+            }
+        }
+        
+        // Registrar pacientes importados
+        if (isset($dados['pacientes'])) {
+            foreach ($dados['pacientes'] as $paciente) {
+                $stmt = $pdo->prepare("
+                    INSERT INTO logs_importacao_detalhes (
+                        log_importacao_id, paciente_nome, observacao
+                    ) VALUES (?, ?, ?)
+                ");
+                $stmt->execute([
+                    $logImportacaoId,
+                    $paciente['nome'],
+                    'Paciente importado da linha ' . ($paciente['linha'] ?? 'N/A')
+                ]);
+            }
+        }
+        
+        return true;
+    } catch (Exception $e) {
+        // Se falhar ao registrar detalhes, apenas loga o erro mas não interrompe a importação
+        error_log("Erro ao registrar detalhes da importação: " . $e->getMessage());
+        return false;
+    }
+}
+
 function importarDados($dados) {
     global $pdo;
     
@@ -804,16 +850,54 @@ function importarDados($dados) {
             fwrite($logFile, "Transação concluída com sucesso!\n");
             fclose($logFile);
         }
+
+        // CÓDIGO REMOVIDO PARA EVITAR DUPLICAÇÃO - O LOG É REGISTRADO NO CÓDIGO PRINCIPAL
+        // // Registrar o log da importação
+        // $stmt = $pdo->prepare("INSERT INTO logs_importacao (usuario_id, usuario_nome, data_hora, arquivo_nome, quantidade_registros, status) VALUES (?, ?, NOW(), ?, ?, ?)");
+        // $stmt->execute([
+        //     $_SESSION['usuario']['id'],
+        //     $_SESSION['usuario']['nome'],
+        //     $_FILES['arquivo']['name'],
+        //     count($dados['medicamentos']),
+        //     'SUCESSO'
+        // ]);
+        
+        // // Capturar o ID do log e registrar detalhes
+        // $logImportacaoId = $pdo->lastInsertId();
+        // registrarDetalhesImportacao($pdo, $logImportacaoId, $dados);
+
+        return count($pacientesProcessados);
     } catch (Exception $e) {
         $pdo->rollBack();
         if ($logFile) {
-            fwrite($logFile, "ERRO na transação: " . $e->getMessage() . "\n");
+            fwrite($logFile, "ERRO: " . $e->getMessage() . "\n");
             fclose($logFile);
         }
-        throw $e;
+        
+        // Registrar erro em um arquivo de log alternativo
+        file_put_contents('/tmp/import_error.log', date('Y-m-d H:i:s') . ': ' . $e->getMessage() . "\n", FILE_APPEND);
+        
+        // Registrar o erro na tabela de logs
+        try {
+            $stmt = $pdo->prepare("INSERT INTO logs_importacao (usuario_id, usuario_nome, data_hora, arquivo_nome, quantidade_registros, status) VALUES (?, ?, NOW(), ?, ?, ?)");
+            $stmt->execute([
+                $_SESSION['usuario']['id'],
+                $_SESSION['usuario']['nome'],
+                $_FILES['arquivo']['name'] ?? 'N/A',
+                0,
+                'ERRO'
+            ]);
+        } catch (Exception $logError) {
+            // Se falhar ao registrar o log, apenas ignora
+        }
+        
+        if ($isAjax) {
+            echo json_encode(['success' => false, 'message' => 'Erro ao importar dados: ' . $e->getMessage()]);
+        } else {
+            header('Location: relatorios.php?erro=' . urlencode($e->getMessage()) . '&aba=importacoes');
+        }
+        exit();
     }
-
-    return count($pacientesProcessados);
 }
 
 // Adicionar função para imprimir a estrutura do arquivo importado no log
@@ -1461,8 +1545,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
             $_SESSION['usuario']['nome'],
             $_FILES['arquivo']['name'],
             count($dados['medicamentos']),
-            'Sucesso'
+            'SUCESSO'
         ]);
+        
+        // Capturar o ID do log e registrar detalhes
+        $logImportacaoId = $pdo->lastInsertId();
+        registrarDetalhesImportacao($pdo, $logImportacaoId, $dados);
         
         // Preparar mensagem de sucesso
         $mensagem = count($dados['medicamentos']) . " medicamentos importados com sucesso!";
@@ -1485,18 +1573,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
         if ($isAjax) {
             echo json_encode(['success' => true, 'message' => $mensagem]);
         } else {
-            header('Location: medicamentos.php?sucesso=' . urlencode($mensagem));
+            header('Location: relatorios.php?sucesso=' . urlencode($mensagem) . '&aba=importacoes');
         }
         exit();
 
     } catch (Exception $e) {
+        if ($logFile) {
+            fwrite($logFile, "ERRO: " . $e->getMessage() . "\n");
+            fclose($logFile);
+        }
+        
         // Registrar erro em um arquivo de log alternativo
         file_put_contents('/tmp/import_error.log', date('Y-m-d H:i:s') . ': ' . $e->getMessage() . "\n", FILE_APPEND);
+        
+        // Registrar o erro na tabela de logs
+        try {
+            $stmt = $pdo->prepare("INSERT INTO logs_importacao (usuario_id, usuario_nome, data_hora, arquivo_nome, quantidade_registros, status) VALUES (?, ?, NOW(), ?, ?, ?)");
+            $stmt->execute([
+                $_SESSION['usuario']['id'],
+                $_SESSION['usuario']['nome'],
+                $_FILES['arquivo']['name'] ?? 'N/A',
+                0,
+                'ERRO'
+            ]);
+        } catch (Exception $logError) {
+            // Se falhar ao registrar o log, apenas ignora
+        }
         
         if ($isAjax) {
             echo json_encode(['success' => false, 'message' => 'Erro ao importar dados: ' . $e->getMessage()]);
         } else {
-            header('Location: medicamentos.php?erro=' . urlencode($e->getMessage()));
+            header('Location: relatorios.php?erro=' . urlencode($e->getMessage()) . '&aba=importacoes');
         }
         exit();
     }
@@ -1504,7 +1611,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
     if ($isAjax) {
         echo json_encode(['success' => false, 'message' => 'Nenhum arquivo enviado']);
     } else {
-        header('Location: medicamentos.php?erro=' . urlencode('Nenhum arquivo enviado'));
+        header('Location: relatorios.php?erro=' . urlencode('Nenhum arquivo enviado') . '&aba=importacoes');
     }
     exit();
 } 

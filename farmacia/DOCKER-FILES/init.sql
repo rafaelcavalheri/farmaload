@@ -358,6 +358,20 @@ CREATE TABLE IF NOT EXISTS logs_importacao (
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
 ) ENGINE=InnoDB;
 
+-- Tabela de detalhes de importação
+CREATE TABLE IF NOT EXISTS logs_importacao_detalhes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    log_importacao_id INT NOT NULL,
+    tipo ENUM('medicamento', 'paciente') NOT NULL,
+    nome VARCHAR(255) NOT NULL,
+    quantidade INT DEFAULT 0,
+    lote VARCHAR(100),
+    validade VARCHAR(20),
+    cpf VARCHAR(14),
+    observacoes TEXT,
+    FOREIGN KEY (log_importacao_id) REFERENCES logs_importacao(id) ON DELETE CASCADE
+) ENGINE=InnoDB;
+
 
 -- Tabela de pessoas autorizadas
 CREATE TABLE IF NOT EXISTS pessoas_autorizadas (

@@ -62,6 +62,24 @@ if ($tipo_relatorio === 'dispensas') {
     }
 
     $sql .= " ORDER BY t.data DESC";
+} elseif ($tipo_relatorio === 'importacoes') {
+    // Relatório de importações
+    $sql = "SELECT li.*, u.nome as usuario_nome
+            FROM logs_importacao li
+            LEFT JOIN usuarios u ON li.usuario_id = u.id
+            WHERE DATE(li.data_hora) BETWEEN :data_inicio AND :data_fim";
+    
+    $params = [
+        ':data_inicio' => $data_inicio->format('Y-m-d'),
+        ':data_fim' => $data_fim->format('Y-m-d')
+    ];
+
+    if (!empty($operador_id)) {
+        $sql .= " AND li.usuario_id = :operador_id";
+        $params[':operador_id'] = $operador_id;
+    }
+
+    $sql .= " ORDER BY li.data_hora DESC";
 } else {
     // Relatório de pacientes
     $sql = "SELECT p.id, p.nome, p.cpf, p.telefone, 
@@ -157,6 +175,120 @@ if ($tipo_relatorio === 'dispensas') {
     foreach (range('A', 'H') as $col) {
         $sheet->getColumnDimension($col)->setAutoSize(true);
     }
+} elseif ($tipo_relatorio === 'importacoes') {
+    // Definir cabeçalhos para importações
+    $sheet->setCellValue('A1', 'Data/Hora');
+    $sheet->setCellValue('B1', 'Usuário');
+    $sheet->setCellValue('C1', 'Arquivo');
+    $sheet->setCellValue('D1', 'Quantidade de Registros');
+    $sheet->setCellValue('E1', 'Status');
+
+    // Estilo para o cabeçalho
+    $headerStyle = [
+        'font' => ['bold' => true],
+        'fill' => [
+            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+            'startColor' => ['rgb' => 'E9ECEF']
+        ]
+    ];
+    $sheet->getStyle('A1:E1')->applyFromArray($headerStyle);
+
+    // Preencher dados
+    $row = 2;
+    foreach ($resultados as $importacao) {
+        $sheet->setCellValue('A' . $row, date('d/m/Y H:i', strtotime($importacao['data_hora'])));
+        $sheet->setCellValue('B' . $row, $importacao['usuario_nome'] ?? 'N/A');
+        $sheet->setCellValue('C' . $row, $importacao['arquivo_nome'] ?? 'N/A');
+        $sheet->setCellValue('D' . $row, $importacao['quantidade_registros'] ?? 'N/A');
+        $sheet->setCellValue('E' . $row, $importacao['status'] ?? 'N/A');
+        $row++;
+    }
+
+    // Ajustar largura das colunas
+    foreach (range('A', 'E') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+    
+    // Adicionar detalhes das importações em abas separadas
+    foreach ($resultados as $importacao) {
+        if ($importacao['status'] === 'SUCESSO') {
+            // Buscar detalhes dos medicamentos
+            $stmt = $pdo->prepare("
+                SELECT nome, quantidade, lote, validade, observacoes
+                FROM logs_importacao_detalhes
+                WHERE log_importacao_id = ? AND tipo = 'medicamento'
+                ORDER BY nome
+            ");
+            $stmt->execute([$importacao['id']]);
+            $medicamentos = $stmt->fetchAll();
+            
+            // Buscar detalhes dos pacientes
+            $stmt = $pdo->prepare("
+                SELECT nome, cpf, observacoes
+                FROM logs_importacao_detalhes
+                WHERE log_importacao_id = ? AND tipo = 'paciente'
+                ORDER BY nome
+            ");
+            $stmt->execute([$importacao['id']]);
+            $pacientes = $stmt->fetchAll();
+            
+            // Criar aba para medicamentos se houver
+            if (!empty($medicamentos)) {
+                $medSheet = $spreadsheet->createSheet();
+                $medSheet->setTitle('Medicamentos_' . date('dmY_Hi', strtotime($importacao['data_hora'])));
+                
+                // Cabeçalhos
+                $medSheet->setCellValue('A1', 'Nome do Medicamento');
+                $medSheet->setCellValue('B1', 'Quantidade');
+                $medSheet->setCellValue('C1', 'Lote');
+                $medSheet->setCellValue('D1', 'Validade');
+                $medSheet->setCellValue('E1', 'Observações');
+                
+                $medSheet->getStyle('A1:E1')->applyFromArray($headerStyle);
+                
+                // Dados
+                $medRow = 2;
+                foreach ($medicamentos as $med) {
+                    $medSheet->setCellValue('A' . $medRow, $med['nome']);
+                    $medSheet->setCellValue('B' . $medRow, $med['quantidade']);
+                    $medSheet->setCellValue('C' . $medRow, $med['lote'] ?? '');
+                    $medSheet->setCellValue('D' . $medRow, $med['validade'] ?? '');
+                    $medSheet->setCellValue('E' . $medRow, $med['observacoes'] ?? '');
+                    $medRow++;
+                }
+                
+                foreach (range('A', 'E') as $col) {
+                    $medSheet->getColumnDimension($col)->setAutoSize(true);
+                }
+            }
+            
+            // Criar aba para pacientes se houver
+            if (!empty($pacientes)) {
+                $pacSheet = $spreadsheet->createSheet();
+                $pacSheet->setTitle('Pacientes_' . date('dmY_Hi', strtotime($importacao['data_hora'])));
+                
+                // Cabeçalhos
+                $pacSheet->setCellValue('A1', 'Nome do Paciente');
+                $pacSheet->setCellValue('B1', 'CPF');
+                $pacSheet->setCellValue('C1', 'Observações');
+                
+                $pacSheet->getStyle('A1:C1')->applyFromArray($headerStyle);
+                
+                // Dados
+                $pacRow = 2;
+                foreach ($pacientes as $pac) {
+                    $pacSheet->setCellValue('A' . $pacRow, $pac['nome']);
+                    $pacSheet->setCellValue('B' . $pacRow, $pac['cpf'] ?? '');
+                    $pacSheet->setCellValue('C' . $pacRow, $pac['observacoes'] ?? '');
+                    $pacRow++;
+                }
+                
+                foreach (range('A', 'C') as $col) {
+                    $pacSheet->getColumnDimension($col)->setAutoSize(true);
+                }
+            }
+        }
+    }
 } else {
     // Definir cabeçalhos para pacientes
     $sheet->setCellValue('A1', 'Nome');
@@ -234,7 +366,7 @@ if ($tipo_relatorio === 'dispensas') {
 
 // Configurar cabeçalhos HTTP para download
 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-header('Content-Disposition: attachment;filename="relatorio_' . ($tipo_relatorio === 'dispensas' ? 'dispensas' : 'pacientes') . '_' . date('Y-m-d') . '.xlsx"');
+header('Content-Disposition: attachment;filename="relatorio_' . ($tipo_relatorio === 'dispensas' ? 'dispensas' : ($tipo_relatorio === 'importacoes' ? 'importacoes' : 'pacientes')) . '_' . date('Y-m-d') . '.xlsx"');
 header('Cache-Control: max-age=0');
 
 // Criar arquivo Excel

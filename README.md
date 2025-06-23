@@ -1,14 +1,46 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.1906.1920
-**Data:** 19/06/2025
+**Versão:** v.1.2025.2306.1200
+**Data:** 23/06/2025
+
+---
+
+## v.1.2025.2306.1200 (23/06/2025)
+
+### Implementação de Relatório de Importação Detalhado e Correções Críticas
+
+**Nova Funcionalidade: Relatório de Importação Detalhado**
+- **Banco de Dados:** Criada a nova tabela `logs_importacao_detalhes` para armazenar detalhes de cada item importado.
+- **Backend:** O script `processar_importacao_automatica.php` foi aprimorado para popular a nova tabela com dados dos medicamentos e pacientes de cada importação.
+- **Frontend:**
+  - Adicionado um botão "Detalhes" na lista de logs de importação na página `relatorios.php`.
+  - Implementado um modal que exibe os detalhes (medicamentos, pacientes, lotes, validades) de forma clara.
+  - Criado o endpoint `ajax_detalhes_importacao.php` para carregar os dados dinamicamente.
+- **Exportação:** A funcionalidade de exportar para Excel foi estendida para incluir os relatórios detalhados.
+
+**Correções de Bugs e Melhorias**
+- **Logs Duplicados:** Resolvido o problema crítico onde cada importação gerava duas entradas de log. O código duplicado foi removido, garantindo a integridade dos registros.
+- **Redirecionamento Pós-Importação:** Melhorada a experiência do usuário, alterando o redirecionamento para a página `relatorios.php` com a aba de importações já selecionada.
+- **Estabilidade:** Corrigidos múltiplos erros e warnings (`Column not found`, `headers already sent`) que surgiram durante o desenvolvimento, garantindo uma execução limpa e estável.
+- **Código Limpo:** Removidos todos os logs e `echo` de depuração.
+
+**Arquivos Modificados:**
+- `PHP/processar_importacao_automatica.php`
+- `PHP/relatorios.php`
+- `PHP/ajax_detalhes_importacao.php`
+- `DOCKER-FILES/init.sql`
+
+**Resultado:**
+- O sistema agora possui um robusto relatório de detalhes de importação.
+- A estabilidade foi melhorada com a correção de bugs críticos.
+- A usabilidade foi aprimorada com o redirecionamento inteligente.
 
 ---
 
 # Histórico de versões
 
-## v.1.2025.1906.1920 (19/06/2025)
+## v.1.2025.1906.1920
 
 ### Implementação de Observações Padrão no Modal de Dispensação
 
@@ -57,8 +89,6 @@
 - Funcionalidade testada e funcionando perfeitamente
 - Sistema de retry funcionando corretamente
 - Compatibilidade mantida com funções existentes de dispensação
-
----
 
 ## v.1.2025.1906.1800 (19/06/2025)
 
@@ -127,8 +157,6 @@ const observer = new MutationObserver(function(mutations) {
 - Console limpo sem erros JavaScript
 - Sistema responsivo e intuitivo
 
----
-
 ## v.1.2025.1906.1740 (19/06/2025)
 
 ### Correção Crítica na Importação de Datas de Renovação
@@ -187,8 +215,6 @@ const observer = new MutationObserver(function(mutations) {
 - Containers Docker reconstruídos com sucesso
 - Sistema funcionando com a versão restaurada
 - Pronto para testes de importação com datas de renovação
-
----
 
 ## v.1.2025.1806.1700 (18/06/2025)
 

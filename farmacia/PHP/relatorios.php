@@ -43,7 +43,7 @@ try {
 $medicamento_id = $_GET['medicamento_id'] ?? '';
 $operador_id = $_GET['operador_id'] ?? '';
 $paciente_id = $_GET['paciente_id'] ?? '';
-$tipo_relatorio = $_GET['tipo_relatorio'] ?? 'dispensas';
+$tipo_relatorio = $_GET['aba'] ?? $_GET['tipo_relatorio'] ?? 'dispensas';
 $status_paciente = $_GET['status_paciente'] ?? '';
 
 if ($tipo_relatorio === 'dispensas') {
@@ -81,6 +81,32 @@ if ($tipo_relatorio === 'dispensas') {
         $resultados = $stmt->fetchAll();
     } catch (PDOException $e) {
         die("Erro na consulta: " . $e->getMessage());
+    }
+} elseif ($tipo_relatorio === 'importacoes') {
+    // Relatório de importações
+    $sql = "SELECT li.*, u.nome as usuario_nome
+            FROM logs_importacao li
+            LEFT JOIN usuarios u ON li.usuario_id = u.id
+            WHERE DATE(li.data_hora) BETWEEN :data_inicio AND :data_fim";
+    
+    $params = [
+        ':data_inicio' => $data_inicio->format('Y-m-d'),
+        ':data_fim' => $data_fim->format('Y-m-d')
+    ];
+
+    if (!empty($operador_id)) {
+        $sql .= " AND li.usuario_id = :operador_id";
+        $params[':operador_id'] = $operador_id;
+    }
+
+    $sql .= " ORDER BY li.data_hora DESC";
+
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $resultados_importacoes = $stmt->fetchAll();
+    } catch (PDOException $e) {
+        die("Erro na consulta de importações: " . $e->getMessage());
     }
 } else {
     // Relatório de pacientes - Foco nos medicamentos com status específico
@@ -135,7 +161,51 @@ if ($tipo_relatorio === 'dispensas') {
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="/images/fav.png">
     <link rel="stylesheet" href="/css/style.css">
-    
+    <style>
+        /* Estilos do Modal de Detalhes */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 1000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.6); 
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 2% auto; /* Reduzido para exibir melhor em telas menores */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 98%; /* Aumentado para mais largura */
+            max-width: 1500px; /* Aumentado para telas grandes */
+            border-radius: 8px;
+            position: relative;
+        }
+        .close {
+            color: #aaa;
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        #detalhesConteudo table {
+            font-size: 14px;
+        }
+        .modal-actions {
+            text-align: right;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
     <?php include 'header.php'; ?>
@@ -151,6 +221,7 @@ if ($tipo_relatorio === 'dispensas') {
                         <select id="tipo_relatorio" name="tipo_relatorio" onchange="toggleDateFields(this.value)">
                             <option value="dispensas" <?= $tipo_relatorio === 'dispensas' ? 'selected' : '' ?>>Dispensas de Medicamentos</option>
                             <option value="pacientes" <?= $tipo_relatorio === 'pacientes' ? 'selected' : '' ?>>Situação dos Pacientes</option>
+                            <option value="importacoes" <?= $tipo_relatorio === 'importacoes' ? 'selected' : '' ?>>Relatório de Importações</option>
                         </select>
                     </div>
                 </div>
@@ -175,6 +246,15 @@ if ($tipo_relatorio === 'dispensas') {
                     <a href="relatorios.php" class="btn-secondary">Limpar Filtros</a>
                     <?php if ($tipo_relatorio === 'dispensas' && !empty($resultados)): ?>
                         <a href="exportar_relatorio.php?<?= http_build_query($_GET) ?>" 
+                           class="btn-secondary" target="_blank">
+                            <i class="fas fa-file-excel"></i> Exportar Excel
+                        </a>
+                        <button type="button" class="btn-secondary" onclick="window.print()">
+                            <i class="fas fa-print"></i> Imprimir
+                        </button>
+                    <?php endif; ?>
+                    <?php if ($tipo_relatorio === 'importacoes' && !empty($resultados_importacoes)): ?>
+                        <a href="exportar_relatorio.php?<?= http_build_query(array_merge($_GET, ['tipo_relatorio' => 'importacoes'])) ?>" 
                            class="btn-secondary" target="_blank">
                             <i class="fas fa-file-excel"></i> Exportar Excel
                         </a>
@@ -232,6 +312,59 @@ if ($tipo_relatorio === 'dispensas') {
             <?php else: ?>
                 <div class="no-results">
                     Nenhum resultado encontrado com os filtros selecionados
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php elseif ($tipo_relatorio === 'importacoes'): ?>
+        <div class="card">
+            <h3>Resultados (<?= count($resultados_importacoes) ?> registros)</h3>
+            <?php if (!empty($resultados_importacoes)): ?>
+                <div class="form-actions" style="margin-bottom: 15px;">
+                    <a href="exportar_relatorio.php?<?= http_build_query(array_merge($_GET, ['tipo_relatorio' => 'importacoes'])) ?>" 
+                       class="btn-secondary" target="_blank">
+                        <i class="fas fa-file-excel"></i> Exportar Excel
+                    </a>
+                    <button type="button" class="btn-secondary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data/Hora</th>
+                                <th>Usuário</th>
+                                <th>Arquivo</th>
+                                <th>Quantidade de Registros</th>
+                                <th>Status</th>
+                                <th>Ações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($resultados_importacoes as $importacao): ?>
+                                <tr>
+                                    <td><?= date('d/m/Y H:i', strtotime($importacao['data_hora'])) ?></td>
+                                    <td><?= htmlspecialchars($importacao['usuario_nome'] ?? 'N/A') ?></td>
+                                    <td><?= htmlspecialchars($importacao['arquivo_nome'] ?? 'N/A') ?></td>
+                                    <td><?= $importacao['quantidade_registros'] ?? 'N/A' ?></td>
+                                    <td>
+                                        <span class="badge <?= strtoupper(trim($importacao['status'] ?? '')) === 'SUCESSO' ? 'sucesso' : 'erro' ?>">
+                                            <?= htmlspecialchars($importacao['status'] ?? 'N/A') ?>
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <button type="button" class="btn-detalhes" onclick="mostrarDetalhesImportacao(<?= $importacao['id'] ?>)">
+                                            <i class="fas fa-eye"></i> Detalhes
+                                        </button>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <div class="no-results">
+                    Nenhum registro de importação encontrado com os filtros selecionados
                 </div>
             <?php endif; ?>
         </div>
@@ -608,6 +741,116 @@ if ($tipo_relatorio === 'dispensas') {
         }
 
         .observacoes-print { display: none; }
+        
+        .badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+        
+        .badge.sucesso {
+            background-color: #28a745;
+            color: white;
+        }
+        
+        .badge.erro {
+            background-color: #dc3545;
+            color: white;
+        }
+        
+        /* Estilos para o modal de detalhes */
+        .modal-detalhes {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+        }
+        
+        .modal-detalhes .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            border-radius: 8px;
+            position: relative;
+        }
+        
+        .btn-detalhes {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.85em;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.2s;
+        }
+        
+        .btn-detalhes:hover {
+            background: #0056b3;
+        }
+        
+        .detalhes-section {
+            margin-bottom: 20px;
+        }
+        
+        .detalhes-section h4 {
+            color: #333;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 5px;
+            margin-bottom: 15px;
+        }
+        
+        .detalhes-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        
+        .detalhes-table th,
+        .detalhes-table td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        
+        .detalhes-table th {
+            background-color: #f8f9fa;
+            font-weight: bold;
+        }
+        
+        .detalhes-table tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .tipo-medicamento {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .tipo-paciente {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+        }
     </style>
 
     <!-- Modal para observações -->
@@ -616,6 +859,17 @@ if ($tipo_relatorio === 'dispensas') {
             <span class="close-modal" onclick="fecharModal()">&times;</span>
             <h3>Observações</h3>
             <div class="observacoes-content"></div>
+        </div>
+    </div>
+
+    <!-- Modal para detalhes de importação -->
+    <div id="modalDetalhesImportacao" class="modal-detalhes">
+        <div class="modal-content">
+            <span class="close-modal" onclick="fecharModalDetalhes()">&times;</span>
+            <h3>Detalhes da Importação</h3>
+            <div id="detalhesContent">
+                <div class="loading">Carregando detalhes...</div>
+            </div>
         </div>
     </div>
 
@@ -635,12 +889,77 @@ if ($tipo_relatorio === 'dispensas') {
             modal.style.display = 'none';
         }
 
-        // Fechar modal ao clicar fora dele
-        window.onclick = function(event) {
-            const modal = document.getElementById('modalObservacoes');
-            if (event.target == modal) {
-                modal.style.display = 'none';
-            }
+        function fecharModalDetalhes() {
+            const modal = document.getElementById('modalDetalhesImportacao');
+            modal.style.display = 'none';
+        }
+
+        function mostrarDetalhesImportacao(logId) {
+            const modal = document.getElementById('modalDetalhesImportacao');
+            const content = document.getElementById('detalhesContent');
+            
+            modal.style.display = 'block';
+            content.innerHTML = '<div class="loading">Carregando detalhes...</div>';
+            
+            // Fazer requisição AJAX para buscar os detalhes
+            fetch(`ajax_detalhes_importacao.php?log_id=${logId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        let html = '';
+                        
+                        // Seção de medicamentos
+                        if (data.medicamentos && data.medicamentos.length > 0) {
+                            html += '<div class="detalhes-section">';
+                            html += '<h4><i class="fas fa-pills"></i> Medicamentos Importados (' + data.medicamentos.length + ')</h4>';
+                            html += '<table class="detalhes-table">';
+                            html += '<thead><tr><th>Nome</th><th>Quantidade</th><th>Lote</th><th>Validade</th><th>Observações</th></tr></thead>';
+                            html += '<tbody>';
+                            
+                            data.medicamentos.forEach(med => {
+                                html += '<tr class="tipo-medicamento">';
+                                html += '<td>' + med.nome + '</td>';
+                                html += '<td>' + med.quantidade + '</td>';
+                                html += '<td>' + (med.lote || '-') + '</td>';
+                                html += '<td>' + (med.validade || '-') + '</td>';
+                                html += '<td>' + (med.observacoes || '-') + '</td>';
+                                html += '</tr>';
+                            });
+                            
+                            html += '</tbody></table></div>';
+                        }
+                        
+                        // Seção de pacientes
+                        if (data.pacientes && data.pacientes.length > 0) {
+                            html += '<div class="detalhes-section">';
+                            html += '<h4><i class="fas fa-user"></i> Pacientes Importados (' + data.pacientes.length + ')</h4>';
+                            html += '<table class="detalhes-table">';
+                            html += '<thead><tr><th>Nome</th><th>CPF</th><th>Observações</th></tr></thead>';
+                            html += '<tbody>';
+                            
+                            data.pacientes.forEach(pac => {
+                                html += '<tr class="tipo-paciente">';
+                                html += '<td>' + pac.nome + '</td>';
+                                html += '<td>' + (pac.cpf || '-') + '</td>';
+                                html += '<td>' + (pac.observacoes || '-') + '</td>';
+                                html += '</tr>';
+                            });
+                            
+                            html += '</tbody></table></div>';
+                        }
+                        
+                        if (html === '') {
+                            html = '<div class="no-results">Nenhum detalhe encontrado para esta importação.</div>';
+                        }
+                        
+                        content.innerHTML = html;
+                    } else {
+                        content.innerHTML = '<div class="error">Erro ao carregar detalhes: ' + (data.message || 'Erro desconhecido') + '</div>';
+                    }
+                })
+                .catch(error => {
+                    content.innerHTML = '<div class="error">Erro ao carregar detalhes: ' + error.message + '</div>';
+                });
         }
 
         function toggleDateFields(tipoRelatorio) {
@@ -679,6 +998,16 @@ if ($tipo_relatorio === 'dispensas') {
                         <option value="">Todos</option>
                         <?php foreach ($pacientes as $pac): ?>
                             <option value="<?= $pac['id'] ?>" <?= $pac['id'] == $paciente_id ? 'selected' : '' ?>><?= htmlspecialchars($pac['nome']) ?> (<?= formatarCPF($pac['cpf']) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
+                ` }
+            ],
+            importacoes: [
+                { id: 'operador_id', label: 'Usuário', html: `
+                    <select id="operador_id" name="operador_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($operadores as $op): ?>
+                            <option value="<?= $op['id'] ?>" <?= $op['id'] == $operador_id ? 'selected' : '' ?>><?= htmlspecialchars($op['nome']) ?> (<?= ucfirst($op['perfil']) ?>)</option>
                         <?php endforeach; ?>
                     </select>
                 ` }
@@ -786,6 +1115,19 @@ if ($tipo_relatorio === 'dispensas') {
             
             renderFiltrosExtras();
         };
+
+        // Fechar modal ao clicar fora dele
+        window.onclick = function(event) {
+            const modalObservacoes = document.getElementById('modalObservacoes');
+            const modalDetalhes = document.getElementById('modalDetalhesImportacao');
+            
+            if (event.target == modalObservacoes) {
+                modalObservacoes.style.display = 'none';
+            }
+            if (event.target == modalDetalhes) {
+                modalDetalhes.style.display = 'none';
+            }
+        }
     </script>
 </body>
 </html>
