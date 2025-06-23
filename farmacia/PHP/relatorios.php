@@ -176,11 +176,13 @@ if ($tipo_relatorio === 'dispensas') {
         }
         .modal-content {
             background-color: #fefefe;
-            margin: 2% auto; /* Reduzido para exibir melhor em telas menores */
+            margin: 2% auto;
             padding: 20px;
             border: 1px solid #888;
-            width: 98%; /* Aumentado para mais largura */
-            max-width: 1500px; /* Aumentado para telas grandes */
+            width: 98%;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
             border-radius: 8px;
             position: relative;
         }
@@ -204,6 +206,25 @@ if ($tipo_relatorio === 'dispensas') {
         .modal-actions {
             text-align: right;
             margin-top: 20px;
+        }
+        .btn-detalhes {
+            background: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+        }
+        
+        .btn-detalhes:hover {
+            background: var(--primary-dark);
+            color: white;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -353,9 +374,9 @@ if ($tipo_relatorio === 'dispensas') {
                                         </span>
                                     </td>
                                     <td>
-                                        <button type="button" class="btn-detalhes" onclick="mostrarDetalhesImportacao(<?= $importacao['id'] ?>)">
+                                        <a href="detalhes_importacao.php?log_id=<?= $importacao['id'] ?>" class="btn-detalhes" target="_blank">
                                             <i class="fas fa-eye"></i> Detalhes
-                                        </button>
+                                        </a>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -785,24 +806,6 @@ if ($tipo_relatorio === 'dispensas') {
             position: relative;
         }
         
-        .btn-detalhes {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 0.85em;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            transition: background-color 0.2s;
-        }
-        
-        .btn-detalhes:hover {
-            background: #0056b3;
-        }
-        
         .detalhes-section {
             margin-bottom: 20px;
         }
@@ -862,17 +865,6 @@ if ($tipo_relatorio === 'dispensas') {
         </div>
     </div>
 
-    <!-- Modal para detalhes de importação -->
-    <div id="modalDetalhesImportacao" class="modal-detalhes">
-        <div class="modal-content">
-            <span class="close-modal" onclick="fecharModalDetalhes()">&times;</span>
-            <h3>Detalhes da Importação</h3>
-            <div id="detalhesContent">
-                <div class="loading">Carregando detalhes...</div>
-            </div>
-        </div>
-    </div>
-
     <script>
         function mostrarObservacoes(button) {
             const cell = button.closest('.observacoes-cell');
@@ -887,79 +879,6 @@ if ($tipo_relatorio === 'dispensas') {
         function fecharModal() {
             const modal = document.getElementById('modalObservacoes');
             modal.style.display = 'none';
-        }
-
-        function fecharModalDetalhes() {
-            const modal = document.getElementById('modalDetalhesImportacao');
-            modal.style.display = 'none';
-        }
-
-        function mostrarDetalhesImportacao(logId) {
-            const modal = document.getElementById('modalDetalhesImportacao');
-            const content = document.getElementById('detalhesContent');
-            
-            modal.style.display = 'block';
-            content.innerHTML = '<div class="loading">Carregando detalhes...</div>';
-            
-            // Fazer requisição AJAX para buscar os detalhes
-            fetch(`ajax_detalhes_importacao.php?log_id=${logId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        let html = '';
-                        
-                        // Seção de medicamentos
-                        if (data.medicamentos && data.medicamentos.length > 0) {
-                            html += '<div class="detalhes-section">';
-                            html += '<h4><i class="fas fa-pills"></i> Medicamentos Importados (' + data.medicamentos.length + ')</h4>';
-                            html += '<table class="detalhes-table">';
-                            html += '<thead><tr><th>Nome</th><th>Quantidade</th><th>Lote</th><th>Validade</th><th>Observações</th></tr></thead>';
-                            html += '<tbody>';
-                            
-                            data.medicamentos.forEach(med => {
-                                html += '<tr class="tipo-medicamento">';
-                                html += '<td>' + med.nome + '</td>';
-                                html += '<td>' + med.quantidade + '</td>';
-                                html += '<td>' + (med.lote || '-') + '</td>';
-                                html += '<td>' + (med.validade || '-') + '</td>';
-                                html += '<td>' + (med.observacoes || '-') + '</td>';
-                                html += '</tr>';
-                            });
-                            
-                            html += '</tbody></table></div>';
-                        }
-                        
-                        // Seção de pacientes
-                        if (data.pacientes && data.pacientes.length > 0) {
-                            html += '<div class="detalhes-section">';
-                            html += '<h4><i class="fas fa-user"></i> Pacientes Importados (' + data.pacientes.length + ')</h4>';
-                            html += '<table class="detalhes-table">';
-                            html += '<thead><tr><th>Nome</th><th>CPF</th><th>Observações</th></tr></thead>';
-                            html += '<tbody>';
-                            
-                            data.pacientes.forEach(pac => {
-                                html += '<tr class="tipo-paciente">';
-                                html += '<td>' + pac.nome + '</td>';
-                                html += '<td>' + (pac.cpf || '-') + '</td>';
-                                html += '<td>' + (pac.observacoes || '-') + '</td>';
-                                html += '</tr>';
-                            });
-                            
-                            html += '</tbody></table></div>';
-                        }
-                        
-                        if (html === '') {
-                            html = '<div class="no-results">Nenhum detalhe encontrado para esta importação.</div>';
-                        }
-                        
-                        content.innerHTML = html;
-                    } else {
-                        content.innerHTML = '<div class="error">Erro ao carregar detalhes: ' + (data.message || 'Erro desconhecido') + '</div>';
-                    }
-                })
-                .catch(error => {
-                    content.innerHTML = '<div class="error">Erro ao carregar detalhes: ' + error.message + '</div>';
-                });
         }
 
         function toggleDateFields(tipoRelatorio) {
@@ -1119,13 +1038,9 @@ if ($tipo_relatorio === 'dispensas') {
         // Fechar modal ao clicar fora dele
         window.onclick = function(event) {
             const modalObservacoes = document.getElementById('modalObservacoes');
-            const modalDetalhes = document.getElementById('modalDetalhesImportacao');
             
             if (event.target == modalObservacoes) {
                 modalObservacoes.style.display = 'none';
-            }
-            if (event.target == modalDetalhes) {
-                modalDetalhes.style.display = 'none';
             }
         }
     </script>
