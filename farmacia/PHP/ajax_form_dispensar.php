@@ -56,35 +56,45 @@ $stmt = $pdo->prepare("
 $stmt->execute([$paciente_id]);
 $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-// Adicionar campo de observação no início com select de observações padrão
 ?>
-<div class="observacao-box">
-    <div class="observacao-header">
-        <strong>Observações:</strong>
+
+<!-- Novo sistema de observação com botão e modal -->
+<div class="form-group">
+    <label for="observacao">Observações:</label>
+    <div class="observacao-container">
+        <textarea name="observacao" id="observacao" rows="3" class="form-control observacao-textarea"
+                  placeholder="Digite ou clique em + para adicionar observações..."><?= htmlspecialchars($paciente['observacao'] ?? '') ?></textarea>
+        <div style="display: flex; flex-direction: column; gap: 5px;">
+            <button type="button" class="btn-add-observacao" onclick="abrirModalObservacoes()" title="Adicionar observação padrão">
+                <i class="fas fa-plus"></i>
+            </button>
+            <button type="button" class="btn-clear-observacao" onclick="limparObservacoes()" title="Limpar observações">
+                <i class="fas fa-eraser"></i>
+            </button>
+        </div>
     </div>
-    
-    <!-- Select para observações padrão -->
-    <div class="observacao-padrao-container">
-        <label for="observacao_padrao">Observações Padrão:</label>
-        <select name="observacao_padrao" id="observacao_padrao" class="observacao-padrao-select">
-            <option value="">Selecione uma observação padrão (opcional)</option>
+</div>
+
+<!-- Modal de Observações (escondido por padrão) -->
+<div id="modalObservacoes" class="modal-observacoes">
+    <div class="modal-observacoes-content">
+        <div class="modal-observacoes-header">
+            <h3><i class="fas fa-list"></i> Selecionar Observações Padrão</h3>
+            <button type="button" class="close-modal" onclick="fecharModalObservacoes()">&times;</button>
+        </div>
+        <div class="observacoes-grid">
             <?php foreach ($observacoes_padrao as $obs): ?>
-                <option value="<?php echo htmlspecialchars($obs); ?>"><?php echo htmlspecialchars($obs); ?></option>
+                <div class="observacao-checkbox">
+                    <input type="checkbox" id="modal_obs_<?php echo md5($obs); ?>" value="<?php echo htmlspecialchars($obs); ?>">
+                    <label for="modal_obs_<?php echo md5($obs); ?>"><?php echo htmlspecialchars($obs); ?></label>
+                </div>
             <?php endforeach; ?>
-        </select>
+        </div>
+        <div class="modal-observacoes-footer">
+            <button type="button" class="btn-cancelar" onclick="fecharModalObservacoes()">Cancelar</button>
+            <button type="button" class="btn-selecionar-observacoes" onclick="adicionarObservacoesSelecionadas()">Adicionar</button>
+        </div>
     </div>
-    
-    <!-- Textarea para observações -->
-    <div class="observacao-textarea-container">
-        <label for="observacao">Observações (será aplicada na transação):</label>
-        <textarea id="observacao" class="observacao-editor" rows="4" 
-                  placeholder="Digite as observações ou selecione uma opção padrão acima..."><?= htmlspecialchars($paciente['observacao'] ?? '') ?></textarea>
-    </div>
-    
-    <small style="color: #666; margin-top: 5px; display: block;">
-        <i class="fas fa-info-circle"></i> 
-        Dica: Selecione uma observação padrão para preenchimento automático, ou digite sua própria observação.
-    </small>
 </div>
 
 <?php foreach ($medicamentos as $med): ?>
