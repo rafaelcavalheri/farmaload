@@ -33,16 +33,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 // Busca
-$where = "1=1";
+$where_medicos = "1=1";
+$where_instituicoes = "1=1";
 $params = [];
 if (isset($_GET['busca'])) {
     $busca = trim($_GET['busca']);
     if (strlen($busca) >= 3) {
-        $where .= " AND (
+        $where_medicos .= " AND (
             m.nome LIKE ? OR 
             m.crm_numero LIKE ? OR 
             m.crm_estado LIKE ? OR
-            m.cns LIKE ? OR
+            m.cns LIKE ?
+        )";
+        $where_instituicoes .= " AND (
             i.nome LIKE ? OR
             i.cnes LIKE ?
         )";
@@ -70,11 +73,11 @@ $stmt = $pdo->prepare("
     FROM (
         SELECT m.id, m.nome, m.crm_numero, m.crm_estado, m.ativo, m.data_cadastro, 'medico' as tipo
         FROM medicos m 
-        WHERE $where
+        WHERE $where_medicos
         UNION ALL
         SELECT id, nome, cnes as crm_numero, '' as crm_estado, ativo, data_cadastro, 'instituicao' as tipo
         FROM instituicoes i
-        WHERE $where
+        WHERE $where_instituicoes
     ) as registros
 ");
 $stmt->execute($params);
@@ -86,11 +89,11 @@ $stmt = $pdo->prepare("
     SELECT * FROM (
         SELECT m.id, m.nome, m.crm_numero, m.crm_estado, m.ativo, m.data_cadastro, 'medico' as tipo
         FROM medicos m 
-        WHERE $where
+        WHERE $where_medicos
         UNION ALL
         SELECT id, nome, cnes as crm_numero, '' as crm_estado, ativo, data_cadastro, 'instituicao' as tipo
         FROM instituicoes i
-        WHERE $where
+        WHERE $where_instituicoes
     ) as registros
     ORDER BY nome
     LIMIT ? OFFSET ?

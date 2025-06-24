@@ -1,8 +1,39 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.2306.1400
-**Data:** 23/06/2025
+**Versão:** v.1.2025.2406.0920
+**Data:** 24/06/2025
+
+---
+
+## v.1.2025.2406.0920 (24/06/2025)
+
+### Correção Crítica no Sistema de Busca de Médicos e Instituições
+
+**Problema Identificado:**
+- Erro fatal SQL: "Column not found: 1054 Unknown column 'i.nome' in 'where clause'"
+- Ocorria na página `medicos.php` durante buscas por médicos e instituições
+- WHERE clause unificado tentando referenciar aliases de tabelas incompatíveis em UNION query
+
+**Análise do Problema:**
+- Código usava uma única variável `$where` que referenciava tanto `m.` (medicos) quanto `i.` (instituicoes)
+- Em queries UNION, cada parte deve ter seus próprios aliases de tabela válidos
+- A cláusula WHERE incluía `i.nome` e `i.cnes` que não existiam no contexto da tabela `medicos`
+
+**Correções Aplicadas:**
+- **Separação de WHERE Clauses:** Criadas variáveis separadas `$where_medicos` e `$where_instituicoes`
+- **Condições Específicas:** Cada tabela agora tem suas próprias condições de busca apropriadas
+- **Aliases Corretos:** `$where_medicos` usa alias `m.` e `$where_instituicoes` usa alias `i.`
+- **Queries Atualizadas:** Ambas as queries (COUNT e SELECT) foram corrigidas para usar os WHERE clauses apropriados
+
+**Arquivo Corrigido:**
+- `PHP/medicos.php` - Separação das cláusulas WHERE para medicos e instituicoes
+
+**Resultado:**
+- Sistema de busca funcionando corretamente para médicos e instituições
+- Eliminação do erro SQL fatal
+- Busca por nome, CRM, CNS, CNES funcionando sem problemas
+- Sistema mais estável e confiável
 
 ---
 

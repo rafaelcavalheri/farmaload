@@ -37,7 +37,7 @@ log_error() {
 
 # Verificar dependências
 check_dependencies() {
-    local deps=("curl" "jq" "unzip" "docker-compose")
+    local deps=("curl" "jq" "unzip")
     local missing=()
     
     for dep in "${deps[@]}"; do
@@ -180,27 +180,66 @@ aplicar_versao() {
     fi
 }
 
-# Reiniciar containers Docker
-reiniciar_docker() {
-    local docker_dir="$DEST/DOCKER-FILES"
-    
-    if [ -f "$docker_dir/docker-compose.yml" ]; then
-        log_info "Reiniciando containers Docker..."
-        cd "$docker_dir"
-        if docker-compose down && docker-compose up -d --build; then
-            log_success "Containers Docker reiniciados com sucesso."
-        else
-            log_warning "Erro ao reiniciar containers Docker"
-        fi
-    else
-        log_warning "Arquivo docker-compose.yml não encontrado em $docker_dir"
-    fi
-}
-
 # Limpar arquivos temporários
 cleanup() {
     log_info "Limpando arquivos temporários..."
     rm -rf "$TEMP_DIR"
+}
+
+# Função para apagar pasta temporária específica
+apagar_temp() {
+    local temp_pattern="$BASE_DIR/temp_farmacia_*"
+    local temp_dirs=($(ls -1d $temp_pattern 2>/dev/null))
+    
+    if [ ${#temp_dirs[@]} -eq 0 ]; then
+        log_info "Nenhuma pasta temporária encontrada"
+        return
+    fi
+    
+    log_info "Pastas temporárias encontradas:"
+    local i=1
+    for temp_dir in "${temp_dirs[@]}"; do
+        local date=$(basename "$temp_dir" | sed 's/temp_farmacia_//')
+        echo "$i - $date ($temp_dir)"
+        i=$((i+1))
+    done
+    
+    if [ "$1" = "auto" ]; then
+        # Modo automático - apagar todas
+        log_info "Apagando todas as pastas temporárias..."
+        for temp_dir in "${temp_dirs[@]}"; do
+            if rm -rf "$temp_dir"; then
+                log_success "Pasta removida: $(basename "$temp_dir")"
+            else
+                log_error "Erro ao remover: $(basename "$temp_dir")"
+            fi
+        done
+    else
+        # Modo interativo
+        read -p "Digite 'all' para apagar todas ou o número da pasta específica: " choice
+        
+        if [ "$choice" = "all" ]; then
+            log_info "Apagando todas as pastas temporárias..."
+            for temp_dir in "${temp_dirs[@]}"; do
+                if rm -rf "$temp_dir"; then
+                    log_success "Pasta removida: $(basename "$temp_dir")"
+                else
+                    log_error "Erro ao remover: $(basename "$temp_dir")"
+                fi
+            done
+        elif [[ "$choice" =~ ^[0-9]+$ ]] && [ "$choice" -ge 1 ] && [ "$choice" -le ${#temp_dirs[@]} ]; then
+            local selected_temp="${temp_dirs[$((choice-1))]}"
+            log_info "Apagando pasta: $(basename "$selected_temp")"
+            if rm -rf "$selected_temp"; then
+                log_success "Pasta removida com sucesso!"
+            else
+                log_error "Erro ao remover pasta"
+            fi
+        else
+            log_error "Opção inválida!"
+            return 1
+        fi
+    fi
 }
 
 # Função principal de atualização
@@ -239,9 +278,6 @@ atualizar_versao() {
         log_info "Tente restaurar o backup com: $0 restaurar"
         exit 1
     fi
-    
-    # Reiniciar Docker
-    reiniciar_docker
     
     # Limpar
     cleanup
@@ -315,13 +351,17 @@ case "$1" in
     restaurar-especifico)
         restaurar_backup_especifico
         ;;
+    apagar-temp)
+        apagar_temp "$2"
+        ;;
     *)
-        echo "Uso: $0 {atualizar|restaurar|listar-backups|restaurar-especifico}"
+        echo "Uso: $0 {atualizar|restaurar|listar-backups|restaurar-especifico|apagar-temp}"
         echo ""
         echo "Comandos disponíveis:"
         echo "  atualizar           - Baixar e aplicar a última versão do GitHub"
         echo "  restaurar           - Restaurar o último backup criado"
         echo "  listar-backups      - Listar todos os backups disponíveis"
         echo "  restaurar-especifico - Restaurar um backup específico"
+        echo "  apagar-temp         - Apagar uma pasta temporária específica ou todas"
         ;;
 esac 

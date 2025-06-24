@@ -17,6 +17,210 @@ REM Limpar variáveis de tempo
 set "BACKUP_DIR=%BACKUP_DIR: =0%"
 set "TEMP_DIR=%TEMP_DIR: =0%"
 
+REM Verificar se é um comando específico
+if "%1"=="apagar-temp" goto :apagar_temp
+if "%1"=="listar-backups" goto :listar_backups
+if "%1"=="restaurar" goto :restaurar_backup
+if "%1"=="restaurar-especifico" goto :restaurar_backup_especifico
+if "%1"=="atualizar" goto :atualizar_versao
+
+REM Se não for um comando específico, mostrar ajuda
+goto :mostrar_ajuda
+
+:apagar_temp
+echo ========================================
+echo    APAGAR PASTAS TEMPORARIAS
+echo ========================================
+echo.
+
+REM Encontrar pastas temporárias
+set "temp_count=0"
+for /d %%i in ("%BASE_DIR%\temp_farmacia_*") do (
+    set /a temp_count+=1
+    set "temp_dir_!temp_count!=%%i"
+    set "temp_name_!temp_count!=%%~nxi"
+)
+
+if %temp_count%==0 (
+    echo [INFO] Nenhuma pasta temporária encontrada
+    pause
+    exit /b 0
+)
+
+echo [INFO] Pastas temporárias encontradas:
+for /l %%i in (1,1,%temp_count%) do (
+    echo %%i - !temp_name_%%i! (!temp_dir_%%i!)
+)
+
+if "%2"=="auto" (
+    echo [INFO] Apagando todas as pastas temporárias...
+    for /l %%i in (1,1,%temp_count%) do (
+        echo [INFO] Removendo: !temp_name_%%i!
+        rmdir /S /Q "!temp_dir_%%i!" 2>nul
+        if errorlevel 1 (
+            echo [ERROR] Erro ao remover: !temp_name_%%i!
+        ) else (
+            echo [SUCCESS] Pasta removida: !temp_name_%%i!
+        )
+    )
+) else (
+    echo.
+    set /p choice="Digite 'all' para apagar todas ou o número da pasta específica: "
+    
+    if /i "!choice!"=="all" (
+        echo [INFO] Apagando todas as pastas temporárias...
+        for /l %%i in (1,1,%temp_count%) do (
+            echo [INFO] Removendo: !temp_name_%%i!
+            rmdir /S /Q "!temp_dir_%%i!" 2>nul
+            if errorlevel 1 (
+                echo [ERROR] Erro ao remover: !temp_name_%%i!
+            ) else (
+                echo [SUCCESS] Pasta removida: !temp_name_%%i!
+            )
+        )
+    ) else (
+        set /a num=!choice! 2>nul
+        if !num! geq 1 if !num! leq %temp_count% (
+            echo [INFO] Apagando pasta: !temp_name_%num%!
+            rmdir /S /Q "!temp_dir_%num%!" 2>nul
+            if errorlevel 1 (
+                echo [ERROR] Erro ao remover pasta
+            ) else (
+                echo [SUCCESS] Pasta removida com sucesso!
+            )
+        ) else (
+            echo [ERROR] Opção inválida!
+        )
+    )
+)
+
+echo.
+pause
+exit /b 0
+
+:listar_backups
+echo ========================================
+echo    LISTAR BACKUPS DISPONIVEIS
+echo ========================================
+echo.
+
+set "backup_count=0"
+for /d %%i in ("%BASE_DIR%\backup_farmacia_*") do (
+    set /a backup_count+=1
+    set "backup_dir_!backup_count!=%%i"
+    set "backup_name_!backup_count!=%%~nxi"
+)
+
+if %backup_count%==0 (
+    echo [INFO] Nenhum backup encontrado
+    pause
+    exit /b 0
+)
+
+echo [INFO] Backups disponíveis:
+for /l %%i in (1,1,%backup_count%) do (
+    echo %%i - !backup_name_%%i!
+)
+
+pause
+exit /b 0
+
+:restaurar_backup
+echo ========================================
+echo    RESTAURAR ULTIMO BACKUP
+echo ========================================
+echo.
+
+REM Encontrar o backup mais recente
+set "latest_backup="
+for /f "delims=" %%i in ('dir /B /AD /O-D "%BASE_DIR%\backup_farmacia_*" 2^>nul') do (
+    if not defined latest_backup set "latest_backup=%BASE_DIR%\%%i"
+)
+
+if not defined latest_backup (
+    echo [ERROR] Nenhum backup encontrado!
+    pause
+    exit /b 1
+)
+
+echo [INFO] Restaurando backup: %latest_backup%
+if exist "%DEST%" rmdir /S /Q "%DEST%"
+xcopy "%latest_backup%" "%DEST%" /E /I /H /Y >nul
+if errorlevel 1 (
+    echo [ERROR] Erro ao restaurar backup
+    pause
+    exit /b 1
+)
+
+echo [SUCCESS] Backup restaurado com sucesso!
+pause
+exit /b 0
+
+:restaurar_backup_especifico
+echo ========================================
+echo    RESTAURAR BACKUP ESPECIFICO
+echo ========================================
+echo.
+
+set "backup_count=0"
+for /d %%i in ("%BASE_DIR%\backup_farmacia_*") do (
+    set /a backup_count+=1
+    set "backup_dir_!backup_count!=%%i"
+    set "backup_name_!backup_count!=%%~nxi"
+)
+
+if %backup_count%==0 (
+    echo [ERROR] Nenhum backup encontrado
+    pause
+    exit /b 1
+)
+
+echo [INFO] Backups disponíveis:
+for /l %%i in (1,1,%backup_count%) do (
+    echo %%i - !backup_name_%%i!
+)
+
+echo.
+set /p num="Digite o número do backup que deseja restaurar: "
+set /a num=!num! 2>nul
+
+if !num! lss 1 if !num! gtr %backup_count% (
+    echo [ERROR] Número inválido!
+    pause
+    exit /b 1
+)
+
+echo [INFO] Restaurando backup: !backup_name_%num%!
+if exist "%DEST%" rmdir /S /Q "%DEST%"
+xcopy "!backup_dir_%num%!" "%DEST%" /E /I /H /Y >nul
+if errorlevel 1 (
+    echo [ERROR] Erro ao restaurar backup
+    pause
+    exit /b 1
+)
+
+echo [SUCCESS] Backup restaurado com sucesso!
+pause
+exit /b 0
+
+:mostrar_ajuda
+echo ========================================
+echo    SCRIPT DE ATUALIZACAO FARMALOAD
+echo ========================================
+echo.
+echo Uso: %0 {atualizar^|restaurar^|listar-backups^|restaurar-especifico^|apagar-temp}
+echo.
+echo Comandos disponíveis:
+echo   atualizar           - Baixar e aplicar a última versão do GitHub
+echo   restaurar           - Restaurar o último backup criado
+echo   listar-backups      - Listar todos os backups disponíveis
+echo   restaurar-especifico - Restaurar um backup específico
+echo   apagar-temp         - Apagar uma pasta temporária específica ou todas
+echo.
+pause
+exit /b 0
+
+:atualizar_versao
 echo ========================================
 echo    SCRIPT DE ATUALIZACAO FARMALOAD
 echo ========================================
