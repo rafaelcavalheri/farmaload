@@ -1,8 +1,48 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.2406.0920
+**Versão:** v.1.2025.2406.1500
 **Data:** 24/06/2025
+
+## v.1.2025.2406.1500 (24/06/2025)
+
+### Correção Crítica no Sistema de importação
+
+**Problema Identificado:**
+- As datas do arquivo de importação estão vindo com ' antes, exemplo '30/10/2025,
+isso gerava um erro ao importar
+
+**Arquivo Corrigido:**
+- `PHP/processar_importacao_automatica.php` - adicionado correção pra lidar com '
+
+### Nova Funcionalidade: Desmarcação Automática do Campo "Renovado"
+
+**Funcionalidade Implementada:**
+- **Lógica Automática:** Quando uma data de renovação é atualizada durante a importação, se o medicamento estiver marcado como "renovado" (campo `renovado = 1`), o sistema automaticamente desmarca esse campo.
+- **Inteligência de Detecção:** O sistema compara a data de renovação atual com a nova data. Se forem diferentes e o medicamento estiver marcado como renovado, executa a desmarcação automática.
+- **Logs Detalhados:** Todas as ações de desmarcação automática são registradas nos logs de importação para auditoria.
+- **Preservação de Dados:** Se a data de renovação for a mesma, o campo "renovado" permanece inalterado, evitando desmarcações desnecessárias.
+
+**Detalhes Técnicos:**
+- **Função Modificada:** `vincularMedicamentoPaciente()` no arquivo `processar_importacao_automatica.php`
+- **Verificação Inteligente:** Comparação entre `renovacao_atual` e `renovacao_nova` antes de executar a desmarcação
+- **Query Dinâmica:** Construção de SQL dinâmico que inclui `renovado = 0` apenas quando necessário
+- **Compatibilidade:** Mantida total compatibilidade com funcionalidades existentes
+
+**Cenários de Uso:**
+1. **Importação com Nova Data:** Paciente com medicamento marcado como "renovado" e data 31/12/2024. Nova importação traz data 30/06/2025 → Campo "renovado" é automaticamente desmarcado.
+2. **Importação com Mesma Data:** Paciente com medicamento marcado como "renovado" e data 31/12/2024. Nova importação traz a mesma data → Campo "renovado" permanece marcado.
+3. **Novo Vínculo:** Criação de novo vínculo paciente-medicamento não afeta campos "renovado" existentes.
+
+**Arquivos Modificados:**
+- `PHP/processar_importacao_automatica.php` - Função `vincularMedicamentoPaciente()` aprimorada
+- `PHP/teste_renovacao_automatica.php` - Arquivo de teste para validar a funcionalidade
+
+**Resultado:**
+- Sistema mais inteligente e automatizado para gestão de renovações
+- Redução de trabalho manual para desmarcar campos "renovado" obsoletos
+- Maior consistência nos dados de renovação
+- Logs detalhados para auditoria e troubleshooting
 
 ---
 

@@ -28,15 +28,39 @@ function converterDataExcel($data) {
     // Converter para string se não for
     $data = (string)$data;
     
+    // CORREÇÃO: Remover apóstrofo no início se existir (problema do Excel)
+    if (strpos($data, "'") === 0) {
+        $data = substr($data, 1);
+    }
+    
     // Se for uma string no formato dd/mm/yyyy, retorna como está
     if (preg_match('/^\d{2}\/\d{2}\/\d{4}$/', $data)) {
         return $data;
     }
     
+    // Se for uma string no formato dd/mm/yy (2 dígitos para ano), converter para 4 dígitos
+    if (preg_match('/^(\d{2})\/(\d{2})\/(\d{2})$/', $data, $matches)) {
+        $dia = $matches[1];
+        $mes = $matches[2];
+        $ano = $matches[3];
+        
+        // Assumir que anos 00-29 são 2000-2029, anos 30-99 são 1930-1999
+        if ($ano >= 0 && $ano <= 29) {
+            $ano = '20' . $ano;
+        } else {
+            $ano = '19' . $ano;
+        }
+        
+        return $dia . '/' . $mes . '/' . $ano;
+    }
+    
     // Se for um número (formato Excel), converte para data
     if (is_numeric($data)) {
+        // CORREÇÃO: Usar gmdate() em vez de date() para evitar problemas de timezone
+        // O Excel armazena datas como número de dias desde 1/1/1900
+        // A conversão deve ser feita em UTC para evitar problemas de timezone local
         $timestamp = ($data - 25569) * 86400;
-        return date('d/m/Y', $timestamp);
+        return gmdate('d/m/Y', $timestamp); // CORREÇÃO: usa UTC
     }
     
     // Se não conseguir converter, retorna data padrão
@@ -942,32 +966,64 @@ function logEstruturaPlanilha($spreadsheet, $logFile) {
 function vincularMedicamentoPaciente($pdo, $pacienteId, $medicamentoId, $nomeMedicamento, $quantidade, $cid = null, $logFile = null, $renovacao = null) {
     try {
         // Converter data para formato YYYY-MM-DD se vier como dd/mm/yyyy
+        $renovacaoFormatada = null;
         if ($renovacao && preg_match('/^(\d{2})\/(\d{2})\/(\d{4})$/', $renovacao, $m)) {
-            $renovacao = $m[3] . '-' . $m[2] . '-' . $m[1];
+            $renovacaoFormatada = $m[3] . '-' . $m[2] . '-' . $m[1];
+        } else {
+            $renovacaoFormatada = $renovacao;
         }
+        
         // Verificar se o vínculo já existe
         $stmt = $pdo->prepare("
-            SELECT id FROM paciente_medicamentos 
+            SELECT id, renovacao, renovado FROM paciente_medicamentos 
             WHERE paciente_id = ? AND medicamento_id = ?
         ");
         $stmt->execute([$pacienteId, $medicamentoId]);
         $vinculoExistente = $stmt->fetch();
         
         if ($vinculoExistente) {
-            // Substituir quantidade e renovacao se o vínculo já existir (em vez de incrementar)
-            $stmt = $pdo->prepare("
+            // Verificar se a data de renovação mudou e se o medicamento está marcado como renovado
+            $renovacaoAtual = $vinculoExistente['renovacao'];
+            $estaRenovado = $vinculoExistente['renovado'];
+            $desmarcarRenovado = false;
+            
+            // Se a data de renovação mudou e o medicamento está marcado como renovado, desmarcar
+            if ($renovacaoFormatada && $renovacaoAtual !== $renovacaoFormatada && $estaRenovado == 1) {
+                $desmarcarRenovado = true;
+                if ($logFile) {
+                    fwrite($logFile, "Data de renovação atualizada de '$renovacaoAtual' para '$renovacaoFormatada'. Desmarcando campo 'renovado' automaticamente.\n");
+                }
+            }
+            
+            // Preparar a query de atualização
+            $sql = "
                 UPDATE paciente_medicamentos 
                 SET quantidade = ?,
                     cid = ?,
                     renovacao = ?,
                     data_atualizacao = NOW(),
                     observacoes = CONCAT(IFNULL(observacoes, ''), ' | Atualizado via importação em ', NOW())
-                WHERE id = ?
-            ");
-            $stmt->execute([$quantidade, $cid, $renovacao, $vinculoExistente['id']]);
+            ";
+            $params = [$quantidade, $cid, $renovacaoFormatada];
+            
+            // Adicionar atualização do campo renovado se necessário
+            if ($desmarcarRenovado) {
+                $sql .= ", renovado = 0";
+            }
+            
+            $sql .= " WHERE id = ?";
+            $params[] = $vinculoExistente['id'];
+            
+            $stmt = $pdo->prepare($sql);
+            $stmt->execute($params);
             
             if ($logFile) {
-                fwrite($logFile, "Vínculo paciente-medicamento atualizado: Paciente ID $pacienteId, Medicamento ID $medicamentoId, Nova Quantidade definida para $quantidade, CID: $cid, Renovacao: $renovacao\n");
+                $logMsg = "Vínculo paciente-medicamento atualizado: Paciente ID $pacienteId, Medicamento ID $medicamentoId, Nova Quantidade definida para $quantidade, CID: $cid, Renovacao: $renovacaoFormatada";
+                if ($desmarcarRenovado) {
+                    $logMsg .= ", Campo 'renovado' desmarcado automaticamente";
+                }
+                $logMsg .= "\n";
+                fwrite($logFile, $logMsg);
             }
         } else {
             // Criar novo vínculo
@@ -988,12 +1044,12 @@ function vincularMedicamentoPaciente($pdo, $pacienteId, $medicamentoId, $nomeMed
                 $nomeMedicamento,
                 $quantidade,
                 $cid,
-                $renovacao,
+                $renovacaoFormatada,
                 'Vínculo criado automaticamente durante importação em ' . date('Y-m-d H:i:s')
             ]);
             
             if ($logFile) {
-                fwrite($logFile, "Novo vínculo paciente-medicamento criado: Paciente ID $pacienteId, Medicamento ID $medicamentoId, Quantidade $quantidade, CID: $cid, Renovacao: $renovacao\n");
+                fwrite($logFile, "Novo vínculo paciente-medicamento criado: Paciente ID $pacienteId, Medicamento ID $medicamentoId, Quantidade $quantidade, CID: $cid, Renovacao: $renovacaoFormatada\n");
             }
         }
         
