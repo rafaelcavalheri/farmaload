@@ -4,10 +4,15 @@
 **Versão:** v.1.2025.2406.1730
 **Data:** 24/06/2025
 
+## v.1.2025.2406.1500 (24/06/2025)
+
 ### Correçoes
+
 - Duplicidade de medicamentos na pagina medicamentos
 - Erro ao exibir detalhes da importaçao
+
 **Arquivos Corrigidos:**
+
 - `PHP/medicamentos.php`
 - `PHP/detalhes_importacao.php`
 
