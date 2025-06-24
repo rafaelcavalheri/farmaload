@@ -590,17 +590,24 @@ function registrarDetalhesImportacao($pdo, $logImportacaoId, $dados) {
         // Registrar medicamentos importados
         if (isset($dados['medicamentos'])) {
             foreach ($dados['medicamentos'] as $medicamento) {
+                // Converter a data de validade para o formato correto
+                $validadeDate = null;
+                if (!empty($medicamento['validade'])) {
+                    $validadeDate = DateTime::createFromFormat('d/m/Y', $medicamento['validade']);
+                    $validadeDate = $validadeDate ? $validadeDate->format('Y-m-d') : null;
+                }
+                
                 $stmt = $pdo->prepare("
                     INSERT INTO logs_importacao_detalhes (
-                        log_importacao_id, tipo, nome, quantidade, lote, validade, observacoes
-                    ) VALUES (?, 'medicamento', ?, ?, ?, ?, ?)
+                        log_importacao_id, medicamento_nome, quantidade, lote, validade, observacao
+                    ) VALUES (?, ?, ?, ?, ?, ?)
                 ");
                 $stmt->execute([
                     $logImportacaoId,
                     $medicamento['nome'],
                     $medicamento['quantidade'],
                     $medicamento['lote'],
-                    $medicamento['validade'],
+                    $validadeDate,
                     'Código: ' . ($medicamento['codigo'] ?? 'N/A') . ', Apresentação: ' . ($medicamento['apresentacao'] ?? 'N/A')
                 ]);
             }
@@ -611,13 +618,12 @@ function registrarDetalhesImportacao($pdo, $logImportacaoId, $dados) {
             foreach ($dados['pacientes'] as $paciente) {
                 $stmt = $pdo->prepare("
                     INSERT INTO logs_importacao_detalhes (
-                        log_importacao_id, tipo, nome, cpf, observacoes
-                    ) VALUES (?, 'paciente', ?, ?, ?)
+                        log_importacao_id, paciente_nome, observacao
+                    ) VALUES (?, ?, ?)
                 ");
                 $stmt->execute([
                     $logImportacaoId,
                     $paciente['nome'],
-                    $paciente['cpf'] ?? null,
                     'Paciente importado da linha ' . ($paciente['linha'] ?? 'N/A')
                 ]);
             }

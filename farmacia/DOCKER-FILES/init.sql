@@ -362,13 +362,12 @@ CREATE TABLE IF NOT EXISTS logs_importacao (
 CREATE TABLE IF NOT EXISTS logs_importacao_detalhes (
     id INT AUTO_INCREMENT PRIMARY KEY,
     log_importacao_id INT NOT NULL,
-    tipo ENUM('medicamento', 'paciente') NOT NULL,
-    nome VARCHAR(255) NOT NULL,
-    quantidade INT DEFAULT 0,
-    lote VARCHAR(100),
-    validade VARCHAR(20),
-    cpf VARCHAR(14),
-    observacoes TEXT,
+    paciente_nome VARCHAR(255) DEFAULT NULL,
+    medicamento_nome VARCHAR(255) DEFAULT NULL,
+    quantidade INT DEFAULT NULL,
+    lote VARCHAR(100) DEFAULT NULL,
+    validade DATE DEFAULT NULL,
+    observacao TEXT,
     FOREIGN KEY (log_importacao_id) REFERENCES logs_importacao(id) ON DELETE CASCADE
 ) ENGINE=InnoDB;
 

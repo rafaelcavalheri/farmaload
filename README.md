@@ -1,18 +1,24 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.2406.1500
+**Versão:** v.1.2025.2406.1730
 **Data:** 24/06/2025
+
+### Correçoes
+- Duplicidade de medicamentos na pagina medicamentos
+- Erro ao exibir detalhes da importaçao
+**Arquivos Corrigidos:**
+- `PHP/medicamentos.php`
+- `PHP/detalhes_importacao.php`
 
 ## v.1.2025.2406.1500 (24/06/2025)
 
-### Correção Crítica no Sistema de importação
+### Correçoes
 
 **Problema Identificado:**
 - As datas do arquivo de importação estão vindo com ' antes, exemplo '30/10/2025,
 isso gerava um erro ao importar
-
-**Arquivo Corrigido:**
+**Arquivos Corrigidos:**
 - `PHP/processar_importacao_automatica.php` - adicionado correção pra lidar com '
 
 ### Nova Funcionalidade: Desmarcação Automática do Campo "Renovado"

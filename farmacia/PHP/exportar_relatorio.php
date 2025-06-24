@@ -214,20 +214,20 @@ if ($tipo_relatorio === 'dispensas') {
         if ($importacao['status'] === 'SUCESSO') {
             // Buscar detalhes dos medicamentos
             $stmt = $pdo->prepare("
-                SELECT nome, quantidade, lote, validade, observacoes
+                SELECT medicamento_nome as nome, quantidade, lote, validade, observacao as observacoes
                 FROM logs_importacao_detalhes
-                WHERE log_importacao_id = ? AND tipo = 'medicamento'
-                ORDER BY nome
+                WHERE log_importacao_id = ? AND medicamento_nome IS NOT NULL
+                ORDER BY medicamento_nome
             ");
             $stmt->execute([$importacao['id']]);
             $medicamentos = $stmt->fetchAll();
             
             // Buscar detalhes dos pacientes
             $stmt = $pdo->prepare("
-                SELECT nome, cpf, observacoes
+                SELECT paciente_nome as nome, observacao as observacoes
                 FROM logs_importacao_detalhes
-                WHERE log_importacao_id = ? AND tipo = 'paciente'
-                ORDER BY nome
+                WHERE log_importacao_id = ? AND paciente_nome IS NOT NULL
+                ORDER BY paciente_nome
             ");
             $stmt->execute([$importacao['id']]);
             $pacientes = $stmt->fetchAll();
@@ -269,21 +269,19 @@ if ($tipo_relatorio === 'dispensas') {
                 
                 // Cabeçalhos
                 $pacSheet->setCellValue('A1', 'Nome do Paciente');
-                $pacSheet->setCellValue('B1', 'CPF');
-                $pacSheet->setCellValue('C1', 'Observações');
+                $pacSheet->setCellValue('B1', 'Observações');
                 
-                $pacSheet->getStyle('A1:C1')->applyFromArray($headerStyle);
+                $pacSheet->getStyle('A1:B1')->applyFromArray($headerStyle);
                 
                 // Dados
                 $pacRow = 2;
                 foreach ($pacientes as $pac) {
                     $pacSheet->setCellValue('A' . $pacRow, $pac['nome']);
-                    $pacSheet->setCellValue('B' . $pacRow, $pac['cpf'] ?? '');
-                    $pacSheet->setCellValue('C' . $pacRow, $pac['observacoes'] ?? '');
+                    $pacSheet->setCellValue('B' . $pacRow, $pac['observacoes'] ?? '');
                     $pacRow++;
                 }
                 
-                foreach (range('A', 'C') as $col) {
+                foreach (range('A', 'B') as $col) {
                     $pacSheet->getColumnDimension($col)->setAutoSize(true);
                 }
             }

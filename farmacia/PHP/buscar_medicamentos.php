@@ -18,6 +18,7 @@ $colunas_ordenacao = [
     'apresentacao' => 'm.apresentacao',
     'validade' => 'MIN(lm.validade)'
 ];
+
 $sql = "SELECT 
             m.id,
             m.nome,
@@ -42,12 +43,15 @@ if (!empty($busca)) {
     $params = ["%$busca%", "%$busca%", "%$busca%"];
 }
 
+// Sempre adicionar GROUP BY
+$sql .= " GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo";
+
 if ($ordem === 'total_recebido' || $ordem === 'quantidade') {
-    // Adiciona sempre o GROUP BY
-    $sql .= " GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo";
+    // Para ordenações especiais, buscar todos e ordenar no PHP
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
     $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
     if ($ordem === 'total_recebido') {
         foreach ($medicamentos as &$medicamento) {
             $ultimaImport = getTotalUltimaImportacao($pdo, $medicamento['id']);
@@ -76,112 +80,90 @@ if ($ordem === 'total_recebido' || $ordem === 'quantidade') {
             }
         });
     }
-} else if (isset($colunas_ordenacao[$ordem]) && $colunas_ordenacao[$ordem]) {
-    $sql .= " GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo, lm.lote";
-    $sql .= " ORDER BY " . $colunas_ordenacao[$ordem] . " " . ($direcao === 'DESC' ? 'DESC' : 'ASC');
-    $stmt = $pdo->prepare($sql);
-    $stmt->execute($params);
 } else {
-    $sql .= " GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo, lm.lote";
-    $sql .= " ORDER BY nome ASC";
+    // Para outras ordenações, usar ORDER BY no SQL
+    if (isset($colunas_ordenacao[$ordem]) && $colunas_ordenacao[$ordem]) {
+        $sql .= " ORDER BY " . $colunas_ordenacao[$ordem] . " " . ($direcao === 'DESC' ? 'DESC' : 'ASC');
+    } else {
+        $sql .= " ORDER BY m.nome ASC";
+    }
     $stmt = $pdo->prepare($sql);
     $stmt->execute($params);
+    $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
 
-if ($stmt->rowCount() > 0) {
-    if (isset($medicamentos)) {
-        foreach ($medicamentos as $medicamento): ?>
-            <tr>
-                <td><?= htmlspecialchars($medicamento['nome'] ?? '') ?></td>
-                <td><?= calcularEstoqueAtual($pdo, $medicamento['id']) ?></td>
-                <td><?= $medicamento['total_recebido'] ?? (getTotalUltimaImportacao($pdo, $medicamento['id'])['total'] ?? '--') ?></td>
-                <td><?= htmlspecialchars($medicamento['codigo'] ?? '') ?></td>
-                <td><?= $medicamento['lotes'] ?: '--' ?></td>
-                <td><?= htmlspecialchars($medicamento['apresentacao'] ?? '') ?></td>
-                <td class="actions">
-                    <div style="display: flex; gap: 6px;">
-                        <a href="editar_medicamento.php?id=<?= $medicamento['id'] ?>" class="btn-secondary btn-small">
-                            <i class="fas fa-edit"></i>
-                        </a>
-                        <?php if ($medicamento['ativo']): ?>
-                            <a href="medicamentos.php?inativar=<?= $medicamento['id'] ?>"
-                                class="btn-secondary btn-small"
-                                onclick="return confirm('Tem certeza que deseja inativar este medicamento?')">
-                                <i class="fas fa-power-off"></i>
-                            </a>
-                        <?php else: ?>
-                            <a href="medicamentos.php?ativar=<?= $medicamento['id'] ?>"
-                                class="btn-secondary btn-small btn-inativo"
-                                onclick="return confirm('Tem certeza que deseja ativar este medicamento?')">
-                                <i class="fas fa-power-off"></i>
-                            </a>
-                        <?php endif; ?>
-                    </div>
-                </td>
-            </tr>
-        <?php endforeach;
-    } else {
-        while ($medicamento = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
-            <tr>
-                <td><?= htmlspecialchars($medicamento['nome'] ?? '') ?></td>
-                <td><?= calcularEstoqueAtual($pdo, $medicamento['id']) ?></td>
-                <?php $ultimaImport = getTotalUltimaImportacao($pdo, $medicamento['id']); ?>
-                <td>
-                    <?= $ultimaImport ? $ultimaImport['total'] : '--' ?>
-                </td>
-                <td><?= htmlspecialchars($medicamento['codigo'] ?? '') ?></td>
-                <td>
-                    <?php
-                    // Buscar lotes ativos
-                    $stmtLotes = $pdo->prepare("
-                        SELECT lote, validade, quantidade 
-                        FROM lotes_medicamentos 
-                        WHERE medicamento_id = ? AND quantidade > 0 
-                        ORDER BY validade ASC
-                    ");
-                    $stmtLotes->execute([$medicamento['id']]);
-                    $lotes = $stmtLotes->fetchAll(PDO::FETCH_ASSOC);
-                    
-                    if (!empty($lotes)) {
-                        foreach ($lotes as $lote) {
-                            echo htmlspecialchars($lote['lote']);
-                            echo ' (';
-                            echo $lote['quantidade'] . ' un)';
-                            echo ' - ';
-                            echo ($lote['validade'] && $lote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($lote['validade'])) : '--';
-                            echo '<br>';
-                        }
-                    } else {
-                        echo "--";
+// ESTRUTURA UNIFICADA DE EXIBIÇÃO
+if (!empty($medicamentos)) {
+    foreach ($medicamentos as $medicamento): ?>
+        <tr class="med-row" data-id="<?= $medicamento['id'] ?>">
+            <td class="med-nome" style="cursor:pointer;color:#0d6efd;text-decoration:underline;">
+                <?= htmlspecialchars($medicamento['nome']) ?>
+            </td>
+            <td><?= calcularEstoqueAtual($pdo, $medicamento['id']) ?></td>
+            <?php $ultimaImport = getTotalUltimaImportacao($pdo, $medicamento['id']); ?>
+            <td>
+                <?= $ultimaImport ? $ultimaImport['total'] : '--' ?>
+            </td>
+            <td><?= htmlspecialchars($medicamento['codigo']) ?></td>
+            <td>
+                <?php
+                // Buscar lotes ativos com validade
+                $stmtLotes = $pdo->prepare("
+                    SELECT lote, validade, quantidade
+                    FROM lotes_medicamentos 
+                    WHERE medicamento_id = ? AND quantidade > 0 
+                    ORDER BY validade ASC
+                ");
+                $stmtLotes->execute([$medicamento['id']]);
+                $lotes = $stmtLotes->fetchAll(PDO::FETCH_ASSOC);
+                
+                if (!empty($lotes)) {
+                    foreach ($lotes as $lote) {
+                        echo htmlspecialchars($lote['lote']);
+                        echo ' (';
+                        echo $lote['quantidade'] . ' un)';
+                        echo ' - ';
+                        echo ($lote['validade'] && $lote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($lote['validade'])) : '--';
+                        echo '<br>';
                     }
-                    ?>
-                </td>
-                <td><?= htmlspecialchars($medicamento['apresentacao'] ?? '') ?></td>
-                <td class="actions">
-                    <div style="display: flex; gap: 6px;">
-                        <a href="editar_medicamento.php?id=<?= $medicamento['id'] ?>" class="btn-secondary btn-small">
-                            <i class="fas fa-edit"></i>
+                } else {
+                    echo "--";
+                }
+                ?>
+            </td>
+            <td><?= htmlspecialchars($medicamento['apresentacao']) ?></td>
+            <td class="actions">
+                <div style="display: flex; gap: 6px;">
+                    <a href="editar_medicamento.php?id=<?= $medicamento['id'] ?>" class="btn-secondary btn-small">
+                        <i class="fas fa-edit"></i>
+                    </a>
+                    <?php if ($medicamento['ativo']): ?>
+                        <a href="medicamentos.php?inativar=<?= $medicamento['id'] ?>"
+                            class="btn-secondary btn-small"
+                            onclick="return confirm('Tem certeza que deseja inativar este medicamento?')">
+                            <i class="fas fa-power-off"></i>
                         </a>
-                        <?php if ($medicamento['ativo']): ?>
-                            <a href="medicamentos.php?inativar=<?= $medicamento['id'] ?>"
-                                class="btn-secondary btn-small"
-                                onclick="return confirm('Tem certeza que deseja inativar este medicamento?')">
-                                <i class="fas fa-power-off"></i>
-                            </a>
-                        <?php else: ?>
-                            <a href="medicamentos.php?ativar=<?= $medicamento['id'] ?>"
-                                class="btn-secondary btn-small btn-inativo"
-                                onclick="return confirm('Tem certeza que deseja ativar este medicamento?')">
-                                <i class="fas fa-power-off"></i>
-                            </a>
-                        <?php endif; ?>
-                    </div>
-                </td>
-            </tr>
-        <?php endwhile;
-    }
+                    <?php else: ?>
+                        <a href="medicamentos.php?ativar=<?= $medicamento['id'] ?>"
+                            class="btn-secondary btn-small btn-inativo"
+                            onclick="return confirm('Tem certeza que deseja ativar este medicamento?')">
+                            <i class="fas fa-power-off"></i>
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </td>
+        </tr>
+        <tr class="lotes-row" id="lotes-row-<?= $medicamento['id'] ?>" style="display:none;background:#f8f9fa;">
+            <td colspan="8">
+                <div class="lotes-content" id="lotes-content-<?= $medicamento['id'] ?>">
+                    <!-- Conteúdo dos lotes será carregado via AJAX -->
+                </div>
+            </td>
+        </tr>
+    <?php endforeach;
 } else {
     echo '<tr><td colspan="8" class="no-results">' . 
          (empty($busca) ? 'Nenhum medicamento cadastrado.' : 'Nenhum resultado encontrado para sua busca.') . 
          '</td></tr>';
 }
+?>

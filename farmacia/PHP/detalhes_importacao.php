@@ -31,20 +31,20 @@ try {
     
     // Buscar detalhes dos medicamentos importados
     $stmt = $pdo->prepare("
-        SELECT nome, quantidade, lote, validade, observacoes
+        SELECT medicamento_nome as nome, quantidade, lote, validade, observacao as observacoes
         FROM logs_importacao_detalhes
-        WHERE log_importacao_id = ? AND tipo = 'medicamento'
-        ORDER BY nome
+        WHERE log_importacao_id = ? AND medicamento_nome IS NOT NULL
+        ORDER BY medicamento_nome
     ");
     $stmt->execute([$log_id]);
     $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
     
     // Buscar detalhes dos pacientes importados
     $stmt = $pdo->prepare("
-        SELECT nome, cpf, observacoes
+        SELECT paciente_nome as nome, observacao as observacoes
         FROM logs_importacao_detalhes
-        WHERE log_importacao_id = ? AND tipo = 'paciente'
-        ORDER BY nome
+        WHERE log_importacao_id = ? AND paciente_nome IS NOT NULL
+        ORDER BY paciente_nome
     ");
     $stmt->execute([$log_id]);
     $pacientes = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -269,7 +269,6 @@ try {
                 <thead>
                     <tr>
                         <th>Nome</th>
-                        <th>CPF</th>
                         <th>Observações</th>
                     </tr>
                 </thead>
@@ -277,7 +276,6 @@ try {
                     <?php foreach ($pacientes as $pac): ?>
                     <tr class="tipo-paciente">
                         <td><?= htmlspecialchars($pac['nome']) ?></td>
-                        <td><?= htmlspecialchars($pac['cpf'] ?? '-') ?></td>
                         <td><?= htmlspecialchars($pac['observacoes'] ?? '-') ?></td>
                     </tr>
                     <?php endforeach; ?>

@@ -351,9 +351,7 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                 modal.style.display = 'none';
             }
         }
-        </script>
 
-        <script>
         function searchMedicamentos() {
             const searchInput = document.getElementById('searchInput').value.toLowerCase();
             const urlParams = new URLSearchParams(window.location.search);
@@ -363,63 +361,84 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                 .then(response => response.text())
                 .then(html => {
                     document.getElementById('medicamentosTableBody').innerHTML = html;
+                    // Re-inicializar event listeners após atualizar o conteúdo
+                    initializeEventListeners();
                 })
                 .catch(error => {
                     console.error('Erro ao buscar medicamentos:', error);
                 });
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            searchMedicamentos();
+        function initializeEventListeners() {
             // Ordenação ao clicar nos cabeçalhos
             document.querySelectorAll('th.sortable').forEach(th => {
-                th.addEventListener('click', function() {
-                    const urlParams = new URLSearchParams(window.location.search);
-                    const ordemAtual = urlParams.get('ordem') || 'nome';
-                    const direcaoAtual = urlParams.get('direcao') || 'ASC';
-                    const coluna = th.dataset.ordem;
-                    const novaDirecao = (ordemAtual === coluna && direcaoAtual === 'ASC') ? 'DESC' : 'ASC';
-                    urlParams.set('ordem', coluna);
-                    urlParams.set('direcao', novaDirecao);
-                    history.replaceState(null, '', '?' + urlParams.toString());
-                    searchMedicamentos();
-                    // Atualizar setas visuais
-                    document.querySelectorAll('th.sortable').forEach(th2 => th2.classList.remove('asc', 'desc'));
-                    th.classList.add(novaDirecao.toLowerCase());
-                });
+                // Remover event listeners existentes para evitar duplicação
+                th.removeEventListener('click', handleSortClick);
+                th.addEventListener('click', handleSortClick);
             });
+
+            // Expansão de lotes por medicamento
+            document.querySelectorAll('.med-nome').forEach(function(td) {
+                // Remover event listeners existentes para evitar duplicação
+                td.removeEventListener('click', handleMedClick);
+                td.addEventListener('click', handleMedClick);
+            });
+        }
+
+        function handleSortClick() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const ordemAtual = urlParams.get('ordem') || 'nome';
+            const direcaoAtual = urlParams.get('direcao') || 'ASC';
+            const coluna = this.dataset.ordem;
+            const novaDirecao = (ordemAtual === coluna && direcaoAtual === 'ASC') ? 'DESC' : 'ASC';
+            urlParams.set('ordem', coluna);
+            urlParams.set('direcao', novaDirecao);
+            history.replaceState(null, '', '?' + urlParams.toString());
+            searchMedicamentos();
+            // Atualizar setas visuais
+            document.querySelectorAll('th.sortable').forEach(th2 => th2.classList.remove('asc', 'desc'));
+            this.classList.add(novaDirecao.toLowerCase());
+        }
+
+        function handleMedClick() {
+            const tr = this.closest('tr');
+            const medId = tr.getAttribute('data-id');
+            const lotesRow = document.getElementById('lotes-row-' + medId);
+            const lotesContent = document.getElementById('lotes-content-' + medId);
+            if (lotesRow.style.display === 'none') {
+                // Expandir e buscar lotes
+                lotesRow.style.display = '';
+                if (!lotesContent.innerHTML.trim()) {
+                    lotesContent.innerHTML = '<em>Carregando lotes...</em>';
+                    fetch('ajax_lotes_medicamento.php?id=' + medId)
+                        .then(resp => resp.text())
+                        .then(html => {
+                            lotesContent.innerHTML = html;
+                        })
+                        .catch(() => {
+                            lotesContent.innerHTML = '<span style="color:red;">Erro ao carregar lotes.</span>';
+                        });
+                }
+            } else {
+                lotesRow.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar event listeners
+            initializeEventListeners();
+            
             // Marcar coluna ordenada ao carregar
             const urlParams = new URLSearchParams(window.location.search);
             const ordemAtual = urlParams.get('ordem') || 'nome';
             const direcaoAtual = urlParams.get('direcao') || 'ASC';
             const thAtual = document.querySelector(`th[data-ordem="${ordemAtual}"]`);
             if (thAtual) thAtual.classList.add(direcaoAtual.toLowerCase());
-            // Expansão de lotes por medicamento
-            document.querySelectorAll('.med-nome').forEach(function(td) {
-                td.addEventListener('click', function() {
-                    const tr = td.closest('tr');
-                    const medId = tr.getAttribute('data-id');
-                    const lotesRow = document.getElementById('lotes-row-' + medId);
-                    const lotesContent = document.getElementById('lotes-content-' + medId);
-                    if (lotesRow.style.display === 'none') {
-                        // Expandir e buscar lotes
-                        lotesRow.style.display = '';
-                        if (!lotesContent.innerHTML.trim()) {
-                            lotesContent.innerHTML = '<em>Carregando lotes...</em>';
-                            fetch('ajax_lotes_medicamento.php?id=' + medId)
-                                .then(resp => resp.text())
-                                .then(html => {
-                                    lotesContent.innerHTML = html;
-                                })
-                                .catch(() => {
-                                    lotesContent.innerHTML = '<span style="color:red;">Erro ao carregar lotes.</span>';
-                                });
-                        }
-                    } else {
-                        lotesRow.style.display = 'none';
-                    }
-                });
-            });
+            
+            // Fazer busca inicial apenas se não houver dados já carregados
+            if (document.getElementById('medicamentosTableBody').children.length === 0) {
+                searchMedicamentos();
+            }
         });
         </script>
     </main>
