@@ -24,3 +24,9 @@ Thumbs.db
 # Arquivos temporários
 *.tmp
 *.temp
+
+# Backups e arquivos temporários dos scripts de atualização
+backup_farmacia_*/
+temp_farmacia_*/
+backup_*/
+temp_*/
