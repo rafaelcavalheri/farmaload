@@ -96,7 +96,7 @@ if ($ordem === 'total_recebido' || $ordem === 'quantidade') {
 if (!empty($medicamentos)) {
     foreach ($medicamentos as $medicamento): ?>
         <tr class="med-row" data-id="<?= $medicamento['id'] ?>">
-            <td class="med-nome" style="cursor:pointer;color:#0d6efd;text-decoration:underline;">
+            <td class="med-nome">
                 <?= htmlspecialchars($medicamento['nome']) ?>
             </td>
             <td><?= calcularEstoqueAtual($pdo, $medicamento['id']) ?></td>
@@ -118,13 +118,40 @@ if (!empty($medicamentos)) {
                 $lotes = $stmtLotes->fetchAll(PDO::FETCH_ASSOC);
                 
                 if (!empty($lotes)) {
-                    foreach ($lotes as $lote) {
-                        echo htmlspecialchars($lote['lote']);
-                        echo ' (';
-                        echo $lote['quantidade'] . ' un)';
-                        echo ' - ';
+                    if (count($lotes) == 1) {
+                        // Se há apenas um lote, mostrar diretamente
+                        $lote = $lotes[0];
+                        echo '<div class="lote-single">';
+                        echo '<strong>' . htmlspecialchars($lote['lote']) . '</strong><br>';
+                        echo '<span class="lote-info">' . $lote['quantidade'] . ' un - ';
                         echo ($lote['validade'] && $lote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($lote['validade'])) : '--';
-                        echo '<br>';
+                        echo '</span>';
+                        echo '</div>';
+                    } else {
+                        // Se há múltiplos lotes, mostrar o primeiro e um botão para expandir
+                        $primeiroLote = $lotes[0];
+                        echo '<div class="lotes-container">';
+                        echo '<div class="lote-principal">';
+                        echo '<strong>' . htmlspecialchars($primeiroLote['lote']) . '</strong><br>';
+                        echo '<span class="lote-info">' . $primeiroLote['quantidade'] . ' un - ';
+                        echo ($primeiroLote['validade'] && $primeiroLote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($primeiroLote['validade'])) : '--';
+                        echo '</span>';
+                        echo '</div>';
+                        echo '<button class="btn-lotes-toggle" onclick="toggleLotes(' . $medicamento['id'] . ')">';
+                        echo '<i class="fas fa-chevron-down"></i> Ver mais (' . (count($lotes) - 1) . ')';
+                        echo '</button>';
+                        echo '<div class="lotes-adicionais" id="lotes-' . $medicamento['id'] . '" style="display:none;">';
+                        for ($i = 1; $i < count($lotes); $i++) {
+                            $lote = $lotes[$i];
+                            echo '<div class="lote-adicional">';
+                            echo '<strong>' . htmlspecialchars($lote['lote']) . '</strong><br>';
+                            echo '<span class="lote-info">' . $lote['quantidade'] . ' un - ';
+                            echo ($lote['validade'] && $lote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($lote['validade'])) : '--';
+                            echo '</span>';
+                            echo '</div>';
+                        }
+                        echo '</div>';
+                        echo '</div>';
                     }
                 } else {
                     echo "--";
@@ -150,13 +177,6 @@ if (!empty($medicamentos)) {
                             <i class="fas fa-power-off"></i>
                         </a>
                     <?php endif; ?>
-                </div>
-            </td>
-        </tr>
-        <tr class="lotes-row" id="lotes-row-<?= $medicamento['id'] ?>" style="display:none;background:#f8f9fa;">
-            <td colspan="8">
-                <div class="lotes-content" id="lotes-content-<?= $medicamento['id'] ?>">
-                    <!-- Conteúdo dos lotes será carregado via AJAX -->
                 </div>
             </td>
         </tr>

@@ -63,7 +63,7 @@ try {
         JOIN pacientes p ON p.id = pm.paciente_id
         LEFT JOIN medicos med ON med.id = pm.medico_id
         WHERE pm.paciente_id = ?
-        ORDER BY m.nome
+        ORDER BY pm.data_cadastro ASC, pm.id ASC
     ");
     $stmtMedicamentos->execute([$idPaciente]);
     $medicamentos = $stmtMedicamentos->fetchAll(PDO::FETCH_ASSOC);

@@ -94,7 +94,7 @@ $direcao = $_GET['direcao'] ?? 'ASC';
         <?php endif; ?>
 
         <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Buscar medicamentos...">
+            <input type="text" id="searchInput" placeholder="Buscar medicamentos..." onkeyup="debounceSearch()">
             <button onclick="searchMedicamentos()" class="btn-primary">
                 <i class="fas fa-search"></i> Buscar
             </button>
@@ -145,7 +145,7 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                     
                     while ($medicamento = $stmt->fetch(PDO::FETCH_ASSOC)): ?>
                         <tr class="med-row" data-id="<?= $medicamento['id'] ?>">
-                            <td class="med-nome" style="cursor:pointer;color:#0d6efd;text-decoration:underline;">
+                            <td class="med-nome">
                                 <?= htmlspecialchars($medicamento['nome']) ?>
                             </td>
                             <td><?php echo calcularEstoqueAtual($pdo, $medicamento['id']); ?></td>
@@ -158,20 +158,49 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                                 <?php
                                 // Buscar lotes ativos com validade
                                 $stmtLotes = $pdo->prepare("
-                                    SELECT lote, validade 
+                                    SELECT lote, validade, quantidade 
                                     FROM lotes_medicamentos 
                                     WHERE medicamento_id = ? AND quantidade > 0 
                                     ORDER BY validade ASC
                                 ");
                                 $stmtLotes->execute([$medicamento['id']]);
                                 $lotes = $stmtLotes->fetchAll(PDO::FETCH_ASSOC);
+                                
                                 if (!empty($lotes)) {
-                                    foreach ($lotes as $lote) {
-                                        echo htmlspecialchars($lote['lote']);
-                                        echo ' (';
+                                    if (count($lotes) == 1) {
+                                        // Se há apenas um lote, mostrar diretamente
+                                        $lote = $lotes[0];
+                                        echo '<div class="lote-single">';
+                                        echo '<strong>' . htmlspecialchars($lote['lote']) . '</strong><br>';
+                                        echo '<span class="lote-info">' . $lote['quantidade'] . ' un - ';
                                         echo ($lote['validade'] && $lote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($lote['validade'])) : '--';
-                                        echo ')';
-                                        echo '<br>';
+                                        echo '</span>';
+                                        echo '</div>';
+                                    } else {
+                                        // Se há múltiplos lotes, mostrar o primeiro e um botão para expandir
+                                        $primeiroLote = $lotes[0];
+                                        echo '<div class="lotes-container">';
+                                        echo '<div class="lote-principal">';
+                                        echo '<strong>' . htmlspecialchars($primeiroLote['lote']) . '</strong><br>';
+                                        echo '<span class="lote-info">' . $primeiroLote['quantidade'] . ' un - ';
+                                        echo ($primeiroLote['validade'] && $primeiroLote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($primeiroLote['validade'])) : '--';
+                                        echo '</span>';
+                                        echo '</div>';
+                                        echo '<button class="btn-lotes-toggle" onclick="toggleLotes(' . $medicamento['id'] . ')">';
+                                        echo '<i class="fas fa-chevron-down"></i> Ver mais (' . (count($lotes) - 1) . ')';
+                                        echo '</button>';
+                                        echo '<div class="lotes-adicionais" id="lotes-' . $medicamento['id'] . '" style="display:none;">';
+                                        for ($i = 1; $i < count($lotes); $i++) {
+                                            $lote = $lotes[$i];
+                                            echo '<div class="lote-adicional">';
+                                            echo '<strong>' . htmlspecialchars($lote['lote']) . '</strong><br>';
+                                            echo '<span class="lote-info">' . $lote['quantidade'] . ' un - ';
+                                            echo ($lote['validade'] && $lote['validade'] != '0000-00-00') ? date('d/m/Y', strtotime($lote['validade'])) : '--';
+                                            echo '</span>';
+                                            echo '</div>';
+                                        }
+                                        echo '</div>';
+                                        echo '</div>';
                                     }
                                 } else {
                                     echo "--";
@@ -197,13 +226,6 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                                             <i class="fas fa-power-off"></i>
                                         </a>
                                     <?php endif; ?>
-                                </div>
-                            </td>
-                        </tr>
-                        <tr class="lotes-row" id="lotes-row-<?= $medicamento['id'] ?>" style="display:none;background:#f8f9fa;">
-                            <td colspan="8">
-                                <div class="lotes-content" id="lotes-content-<?= $medicamento['id'] ?>">
-                                    <!-- Conteúdo dos lotes será carregado via AJAX -->
                                 </div>
                             </td>
                         </tr>
@@ -333,6 +355,69 @@ $direcao = $_GET['direcao'] ?? 'ASC';
             content: '↓';
             color: #333;
         }
+
+        /* Estilos para os lotes */
+        .lotes-container {
+            position: relative;
+            min-height: 20px;
+        }
+
+        .lote-single, .lote-principal {
+            margin-bottom: 5px;
+        }
+
+        .lote-info {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        .btn-lotes-toggle {
+            background: none;
+            border: none;
+            color: #0d6efd;
+            cursor: pointer;
+            font-size: 0.85em;
+            padding: 2px 0;
+            text-decoration: underline;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+
+        .btn-lotes-toggle:hover {
+            color: #0a58ca;
+        }
+
+        .btn-lotes-toggle i {
+            font-size: 0.8em;
+            transition: transform 0.2s ease;
+        }
+
+        .lotes-adicionais {
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid #eee;
+            background-color: #f8f9fa;
+            padding: 8px;
+            border-radius: 4px;
+        }
+
+        .lote-adicional {
+            margin-bottom: 6px;
+            padding-left: 10px;
+            border-left: 2px solid #e9ecef;
+        }
+
+        .lote-adicional:last-child {
+            margin-bottom: 0;
+        }
+
+        .lote-single strong, .lote-principal strong {
+            color: #333;
+            font-weight: 600;
+        }
         </style>
 
         <script>
@@ -350,6 +435,15 @@ $direcao = $_GET['direcao'] ?? 'ASC';
             if (event.target == modal) {
                 modal.style.display = 'none';
             }
+        }
+
+        let searchTimeout;
+
+        function debounceSearch() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                searchMedicamentos();
+            }, 300);
         }
 
         function searchMedicamentos() {
@@ -376,13 +470,6 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                 th.removeEventListener('click', handleSortClick);
                 th.addEventListener('click', handleSortClick);
             });
-
-            // Expansão de lotes por medicamento
-            document.querySelectorAll('.med-nome').forEach(function(td) {
-                // Remover event listeners existentes para evitar duplicação
-                td.removeEventListener('click', handleMedClick);
-                td.addEventListener('click', handleMedClick);
-            });
         }
 
         function handleSortClick() {
@@ -400,27 +487,21 @@ $direcao = $_GET['direcao'] ?? 'ASC';
             this.classList.add(novaDirecao.toLowerCase());
         }
 
-        function handleMedClick() {
-            const tr = this.closest('tr');
-            const medId = tr.getAttribute('data-id');
-            const lotesRow = document.getElementById('lotes-row-' + medId);
-            const lotesContent = document.getElementById('lotes-content-' + medId);
-            if (lotesRow.style.display === 'none') {
-                // Expandir e buscar lotes
-                lotesRow.style.display = '';
-                if (!lotesContent.innerHTML.trim()) {
-                    lotesContent.innerHTML = '<em>Carregando lotes...</em>';
-                    fetch('ajax_lotes_medicamento.php?id=' + medId)
-                        .then(resp => resp.text())
-                        .then(html => {
-                            lotesContent.innerHTML = html;
-                        })
-                        .catch(() => {
-                            lotesContent.innerHTML = '<span style="color:red;">Erro ao carregar lotes.</span>';
-                        });
-                }
+        function toggleLotes(medicamentoId) {
+            const lotesContainer = document.getElementById('lotes-' + medicamentoId);
+            const btnToggle = event.target.closest('.btn-lotes-toggle');
+            const icon = btnToggle.querySelector('i');
+            
+            if (lotesContainer.style.display === 'none') {
+                lotesContainer.style.display = 'block';
+                icon.className = 'fas fa-chevron-up';
+                const currentText = btnToggle.innerHTML;
+                btnToggle.innerHTML = currentText.replace('Ver mais', 'Ver menos');
             } else {
-                lotesRow.style.display = 'none';
+                lotesContainer.style.display = 'none';
+                icon.className = 'fas fa-chevron-down';
+                const currentText = btnToggle.innerHTML;
+                btnToggle.innerHTML = currentText.replace('Ver menos', 'Ver mais');
             }
         }
 

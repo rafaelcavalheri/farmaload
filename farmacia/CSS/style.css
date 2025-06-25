@@ -248,11 +248,18 @@ table {
 th, td {
   padding: 0.4rem 0.6rem;
   text-align: left;
-  border-bottom: 1px solid var(--border-color);
   line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  vertical-align: middle;
+  border-bottom: none;
+  background: transparent !important;
+}
+
+/* Adicionar border-bottom apenas nas linhas da tabela, exceto a última */
+tbody tr:not(:last-child) {
+  border-bottom: 1px solid var(--border-color);
 }
 
 /* Permitir quebra em colunas específicas */
@@ -790,4 +797,64 @@ th {
 
 .btn-extornar:hover {
   background-color: #c0392b;
+}
+
+/* Corrigir linha divisória desalinhada na tabela de medicamentos */
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+/* Centralizar verticalmente os botões de ação */
+td:last-child, th:last-child {
+  text-align: center;
+}
+
+/* Ajustar padding da coluna de ações para igualar às demais */
+td:last-child, th:last-child {
+  padding-top: 0.4rem;
+  padding-bottom: 0.4rem;
+}
+
+/* Ajuste extra para garantir que os botões fiquem centralizados em todas as resoluções */
+.actions, .actions .btn-primary, .actions .btn-secondary {
+  vertical-align: initial;
+  display: initial;
+  align-items: initial;
+  justify-content: initial;
+}
+
+/* Remover qualquer border-bottom ou box-shadow de elementos internos das células da tabela */
+td * {
+  border-bottom: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+}
+
+/* Elimina qualquer borda, fundo ou linha residual em elementos internos das células da tabela */
+td *, td::after, td::before {
+  border-bottom: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+td hr {
+  display: none !important;
+  height: 0 !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Remover todas as linhas divisórias da tabela de medicamentos */
+th, td, tbody tr, thead tr {
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+/* Efeito zebra: alternar cor de fundo das linhas da tabela de medicamentos */
+tbody tr:nth-child(odd) {
+  background-color: #fff;
+}
+tbody tr:nth-child(even) {
+  background-color: #f6f8fa;
 }

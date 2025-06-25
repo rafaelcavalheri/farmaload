@@ -317,3 +317,35 @@ O problema estava na função `importarReliniFim` (`processar_importacao_automat
 ---
 
 **Equipe responsável:** Rafael Cavalheri
+
+## v.1.2025.2506.0800 (25/06/2025)
+
+### Correção Crítica: Marcação de Medicamento Renovado por Paciente
+
+**Problema Identificado:**
+- Ao marcar o campo "Renovado" em um medicamento na tela de edição do paciente, a marcação era salva no medicamento errado ao visualizar os detalhes do paciente, especialmente quando havia múltiplos medicamentos.
+- O erro ocorria devido ao uso de arrays indexados para checkboxes, o que causava descompasso entre os índices dos medicamentos e os valores enviados pelo formulário.
+
+**Solução Aplicada:**
+- O campo de checkbox "Renovado" agora utiliza o ID do medicamento como chave no atributo `name` (ex: `name="renovado[ID]"`).
+- O processamento no PHP foi ajustado para associar corretamente o valor do campo "renovado" ao ID do medicamento, independentemente da ordem ou de medicamentos removidos/adicionados.
+- Garantia de robustez mesmo com adição/remoção dinâmica de medicamentos no formulário.
+
+**Impacto:**
+- Agora, ao marcar ou desmarcar o campo "Renovado" de qualquer medicamento, a informação é salva e exibida corretamente na tela de detalhes do paciente.
+- Eliminação do bug de "deslocamento" da marcação de renovação.
+
+**Arquivos Modificados:**
+- `PHP/editar_paciente.php` (HTML e processamento PHP do campo renovado)
+
+**Versão:** v.1.2025.2506.0800
+**Data:** 25/06/2025
+
+### Melhorias Visuais na Tabela de Medicamentos
+
+- Todas as linhas divisórias (borders) foram removidas da tabela de medicamentos para um visual mais limpo.
+- Implementado efeito zebra: as linhas da tabela agora alternam entre branco e cinza claro, facilitando a leitura e separação visual dos itens.
+- Nenhum traço ou linha residual aparece sob os botões de ação ou em qualquer célula.
+
+**Arquivo Modificado:**
+- `CSS/style.css`

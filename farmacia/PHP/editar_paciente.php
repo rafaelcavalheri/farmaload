@@ -109,6 +109,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Prepara array de medicamentos do POST
     if (isset($_POST['medicamento_id']) && is_array($_POST['medicamento_id'])) {
+        // Debug temporário para identificar o problema
+        $logFile = __DIR__ . '/debug_editar_paciente.log';
+        file_put_contents($logFile, "=== DEBUG POST DATA ===\n", FILE_APPEND);
+        file_put_contents($logFile, "POST medicamento_id: " . print_r($_POST['medicamento_id'], true) . "\n", FILE_APPEND);
+        file_put_contents($logFile, "POST renovado: " . print_r($_POST['renovado'] ?? [], true) . "\n", FILE_APPEND);
+        file_put_contents($logFile, "POST renovacao: " . print_r($_POST['renovacao'] ?? [], true) . "\n", FILE_APPEND);
+        
+        // Criar um array associativo para mapear medicamento_id => dados
+        $medicamentosMap = [];
+        
         foreach ($_POST['medicamento_id'] as $i => $medId) {
             if (empty($medId)) {
                 $erros["medicamento_$i"] = 'Medicamento obrigatório.';
@@ -124,16 +134,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $erros["quantidade_solicitada_$i"] = 'Quantidade solicitada inválida.';
             }
             
-            $valores['medicamentos'][] = [
+            $renovado = isset($_POST['renovado'][$medId]) ? 1 : 0;
+            file_put_contents($logFile, "Medicamento $i: ID=$medId, Renovado=$renovado, Renovado_POST=" . (isset($_POST['renovado'][$medId]) ? '1' : 'não definido') . "\n", FILE_APPEND);
+            
+            $medicamentosMap[$medId] = [
                 'medicamento_id' => $medId,
                 'quantidade' => $qtd,
                 'quantidade_solicitada' => $qtd_solicitada,
                 'cid' => $_POST['cid'][$i] ?? '',
                 'medico_id' => !empty($_POST['medico_id'][$i]) ? $_POST['medico_id'][$i] : null,
                 'renovacao' => $_POST['renovacao'][$i] ?? null,
-                'renovado' => isset($_POST['renovado'][$i]) && $_POST['renovado'][$i] == '1' ? 1 : 0
+                'renovado' => $renovado,
+                'ordem' => $i
             ];
         }
+        
+        // Converter de volta para array indexado numericamente
+        $valores['medicamentos'] = array_values($medicamentosMap);
+        file_put_contents($logFile, "=== FIM DEBUG POST DATA ===\n", FILE_APPEND);
     }
 
     if (empty($erros)) {
@@ -181,15 +199,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             }
 
-            // Remove medicamentos antigos
-            $stmtDel = $pdo->prepare("DELETE FROM paciente_medicamentos WHERE paciente_id = ?");
-            $stmtDel->execute([$pacienteId]);
-
-            // Insere medicamentos novos/atualizados
+            // Processar medicamentos - usar UPDATE para existentes e INSERT para novos
             if (!empty($valores['medicamentos'])) {
-                $stmtMed = $pdo->prepare("INSERT INTO paciente_medicamentos (paciente_id, medicamento_id, nome_medicamento, quantidade, quantidade_solicitada, cid, medico_id, renovacao, renovado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
-                foreach ($valores['medicamentos'] as $med) {
+                // Primeiro, buscar medicamentos existentes
+                $stmtExist = $pdo->prepare("SELECT id, medicamento_id FROM paciente_medicamentos WHERE paciente_id = ?");
+                $stmtExist->execute([$pacienteId]);
+                $medicamentosExistentes = $stmtExist->fetchAll(PDO::FETCH_ASSOC);
+                
+                // Criar um mapa de medicamento_id => id da tabela
+                $mapaExistentes = [];
+                foreach ($medicamentosExistentes as $med) {
+                    $mapaExistentes[$med['medicamento_id']] = $med['id'];
+                }
+                
+                // Preparar statements
+                $stmtUpdate = $pdo->prepare("UPDATE paciente_medicamentos SET nome_medicamento = ?, quantidade = ?, quantidade_solicitada = ?, cid = ?, medico_id = ?, renovacao = ?, renovado = ? WHERE id = ?");
+                $stmtInsert = $pdo->prepare("INSERT INTO paciente_medicamentos (paciente_id, medicamento_id, nome_medicamento, quantidade, quantidade_solicitada, cid, medico_id, renovacao, renovado) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                
+                // IDs de medicamentos que foram processados
+                $medicamentosProcessados = [];
+                
+                foreach ($valores['medicamentos'] as $ordem => $med) {
                     $nomeMed = '';
                     foreach ($medicamentos_disponiveis as $m) {
                         if ($m['id'] == $med['medicamento_id']) {
@@ -197,19 +227,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             break;
                         }
                     }
-
-                    $stmtMed->execute([
-                        $pacienteId,
-                        $med['medicamento_id'],
-                        $nomeMed,
-                        $med['quantidade'],
-                        $med['quantidade_solicitada'],
-                        $med['cid'],
-                        $med['medico_id'],
-                        $med['renovacao'],
-                        $med['renovado']
-                    ]);
+                    
+                    $medicamentosProcessados[] = $med['medicamento_id'];
+                    
+                    file_put_contents($logFile, "Salvando medicamento ordem $ordem: ID={$med['medicamento_id']}, Nome=$nomeMed, Renovado={$med['renovado']}\n", FILE_APPEND);
+                    
+                    if (isset($mapaExistentes[$med['medicamento_id']])) {
+                        // UPDATE - medicamento já existe
+                        file_put_contents($logFile, "UPDATE medicamento ID={$mapaExistentes[$med['medicamento_id']]}\n", FILE_APPEND);
+                        $stmtUpdate->execute([
+                            $nomeMed,
+                            $med['quantidade'],
+                            $med['quantidade_solicitada'],
+                            $med['cid'],
+                            $med['medico_id'],
+                            $med['renovacao'],
+                            $med['renovado'],
+                            $mapaExistentes[$med['medicamento_id']]
+                        ]);
+                    } else {
+                        // INSERT - medicamento novo
+                        file_put_contents($logFile, "INSERT novo medicamento\n", FILE_APPEND);
+                        $stmtInsert->execute([
+                            $pacienteId,
+                            $med['medicamento_id'],
+                            $nomeMed,
+                            $med['quantidade'],
+                            $med['quantidade_solicitada'],
+                            $med['cid'],
+                            $med['medico_id'],
+                            $med['renovacao'],
+                            $med['renovado']
+                        ]);
+                    }
                 }
+                
+                // Remover medicamentos que não estão mais na lista
+                $medicamentosParaRemover = array_diff(array_column($medicamentosExistentes, 'medicamento_id'), $medicamentosProcessados);
+                if (!empty($medicamentosParaRemover)) {
+                    $placeholders = str_repeat('?,', count($medicamentosParaRemover) - 1) . '?';
+                    $stmtDelete = $pdo->prepare("DELETE FROM paciente_medicamentos WHERE paciente_id = ? AND medicamento_id IN ($placeholders)");
+                    $stmtDelete->execute(array_merge([$pacienteId], array_values($medicamentosParaRemover)));
+                }
+            } else {
+                // Se não há medicamentos, remover todos
+                $stmtDel = $pdo->prepare("DELETE FROM paciente_medicamentos WHERE paciente_id = ?");
+                $stmtDel->execute([$pacienteId]);
             }
 
             $pdo->commit();
@@ -236,10 +299,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         FROM paciente_medicamentos pm 
         JOIN medicamentos m ON pm.medicamento_id = m.id 
         WHERE pm.paciente_id = ? 
-        ORDER BY pm.id
+        ORDER BY pm.data_cadastro ASC, pm.id ASC
     ");
     $stmtMed->execute([$pacienteId]);
     $medicamentos = $stmtMed->fetchAll(PDO::FETCH_ASSOC);
+    
+    // Garantir que o campo renovado seja convertido para inteiro
+    foreach ($medicamentos as &$med) {
+        $med['renovado'] = (int)$med['renovado'];
+    }
+    unset($med);
     
     $valores['medicamentos'] = $medicamentos;
 }
@@ -430,6 +499,9 @@ $(document).ready(function() {
     function adicionarMedicamento(data = {}) {
         const index = document.querySelectorAll('.medicamento-item').length;
         
+        console.log('Adicionando medicamento:', data);
+        console.log('Renovado:', data.renovado, 'Tipo:', typeof data.renovado);
+        
         // Formatar a data de renovação se existir
         let dataRenovacao = '';
         if (data.renovacao) {
@@ -461,6 +533,9 @@ $(document).ready(function() {
                 ${med.nome} (${med.tipo === 'medico' ? 'CRM: ' : 'CNES: '}${med.identificacao})
             </option>`
         ).join('');
+
+        const isChecked = data.renovado == 1 || data.renovado === true;
+        console.log('Checkbox será marcado:', isChecked, 'para medicamento ID:', data.medicamento_id);
 
         const template = `
             <div class="medicamento-item">
@@ -504,7 +579,7 @@ $(document).ready(function() {
                         </div>
                         <div class="campo-form checkbox-group">
                             <label class="checkbox-label">
-                                <input type="checkbox" name="renovado[]" value="1" ${data.renovado ? 'checked' : ''}>
+                                <input type="checkbox" name="renovado[${data.medicamento_id}]" value="1" ${isChecked ? 'checked' : ''}>
                                 <span>Renovado</span>
                             </label>
                         </div>
@@ -519,7 +594,12 @@ $(document).ready(function() {
     // Se já tem medicamentos, carrega eles, senão adiciona um vazio
     if(<?= json_encode(count($valores['medicamentos'])) ?> > 0) {
         const meds = <?= json_encode($valores['medicamentos']) ?>;
-        meds.forEach(med => adicionarMedicamento(med));
+        console.log('Medicamentos carregados:', meds);
+        meds.forEach((med, index) => {
+            console.log(`Medicamento ${index}:`, med);
+            console.log(`Medicamento ${index} - Renovado:`, med.renovado, 'Tipo:', typeof med.renovado);
+            adicionarMedicamento(med);
+        });
     } else {
         adicionarMedicamento();
     }
