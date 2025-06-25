@@ -246,9 +246,10 @@ table {
 }
 
 th, td {
-  padding: 0.4rem 0.6rem;
+  padding-top: 0.04rem;
+  padding-bottom: 0.04rem;
+  line-height: 1.0;
   text-align: left;
-  line-height: 1.3;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -268,9 +269,10 @@ td:nth-child(7) {
   white-space: normal;
 }
 
+/* Cor de fundo do cabeçalho da tabela em cinza claro mais visível */
 th {
-  background-color: var(--light-gray);
-  font-weight: 600;
+  background-color: #e9ecef !important;
+  color: #2c3e50;
 }
 
 /* Data Management Styles */
