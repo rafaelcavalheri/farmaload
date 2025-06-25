@@ -83,19 +83,15 @@ if ($tipo_relatorio === 'dispensas') {
         die("Erro na consulta: " . $e->getMessage());
     }
 } elseif ($tipo_relatorio === 'importacoes') {
-    // Relatório de importações
+    // Relatório de importações - sem filtro de data
     $sql = "SELECT li.*, u.nome as usuario_nome
             FROM logs_importacao li
-            LEFT JOIN usuarios u ON li.usuario_id = u.id
-            WHERE DATE(li.data_hora) BETWEEN :data_inicio AND :data_fim";
+            LEFT JOIN usuarios u ON li.usuario_id = u.id";
     
-    $params = [
-        ':data_inicio' => $data_inicio->format('Y-m-d'),
-        ':data_fim' => $data_fim->format('Y-m-d')
-    ];
+    $params = [];
 
     if (!empty($operador_id)) {
-        $sql .= " AND li.usuario_id = :operador_id";
+        $sql .= " WHERE li.usuario_id = :operador_id";
         $params[':operador_id'] = $operador_id;
     }
 
@@ -208,23 +204,39 @@ if ($tipo_relatorio === 'dispensas') {
             margin-top: 20px;
         }
         .btn-detalhes {
-            background: var(--primary-color);
-            color: white;
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9em;
+            background: #2c83c3 !important;
+            color: white !important;
+            padding: 6px 12px !important;
+            border: none !important;
+            border-radius: 4px !important;
+            cursor: pointer !important;
+            text-decoration: none !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+            font-size: 0.9em !important;
         }
         
         .btn-detalhes:hover {
-            background: var(--primary-dark);
-            color: white;
-            text-decoration: none;
+            background: #1f6fb2 !important;
+            color: white !important;
+            text-decoration: none !important;
+        }
+        
+        /* Garantir que o botão detalhes seja sempre visível */
+        td .btn-detalhes {
+            display: inline-flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
+        }
+        
+        /* Garantir que o botão não seja afetado por regras de impressão */
+        @media screen {
+            .btn-detalhes {
+                display: inline-flex !important;
+                visibility: visible !important;
+                opacity: 1 !important;
+            }
         }
     </style>
 </head>
@@ -246,7 +258,7 @@ if ($tipo_relatorio === 'dispensas') {
                         </select>
                     </div>
                 </div>
-                <div class="form-row" id="filtrosDatas" style="display: <?= $tipo_relatorio === 'pacientes' ? 'none' : 'flex' ?>;">
+                <div class="form-row" id="filtrosDatas" style="display: <?= ($tipo_relatorio === 'pacientes' || $tipo_relatorio === 'importacoes') ? 'none' : 'flex' ?>;">
                     <div class="form-group">
                         <label for="data_inicio">Data Início:</label>
                         <input type="date" id="data_inicio" name="data_inicio" 
@@ -883,7 +895,7 @@ if ($tipo_relatorio === 'dispensas') {
 
         function toggleDateFields(tipoRelatorio) {
             const filtrosDatas = document.getElementById('filtrosDatas');
-            filtrosDatas.style.display = tipoRelatorio === 'pacientes' ? 'none' : 'flex';
+            filtrosDatas.style.display = (tipoRelatorio === 'pacientes' || tipoRelatorio === 'importacoes') ? 'none' : 'flex';
             
             // Limpar filtros ativos ao mudar o tipo de relatório
             filtrosAtivos = [];

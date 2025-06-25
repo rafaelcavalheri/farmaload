@@ -28,8 +28,34 @@ error_log("Conteúdo da sessão antes do login: " . print_r($_SESSION, true));
 
 // Corrigindo os caminhos dos arquivos
 require_once __DIR__ . '/config.php';
-require_once __DIR__ . '/ldap_settings.php';
+
+// Incluir configurações LDAP
+$ldapSettingsFile = __DIR__ . '/ldap_settings.php';
+if (file_exists($ldapSettingsFile)) {
+    // Incluir o arquivo para definir as variáveis
+    require_once $ldapSettingsFile;
+    error_log("Arquivo ldap_settings.php incluído com sucesso");
+} else {
+    error_log("Arquivo ldap_settings.php não encontrado em: " . $ldapSettingsFile);
+}
+
 require_once __DIR__ . '/jwt_auth.php';
+
+// Verificar se as variáveis LDAP estão definidas e definir valores padrão se necessário
+if (!isset($ldapServer)) {
+    $ldapServer = 'ldap://192.168.10.224';
+    error_log("Variável \$ldapServer não definida, usando valor padrão: " . $ldapServer);
+}
+if (!isset($ldapDomain)) {
+    $ldapDomain = 'mmirim.local';
+    error_log("Variável \$ldapDomain não definida, usando valor padrão: " . $ldapDomain);
+}
+if (!isset($ldapBaseDn)) {
+    $ldapBaseDn = 'dc=mmirim,dc=local';
+    error_log("Variável \$ldapBaseDn não definida, usando valor padrão: " . $ldapBaseDn);
+}
+
+error_log("Configurações LDAP finais - Server: $ldapServer, Domain: $ldapDomain, BaseDN: $ldapBaseDn");
 
 // Função para autenticar usuário no AD
 function authenticateADUser($email, $senha, $ldapServer, $ldapDomain, $ldapBaseDn) {

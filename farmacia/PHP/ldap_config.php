@@ -17,9 +17,16 @@ $ldapConfig = [
 // Carregar configurações existentes apenas se o arquivo existir
 $configFile = __DIR__ . '/ldap_settings.php';
 if (file_exists($configFile)) {
-    $savedConfig = include $configFile;
-    if (is_array($savedConfig)) {
-        $ldapConfig = $savedConfig;
+    // Incluir o arquivo para definir as variáveis
+    require_once $configFile;
+    
+    // Verificar se as variáveis foram definidas
+    if (isset($ldapServer) && isset($ldapDomain) && isset($ldapBaseDn)) {
+        $ldapConfig = [
+            'ldap_server' => $ldapServer,
+            'ldap_domain' => $ldapDomain,
+            'ldap_base_dn' => $ldapBaseDn
+        ];
     }
 }
 
@@ -62,18 +69,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 ];
             } else {
                 // Salvar configurações em um arquivo
-                $config = [
-                    'ldap_server' => $ldapServer,
-                    'ldap_domain' => $ldapDomain,
-                    'ldap_base_dn' => $ldapBaseDn
-                ];
+                $configContent = "<?php\n";
+                $configContent .= "\$ldapServer = '" . addslashes($ldapServer) . "';\n";
+                $configContent .= "\$ldapDomain = '" . addslashes($ldapDomain) . "';\n";
+                $configContent .= "\$ldapBaseDn = '" . addslashes($ldapBaseDn) . "';\n";
                 
                 $configFile = __DIR__ . '/ldap_settings.php';
-                $configContent = "<?php\nreturn " . var_export($config, true) . ";\n";
                 
                 if (file_put_contents($configFile, $configContent)) {
                     $sucesso = "Configurações LDAP salvas com sucesso!";
-                    $ldapConfig = $config;
+                    $ldapConfig = [
+                        'ldap_server' => $ldapServer,
+                        'ldap_domain' => $ldapDomain,
+                        'ldap_base_dn' => $ldapBaseDn
+                    ];
                 } else {
                     throw new Exception("Não foi possível salvar as configurações.");
                 }
