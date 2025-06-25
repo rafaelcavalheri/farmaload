@@ -33,6 +33,50 @@
 **Arquivo Modificado:**
 - `CSS/style.css`
 
+### Correção: Coluna "Total Recebido" na Página de Medicamentos
+
+**Problema Identificado:**
+- A coluna "Total Recebido" na página de medicamentos estava exibindo o valor total de todas as importações do dia da última importação, em vez de mostrar apenas o valor recebido na última importação específica.
+- A função `getTotalUltimaImportacao()` somava todas as importações do mesmo dia, causando confusão na visualização dos dados.
+
+**Solução Aplicada:**
+- A função `getTotalUltimaImportacao()` foi corrigida para buscar apenas a última importação específica de cada medicamento.
+- Removida a lógica que somava todas as importações do mesmo dia.
+- Agora a função retorna diretamente a quantidade da importação mais recente de cada medicamento.
+
+**Impacto:**
+- A coluna "Total Recebido" agora exibe corretamente apenas o valor recebido na última importação específica de cada medicamento.
+- Informação mais precisa e útil para o usuário.
+- Eliminação da confusão causada pela soma de múltiplas importações do mesmo dia.
+
+**Arquivos Modificados:**
+- `PHP/funcoes_estoque.php` - Função `getTotalUltimaImportacao()` corrigida
+
+### Correção: Exibição de Extornos na Página de Detalhes do Paciente
+
+**Problema Identificado:**
+- Quando era feito um extorno de medicamento, ele não aparecia na página de detalhes do paciente, apenas nos relatórios.
+- A consulta SQL estava filtrando apenas transações com `quantidade > 0`, excluindo os extornos que têm `quantidade < 0`.
+- Os usuários não conseguiam visualizar o histórico completo de transações do paciente.
+
+**Solução Aplicada:**
+- **Consulta SQL Corrigida:** Removido o filtro `AND t.quantidade > 0` para incluir todas as transações (dispensações e extornos).
+- **Nova Coluna "Tipo":** Adicionada coluna para diferenciar visualmente entre dispensações e extornos:
+  - Dispensações: badge verde com ícone de seta para baixo
+  - Extornos: badge vermelho com ícone de desfazer
+- **Quantidade Absoluta:** Uso de `abs($registro['quantidade'])` para mostrar sempre valores positivos.
+- **Botão Extornar Condicional:** O botão "Extornar" aparece apenas para dispensações (`quantidade > 0`).
+- **Diferenciação Visual:** CSS adicionado para diferenciar linhas de dispensação (fundo verde claro) e extorno (fundo vermelho claro).
+
+**Impacto:**
+- Extornos agora aparecem corretamente na página de detalhes do paciente.
+- Histórico completo de todas as transações do paciente visível.
+- Diferenciação visual clara entre dispensações e extornos.
+- Interface mais informativa e funcional.
+
+**Arquivos Modificados:**
+- `PHP/detalhes_paciente.php` - Consulta SQL corrigida e interface aprimorada
+
 ## v.1.2025.2406.1730
 
 ### Correçoes

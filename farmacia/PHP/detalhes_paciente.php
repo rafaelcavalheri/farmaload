@@ -432,8 +432,21 @@ try {
             margin-bottom: 5px;
         }
         .observacao-actions {
-            display: flex;
-            gap: 10px;
+            display: flex !important;
+            gap: 10px !important;
+            align-items: center !important;
+        }
+        .dispensacao {
+            background-color: #f8fff8 !important;
+        }
+        .extorno {
+            background-color: #fff8f8 !important;
+        }
+        .dispensacao:hover {
+            background-color: #e8f5e8 !important;
+        }
+        .extorno:hover {
+            background-color: #f5e8e8 !important;
         }
         .btn-link {
             background: none;
@@ -446,6 +459,21 @@ try {
         }
         .btn-link:hover {
             color: #0a58ca;
+        }
+        .btn-extornar {
+            background-color: #e74c3c !important;
+            color: white !important;
+            padding: 5px 15px !important;
+            border-radius: 4px !important;
+            border: none !important;
+            cursor: pointer !important;
+            margin-left: 8px !important;
+            display: inline-block !important;
+            text-decoration: none !important;
+            font-size: 0.9em !important;
+        }
+        .btn-extornar:hover {
+            background-color: #c0392b !important;
         }
     </style>
 </head>
@@ -564,13 +592,14 @@ try {
         </div>
 
         <div class="historico">
-            <h3>Histórico de Retiradas de Medicamentos</h3>
+            <h3>Histórico de Transações de Medicamentos</h3>
 
             <?php if (count($historico) > 0): ?>
                 <table>
                     <thead>
                         <tr>
                             <th>Medicamento</th>
+                            <th>Tipo</th>
                             <th>Quantidade</th>
                             <th>Data</th>
                             <th>Observações</th>
@@ -578,9 +607,16 @@ try {
                     </thead>
                     <tbody>
                         <?php foreach ($historico as $registro): ?>
-                            <tr>
+                            <tr class="<?= $registro['quantidade'] > 0 ? 'dispensacao' : 'extorno' ?>">
                                 <td><?= sanitizar($registro['medicamento']) ?></td>
-                                <td><?= sanitizar($registro['quantidade']) ?></td>
+                                <td>
+                                    <?php if ($registro['quantidade'] > 0): ?>
+                                        <span class="badge badge-success"><i class="fas fa-arrow-down"></i> Dispensação</span>
+                                    <?php else: ?>
+                                        <span class="badge badge-danger"><i class="fas fa-undo"></i> Extorno</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?= abs($registro['quantidade']) ?></td>
                                 <td><?= date('d/m/Y H:i', strtotime($registro['data'])) ?></td>
                                 <td class="observacao" data-transacao-id="<?= $registro['id'] ?>">
                                     <div class="observacao-texto"><?= htmlspecialchars(trim(preg_replace('/\s+/', ' ', $registro['observacoes'] ?? ''))) ?></div>
@@ -596,7 +632,7 @@ try {
                     </tbody>
                 </table>
             <?php else: ?>
-                <p>Não há histórico de retiradas de medicamentos para este paciente.</p>
+                <p>Não há histórico de transações de medicamentos para este paciente.</p>
             <?php endif; ?>
         </div>
 
