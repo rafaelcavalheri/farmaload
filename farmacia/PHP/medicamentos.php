@@ -83,7 +83,7 @@ $direcao = $_GET['direcao'] ?? 'ASC';
     <?php include 'header.php'; ?>
 
     <main class="container">
-        <h2>Gerenciamento de Medicamentos</h2>
+        <h2 style="margin-bottom: 2rem;">Gerenciamento de Medicamentos</h2>
 
         <?php if (isset($_GET['sucesso'])): ?>
             <div class="sucesso"><?= htmlspecialchars($_GET['sucesso']) ?></div>
@@ -93,15 +93,17 @@ $direcao = $_GET['direcao'] ?? 'ASC';
             <div class="erro">Erro: <?= htmlspecialchars($_GET['erro']) ?></div>
         <?php endif; ?>
 
-        <div class="search-container">
-            <input type="text" id="searchInput" placeholder="Buscar medicamentos..." onkeyup="debounceSearch()">
-            <button onclick="searchMedicamentos()" class="btn-primary">
-                <i class="fas fa-search"></i> Buscar
-            </button>
-        </div>
-
-        <div class="actions">
-            <a href="cadastrar_medicamento.php" class="btn-secondary">+ Novo Medicamento</a>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Buscar medicamentos..." onkeyup="debounceSearch()">
+                <button onclick="searchMedicamentos()" class="btn-secondary">
+                    <i class="fas fa-search"></i> Buscar
+                </button>
+            </div>
+            
+            <div class="actions">
+                <a href="cadastrar_medicamento.php" class="btn-secondary">+ Novo Medicamento</a>
+            </div>
         </div>
 
         <div class="table-container">

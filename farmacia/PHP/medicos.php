@@ -117,13 +117,14 @@ $registros = $stmt->fetchAll();
     <?php include 'header.php'; ?>
     
     <main class="container">
-        <div class="top-bar">
-            <h2><i class="fas fa-user-md"></i> Médicos e Instituições</h2>
+        <!-- Cabeçalho -->
+        <div class="page-header">
+            <h1><i class="fas fa-user-md"></i> Médicos e Instituições</h1>
             <div class="actions">
-                <a href="cadastrar_medico.php" class="btn-primary">
+                <a href="cadastrar_medico.php" class="btn-secondary">
                     <i class="fas fa-user-md"></i> Novo Médico
                 </a>
-                <a href="cadastrar_instituicao.php" class="btn-primary">
+                <a href="cadastrar_instituicao.php" class="btn-secondary">
                     <i class="fas fa-hospital"></i> Nova Instituição
                 </a>
             </div>
@@ -132,15 +133,15 @@ $registros = $stmt->fetchAll();
         <?= $mensagem ?>
 
         <!-- Formulário de busca -->
-        <form method="GET" class="form-busca">
-            <div class="campo-busca">
+        <form method="GET">
+            <div class="search-container">
                 <input type="text" 
                        name="busca" 
                        value="<?= htmlspecialchars($busca) ?>" 
                        placeholder="Buscar por nome, CRM, CNS, CNES ou instituição..."
                        minlength="3">
-                <button type="submit">
-                    <i class="fas fa-search"></i>
+                <button type="submit" class="btn-secondary">
+                    <i class="fas fa-search"></i> Buscar
                 </button>
             </div>
         </form>
@@ -330,101 +331,27 @@ $registros = $stmt->fetchAll();
         }
         .campo-busca {
             display: flex;
-            gap: 10px;
-            max-width: 500px;
-        }
-        .campo-busca input {
-            flex: 1;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        .campo-busca button {
-            padding: 8px 15px;
-            background-color: #4a90e2;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .campo-busca button:hover {
-            background-color: #357abd;
-        }
-        /* Estilos para o dropdown */
-        .dropdown {
-            position: relative;
-            display: inline-block;
-        }
-        .dropdown-toggle {
-            position: relative;
-            padding-right: 30px;
-        }
-        .dropdown-toggle::after {
-            content: '';
-            position: absolute;
-            right: 10px;
-            top: 50%;
-            transform: translateY(-50%);
-            border-left: 5px solid transparent;
-            border-right: 5px solid transparent;
-            border-top: 5px solid white;
-        }
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            right: 0;
-            background-color: white;
-            min-width: 200px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            border-radius: 4px;
-            z-index: 1000;
-        }
-        .dropdown:hover .dropdown-menu {
-            display: block;
-        }
-        .dropdown-item {
-            display: flex;
             align-items: center;
-            gap: 8px;
-            padding: 10px 15px;
-            color: #333;
-            text-decoration: none;
-            transition: background-color 0.2s;
+            gap: 0.5rem;
+            max-width: 500px;
+            width: 100%;
         }
-        .dropdown-item:hover {
-            background-color: #f8f9fa;
-            color: #007bff;
+        
+        .campo-busca input[type="text"] {
+            flex: 1;
+            min-width: 180px;
+            max-width: 350px;
         }
-        .dropdown-item i {
-            width: 20px;
-            text-align: center;
-        }
-        @media (max-width: 768px) {
-            .table-responsive {
-                overflow-x: auto;
+        
+        @media (max-width: 600px) {
+            .campo-busca {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.5rem;
             }
-            table {
-                min-width: 800px;
+            .campo-busca input[type="text"] {
+                max-width: 100%;
             }
-        }
-        .badge {
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 4px;
-            font-size: 0.8em;
-            margin-left: 5px;
-        }
-        .badge-info {
-            background-color: #17a2b8;
-            color: white;
-        }
-        .badge-success {
-            background-color: #28a745;
-            color: white;
-        }
-        .badge-danger {
-            background-color: #dc3545;
-            color: white;
         }
     </style>
 </body>

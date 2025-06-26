@@ -1,8 +1,41 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.2506.0820
-**Data:** 25/06/2025
+**Versão:** v.1.2025.2606.1200
+**Data:** 26/06/2025
+
+## v.1.2025.2606.1200 (26/06/2025)
+
+### Melhorias no Layout e Design das Páginas
+
+**Interface de Busca Aprimorada:**
+- **Alinhamento Perfeito:** Botão "Buscar" agora está alinhado na mesma linha da caixa de texto de busca
+- **Tamanho Otimizado:** Caixa de texto de busca aumentada para `400px` de largura mínima, proporcionando melhor experiência de digitação
+- **Layout Flexível:** Implementado sistema flexbox para melhor responsividade e alinhamento
+- **Espaçamento Melhorado:** Gap de `15px` entre elementos e altura padronizada de `48px` para o botão
+
+**Melhorias na Página de Dispensar:**
+- **Busca Unificada:** Interface de busca mais intuitiva e profissional
+- **Alinhamento Visual:** Botão e caixa de texto perfeitamente alinhados
+- **Responsividade:** Layout adaptável para diferentes tamanhos de tela
+- **Experiência do Usuário:** Interface mais limpa e organizada
+
+**Correção Crítica de SQL:**
+- **Erro de Parâmetro:** Corrigido erro `SQLSTATE[HY093]: Invalid parameter number` na página de dispensar
+- **Consulta Otimizada:** Removido parâmetro desnecessário `:validade_formatada` que não existia no SQL
+- **Estabilidade:** Sistema mais robusto e livre de erros de execução
+
+**Arquivos Modificados:**
+- `PHP/dispensar.php` - Melhorias de layout e correção de SQL
+- `CSS/style.css` - Estilos aprimorados para interface de busca
+
+**Impacto:**
+- Interface mais profissional e moderna
+- Melhor experiência do usuário na busca de pacientes
+- Sistema mais estável e confiável
+- Layout responsivo e bem alinhado
+
+---
 
 ## v.1.2025.2506.0820 (25/06/2025)
 

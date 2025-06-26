@@ -107,6 +107,7 @@ if (isset($_POST['buscar'])) {
                     COALESCE(pm.quantidade_solicitada, pm.quantidade) as quantidade_solicitada,
                     m.quantidade AS quantidade_estoque, 
                     pm.renovado,
+                    pm.renovacao,
                     COALESCE((
                         SELECT SUM(quantidade) 
                         FROM transacoes 
@@ -158,21 +159,20 @@ if (isset($_POST['paciente_id'])) {
                 COALESCE(pm.quantidade_solicitada, pm.quantidade) as quantidade_solicitada,
                 m.quantidade AS quantidade_estoque,
                 pm.renovado,
+                pm.renovacao,
                 COALESCE((
                     SELECT SUM(quantidade) 
                     FROM transacoes 
                     WHERE medicamento_id = m.id 
                     AND paciente_id = pm.paciente_id
-                ), 0) as quantidade_entregue,
-                :validade_formatada as validade_formatada
+                ), 0) as quantidade_entregue
             FROM paciente_medicamentos pm
             INNER JOIN medicamentos m ON m.id = pm.medicamento_id
             WHERE pm.paciente_id = :paciente_id
             ORDER BY m.nome ASC
         ");
         $stmt->execute([
-            ':paciente_id' => $paciente_id,
-            ':validade_formatada' => $paciente['validade_formatada']
+            ':paciente_id' => $paciente_id
         ]);
         $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -308,12 +308,13 @@ if (isset($_POST['atualizar_observacao'])) {
             margin-bottom: 20px;
         }
         .search-fields {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 10px;
+            display: flex;
+            align-items: flex-end;
+            gap: 15px;
             margin-bottom: 10px;
         }
         .search-field {
+            flex: 1;
             display: flex;
             flex-direction: column;
         }
@@ -327,6 +328,7 @@ if (isset($_POST['atualizar_observacao'])) {
             border-radius: 4px;
             font-size: 16px;
             width: 100%;
+            min-width: 400px;
             transition: border-color 0.3s ease;
         }
         .search-input:focus {
@@ -337,6 +339,8 @@ if (isset($_POST['atualizar_observacao'])) {
         .btn-secondary {
             padding: 12px 24px;
             font-size: 16px;
+            height: 48px;
+            white-space: nowrap;
         }
         .paciente-item {
             padding: 10px;
@@ -840,10 +844,10 @@ if (isset($_POST['atualizar_observacao'])) {
                                value="<?= htmlspecialchars($_POST['busca'] ?? '') ?>"
                                class="search-input">
                     </div>
+                    <button type="submit" name="buscar" class="btn-secondary">
+                        <i class="fas fa-search"></i> Buscar
+                    </button>
                 </div>
-                <button type="submit" name="buscar" class="btn-secondary">
-                    <i class="fas fa-search"></i> Buscar
-                </button>
             </div>
         </form>
 
@@ -998,21 +1002,59 @@ if (isset($_POST['atualizar_observacao'])) {
                                             <td>
                                                 <?= htmlspecialchars($medicamento['nome']) ?>
                                                 <?php
-                                                // Verifica se a quantidade em estoque é menor ou igual a 5
-                                                if ($medicamento['quantidade_estoque'] <= 5) {
+                                                if (isset($medicamento['quantidade_estoque']) && $medicamento['quantidade_estoque'] <= 5) {
                                                     echo '<span class="badge-estoque-baixo" title="Estoque baixo!"><i class="fas fa-exclamation-triangle"></i></span>';
                                                 }
                                                 ?>
                                             </td>
+                                            <td><?= $medicamento['quantidade_estoque'] ?? 'N/A' ?></td>
+                                            <td><?= $medicamento['quantidade_recebida'] ?? 'N/A' ?></td>
                                             <td><?= $medicamento['quantidade_solicitada'] ?? 'N/A' ?></td>
+                                            <td><?= $medicamento['quantidade_entregue'] ?? 'N/A' ?></td>
                                             <td><?= $medicamento['quantidade_disponivel'] ?? 'N/A' ?></td>
-                                            <td><?= $medicamento['quantidade_estoque'] ?></td>
+                                            <td>
+                                                <?php
+                                                if (!empty($medicamento['renovacao'])) {
+                                                    $hoje = new DateTime();
+                                                    $dataRenovacao = DateTime::createFromFormat('Y-m-d', $medicamento['renovacao']);
+                                                    if (!$dataRenovacao) {
+                                                        $dataRenovacao = DateTime::createFromFormat('d/m/Y', $medicamento['renovacao']);
+                                                    }
+                                                    if ($dataRenovacao) {
+                                                        if ($dataRenovacao < $hoje) {
+                                                            echo '<span class="badge badge-danger"><i class="fas fa-exclamation-triangle"></i> Atrasada</span>';
+                                                        } elseif ($dataRenovacao->format('Y-m') === $hoje->format('Y-m')) {
+                                                            echo '<span class="badge badge-warning"><i class="fas fa-clock"></i> Este mês</span>';
+                                                        } else {
+                                                            echo '<span class="badge badge-success"><i class="fas fa-check"></i> Em dia</span>';
+                                                        }
+                                                    } else {
+                                                        echo '--';
+                                                    }
+                                                } else {
+                                                    echo '--';
+                                                }
+                                                ?>
+                                            </td>
+                                            <td>
+                                                <?php
+                                                if (!empty($medicamento['renovacao'])) {
+                                                    $dataRenovacao = DateTime::createFromFormat('Y-m-d', $medicamento['renovacao']);
+                                                    if (!$dataRenovacao) {
+                                                        $dataRenovacao = DateTime::createFromFormat('d/m/Y', $medicamento['renovacao']);
+                                                    }
+                                                    echo $dataRenovacao ? $dataRenovacao->format('d/m/Y') : '--';
+                                                } else {
+                                                    echo '--';
+                                                }
+                                                ?>
+                                            </td>
                                             <td>
                                                 <input type="number" name="dispensa[<?= $medicamento['id'] ?>]" 
                                                        class="form-control" 
                                                        value="0"
                                                        min="0"
-                                                       max="<?= $medicamento['quantidade_disponivel'] ?>">
+                                                       max="<?= $medicamento['quantidade_disponivel'] ?? 0 ?>">
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>

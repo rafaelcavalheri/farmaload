@@ -813,7 +813,7 @@ $stmt->execute($params);
 <body>
 <?php include 'header.php'; ?>
 <main class="container">
-    <h2><i class="fas fa-users"></i> Gerenciamento de Pacientes</h2>
+    <h2 style="margin-bottom: 2rem;"><i class="fas fa-users"></i> Gerenciamento de Pacientes</h2>
 
     <?php if (isset($_GET['sucesso'])): ?>
         <div class="alert sucesso"><?= htmlspecialchars($_GET['sucesso']) ?></div>
