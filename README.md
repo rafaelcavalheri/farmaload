@@ -14,7 +14,7 @@
 - **Layout Flexível:** Implementado sistema flexbox para melhor responsividade e alinhamento
 - **Espaçamento Melhorado:** Gap de `15px` entre elementos e altura padronizada de `48px` para o botão
 
-**Melhorias na Página de Dispensar:**
+**Melhorias nas Páginas:**
 - **Busca Unificada:** Interface de busca mais intuitiva e profissional
 - **Alinhamento Visual:** Botão e caixa de texto perfeitamente alinhados
 - **Responsividade:** Layout adaptável para diferentes tamanhos de tela
@@ -27,6 +27,9 @@
 
 **Arquivos Modificados:**
 - `PHP/dispensar.php` - Melhorias de layout e correção de SQL
+- `PHP/medicos.php` - Melhorias de layout
+- `PHP/medicamentos.php` - Melhorias de layout
+- `PHP/pacientes.php` - Melhorias de layout
 - `CSS/style.css` - Estilos aprimorados para interface de busca
 
 **Impacto:**
