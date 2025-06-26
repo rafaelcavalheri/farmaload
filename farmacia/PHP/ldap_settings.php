@@ -1,4 +1,4 @@
 <?php
-$ldapServer = 'ldap://192.168.10.224';
-$ldapDomain = 'mmirim.local';
-$ldapBaseDn = 'dc=mmirim,dc=local';
+$ldapServer = 'ldap://192.168.1.0';
+$ldapDomain = 'domain.local';
+$ldapBaseDn = 'dc=domain,dc=local';
