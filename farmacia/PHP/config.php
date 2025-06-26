@@ -52,7 +52,7 @@ $dbConfig = [
 
 /* ===================== CONFIGURAÇÕES JWT ===================== */
 define('JWT_SECRET_KEY', getenv('JWT_SECRET_KEY') ?: 'CHAVE-MUITO-SEGURA-AQUI-ALTERE-ISSO');
-define('JWT_ISSUER', 'farmacia.mogimirim.sp.gov.br');
+define('JWT_ISSUER', 'farmacia.com');
 define('JWT_EXPIRY', 3600); // 1 hour in seconds
 
 try {
