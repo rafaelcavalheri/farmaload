@@ -1,5 +1,6 @@
 <?php
 include 'config.php';
+include 'funcoes_estoque.php';
 header('Content-Type: application/json');
 ob_start(); // Prevenir output indesejado
 
@@ -68,8 +69,7 @@ try {
                     FROM transacoes 
                     WHERE medicamento_id = pm.medicamento_id 
                     AND paciente_id = pm.paciente_id
-                ), 0) as quantidade_entregue,
-                m.quantidade as estoque
+                ), 0) as quantidade_entregue
             FROM paciente_medicamentos pm
             JOIN medicamentos m ON m.id = pm.medicamento_id
             WHERE pm.id = ? AND pm.paciente_id = ?
@@ -81,16 +81,29 @@ try {
             throw new Exception("Medicamento não encontrado ou não vinculado ao paciente.");
         }
 
+        // Calcular estoque atual usando a função correta
+        $estoque_atual = calcularEstoqueAtual($pdo, $medicamento['medicamento_id']);
+
         // Calcular quantidade disponível
         $quantidade_disponivel = max(0, (int)$medicamento['quantidade_solicitada'] - (int)$medicamento['quantidade_entregue']);
 
         // Verificar se há quantidade suficiente
-        if ($quantidade > $medicamento['estoque']) {
+        if ($quantidade > $estoque_atual) {
             throw new Exception("Quantidade solicitada maior que o estoque disponível.");
         }
         if ($quantidade > $quantidade_disponivel) {
             throw new Exception("Quantidade solicitada maior que a disponível para dispensação.");
         }
+
+        // NOVA FUNCIONALIDADE: Dispensar dos lotes (FIFO)
+        $lotes_utilizados = dispensarDosLotes($pdo, $medicamento['medicamento_id'], $quantidade);
+        
+        // Registrar movimentação de saída
+        $observacao_movimentacao = "Dispensação para paciente ID: $paciente_id";
+        if (!empty($observacao)) {
+            $observacao_movimentacao .= " - " . $observacao;
+        }
+        registrarMovimentacaoSaida($pdo, $medicamento['medicamento_id'], $quantidade, $observacao_movimentacao);
 
         // Inserir na tabela transações
         $stmt = $pdo->prepare("
@@ -106,9 +119,17 @@ try {
         ]);
 
         $pdo->commit();
+        
+        // Preparar resposta com informações dos lotes utilizados
+        $lotes_info = [];
+        foreach ($lotes_utilizados as $lote) {
+            $lotes_info[] = "Lote {$lote['lote_nome']}: {$lote['quantidade_utilizada']} unidades";
+        }
+        
         $resposta = [
             'success' => true,
-            'message' => "Medicamento dispensado com sucesso!"
+            'message' => "Medicamento dispensado com sucesso!",
+            'lotes_utilizados' => $lotes_info
         ];
 
     } catch (Exception $e) {

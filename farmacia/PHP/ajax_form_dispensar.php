@@ -39,7 +39,6 @@ $stmt = $pdo->prepare("
         m.id as medicamento_id,
         m.nome, 
         COALESCE(pm.quantidade_solicitada, pm.quantidade) AS quantidade_solicitada,
-        m.quantidade AS quantidade_estoque,
         pm.renovado,
         DATE_FORMAT(p.validade, '%d/%m/%Y') as validade_formatada,
         COALESCE((

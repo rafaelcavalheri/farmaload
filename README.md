@@ -1,8 +1,65 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.2606.1200
-**Data:** 26/06/2025
+**Versão:** v.1.2025.2706.1000
+**Data:** 27/06/2025
+
+## v.1.2025.2706.1000 (27/06/2025)
+
+### Implementação Completa do Sistema de Controle de Estoque por Lotes (FIFO)
+
+**Nova Funcionalidade: Controle de Estoque por Lotes com FIFO**
+- **Sistema FIFO:** Implementado controle de estoque por lotes com método First-In-First-Out (FIFO)
+- **Dispensação Inteligente:** Sistema automaticamente seleciona os lotes mais antigos para dispensação
+- **Controle de Validade:** Priorização de lotes com validade mais próxima do vencimento
+- **Rastreabilidade Completa:** Cada dispensação registra exatamente qual lote foi utilizado
+
+**Melhorias no Sistema de Dispensação:**
+- **Dispensação Individual:** Script `ajax_dispensar.php` atualizado para trabalhar com lotes
+- **Dispensação Múltipla:** Script `ajax_dispensar_varios.php` implementado para dispensar vários medicamentos simultaneamente
+- **Interface Aprimorada:** Modal de dispensação com seleção de lotes e quantidades
+- **Validação Robusta:** Verificações de estoque disponível por lote antes da dispensação
+
+**Correções Críticas no Cálculo de Estoque:**
+- **Função de Cálculo:** `funcoes_estoque.php` corrigida para evitar dupla contagem
+- **Estoque por Lotes:** Cálculo baseado na soma das quantidades de todos os lotes ativos
+- **Compatibilidade:** Mantida compatibilidade com sistema antigo durante transição
+
+**Migração de Dados:**
+- **Script de Migração:** Criado e executado script para migrar estoque antigo para sistema de lotes
+- **Correção de Inconsistências:** Implementado sistema de verificação e correção de inconsistências
+- **Backup Automático:** Sistema de backup antes de qualquer operação crítica
+
+**Melhorias na Interface:**
+- **Listagem de Medicamentos:** Página `medicamentos.php` atualizada para mostrar medicamentos com estoque zero
+- **Detalhes de Lotes:** Interface para visualizar lotes disponíveis por medicamento
+- **Relatórios Aprimorados:** Sistema de relatórios atualizado para incluir informações de lotes
+
+**Arquivos Modificados:**
+- `PHP/dispensar.php` - Sistema principal de dispensação por lotes
+- `PHP/ajax_dispensar.php` - Dispensação individual por lotes
+- `PHP/ajax_dispensar_varios.php` - Dispensação múltipla por lotes
+- `PHP/funcoes_estoque.php` - Funções de cálculo de estoque corrigidas
+- `PHP/medicamentos.php` - Listagem atualizada (mostra estoque zero)
+- `PHP/ajax_lotes_medicamento.php` - API para consulta de lotes
+
+**Arquivos de Teste Removidos:**
+- `verificar_corrigir_estoque.php` - Script de verificação e correção
+- `diagnostico_medicamento_especifico.php` - Script de diagnóstico específico
+- `diagnostico_medicamentos.php` - Script de diagnóstico geral
+- `debug_estoque.php` - Script de debug
+- `migracao_estoque_lotes.php` - Script de migração
+- `teste_dispensa_lotes.php` - Script de teste
+- `README_DISPENSA_LOTES.md` - Documentação de implementação
+
+**Impacto:**
+- Sistema de controle de estoque mais preciso e confiável
+- Rastreabilidade completa de medicamentos por lote
+- Melhor gestão de validades e controle FIFO
+- Interface mais informativa e funcional
+- Eliminação de inconsistências de estoque
+
+---
 
 ## v.1.2025.2606.1200 (26/06/2025)
 

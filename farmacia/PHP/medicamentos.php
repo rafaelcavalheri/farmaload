@@ -135,12 +135,6 @@ $direcao = $_GET['direcao'] ?? 'ASC';
                                 MIN(lm.validade) as validade
                             FROM medicamentos m
                             LEFT JOIN lotes_medicamentos lm ON m.id = lm.medicamento_id
-                            WHERE EXISTS (
-                                SELECT 1 
-                                FROM lotes_medicamentos lm2 
-                                WHERE lm2.medicamento_id = m.id 
-                                AND lm2.quantidade > 0
-                            )
                             GROUP BY m.id, m.nome, m.codigo, m.apresentacao, m.ativo
                             ORDER BY $ordem $direcao";
                     $stmt = $pdo->query($sql);

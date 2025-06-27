@@ -48,6 +48,8 @@ try {
         }
 
         // Processar cada medicamento
+        $todos_lotes_utilizados = [];
+        
         foreach ($medicamentos as $med) {
             $medicamento_id = $med['medicamento_id'];
             $quantidade = (int)$med['quantidade'];
@@ -68,7 +70,7 @@ try {
                         WHERE medicamento_id = pm.medicamento_id 
                         AND paciente_id = pm.paciente_id
                     ), 0) as quantidade_entregue,
-                    m.quantidade as estoque
+                    m.nome as nome_medicamento
                 FROM paciente_medicamentos pm
                 JOIN medicamentos m ON m.id = pm.medicamento_id
                 WHERE pm.id = ? AND pm.paciente_id = ?
@@ -80,6 +82,9 @@ try {
                 throw new Exception('Medicamento não encontrado para este paciente');
             }
 
+            // Calcular estoque atual usando a função correta
+            $estoque_atual = calcularEstoqueAtual($pdo, $medicamento['medicamento_id']);
+
             // Verificar quantidade disponível
             $quantidade_disponivel = max(0, (int)$medicamento['quantidade_solicitada'] - (int)$medicamento['quantidade_entregue']);
             if ($quantidade > $quantidade_disponivel) {
@@ -87,9 +92,19 @@ try {
             }
 
             // Verificar estoque
-            if ($quantidade > $medicamento['estoque']) {
+            if ($quantidade > $estoque_atual) {
                 throw new Exception('Quantidade solicitada maior que o estoque disponível');
             }
+
+            // NOVA FUNCIONALIDADE: Dispensar dos lotes (FIFO)
+            $lotes_utilizados = dispensarDosLotes($pdo, $medicamento['medicamento_id'], $quantidade);
+            
+            // Registrar movimentação de saída
+            $observacao_movimentacao = "Dispensação múltipla para paciente ID: $paciente_id";
+            if (!empty($observacao)) {
+                $observacao_movimentacao .= " - " . $observacao;
+            }
+            registrarMovimentacaoSaida($pdo, $medicamento['medicamento_id'], $quantidade, $observacao_movimentacao);
 
             // Registrar transação
             $stmt = $pdo->prepare("
@@ -109,12 +124,27 @@ try {
                 $observacao,
                 $usuario_id
             ]);
+            
+            // Armazenar informações dos lotes utilizados
+            $todos_lotes_utilizados[$medicamento['nome_medicamento']] = $lotes_utilizados;
         }
 
         $pdo->commit();
+        
+        // Preparar resposta com informações dos lotes utilizados
+        $lotes_info = [];
+        foreach ($todos_lotes_utilizados as $nome_medicamento => $lotes) {
+            $med_info = [];
+            foreach ($lotes as $lote) {
+                $med_info[] = "Lote {$lote['lote_nome']}: {$lote['quantidade_utilizada']} unidades";
+            }
+            $lotes_info[] = "$nome_medicamento: " . implode(", ", $med_info);
+        }
+        
         $resposta = [
             'success' => true,
-            'message' => 'Medicamentos dispensados com sucesso'
+            'message' => 'Medicamentos dispensados com sucesso',
+            'lotes_utilizados' => $lotes_info
         ];
 
     } catch (Exception $e) {

@@ -105,7 +105,6 @@ if (isset($_POST['buscar'])) {
                     m.nome, 
                     COALESCE(pm.quantidade, 0) as quantidade_recebida,
                     COALESCE(pm.quantidade_solicitada, pm.quantidade) as quantidade_solicitada,
-                    m.quantidade AS quantidade_estoque, 
                     pm.renovado,
                     pm.renovacao,
                     COALESCE((
@@ -122,9 +121,10 @@ if (isset($_POST['buscar'])) {
             $stmt->execute([$paciente['id']]);
             $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            // Calcular quantidade disponível para cada medicamento
+            // Calcular quantidade disponível e estoque atual para cada medicamento
             foreach ($medicamentos as &$med) {
                 $med['quantidade_disponivel'] = max(0, (int)$med['quantidade_solicitada'] - (int)$med['quantidade_entregue']);
+                $med['quantidade_estoque'] = calcularEstoqueAtual($pdo, $med['medicamento_id']);
             }
             unset($med); // Limpar referência do foreach
         }
@@ -157,7 +157,6 @@ if (isset($_POST['paciente_id'])) {
                 m.nome, 
                 COALESCE(pm.quantidade, 0) as quantidade_recebida,
                 COALESCE(pm.quantidade_solicitada, pm.quantidade) as quantidade_solicitada,
-                m.quantidade AS quantidade_estoque,
                 pm.renovado,
                 pm.renovacao,
                 COALESCE((
@@ -176,9 +175,10 @@ if (isset($_POST['paciente_id'])) {
         ]);
         $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Calcular quantidade disponível para cada medicamento
+        // Calcular quantidade disponível e estoque atual para cada medicamento
         foreach ($medicamentos as &$med) {
             $med['quantidade_disponivel'] = max(0, (int)$med['quantidade_solicitada'] - (int)$med['quantidade_entregue']);
+            $med['quantidade_estoque'] = calcularEstoqueAtual($pdo, $med['medicamento_id']);
         }
         unset($med); // Limpar referência do foreach
 
@@ -251,6 +251,16 @@ if (isset($_POST['dispensar'])) {
                 if ($qtd > $quantidade_disponivel) {
                     throw new Exception("Quantidade solicitada maior que a disponível.");
                 }
+
+                // NOVA FUNCIONALIDADE: Dispensar dos lotes (FIFO)
+                $lotes_utilizados = dispensarDosLotes($pdo, $row['medicamento_id'], $qtd);
+                
+                // Registrar movimentação de saída
+                $observacao_movimentacao = "Dispensação para paciente ID: " . $paciente['id'];
+                if (!empty($nova_observacao)) {
+                    $observacao_movimentacao .= " - " . $nova_observacao;
+                }
+                registrarMovimentacaoSaida($pdo, $row['medicamento_id'], $qtd, $observacao_movimentacao);
 
                 // Atualiza apenas a tabela de transações e o estoque do medicamento
                 // Não altera mais a quantidade na tabela paciente_medicamentos
