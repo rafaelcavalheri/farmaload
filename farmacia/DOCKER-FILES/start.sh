@@ -22,5 +22,19 @@ if [ ! -d /var/www/html/vendor/firebase ]; then
     su -s /bin/bash -c "composer require firebase/php-jwt" www-data
 fi
 
+# Inicializar serviço cron
+echo "🕐 Iniciando serviço cron..."
+service cron start
+
+# Verificar se o cron está rodando
+if service cron status > /dev/null 2>&1; then
+    echo "✅ Serviço cron iniciado com sucesso"
+    echo "📅 Cron jobs ativos:"
+    crontab -l
+else
+    echo "⚠️  Aviso: Não foi possível verificar o status do cron"
+fi
+
 # Iniciar Apache
+echo "🌐 Iniciando Apache..."
 apache2-foreground

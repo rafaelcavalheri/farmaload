@@ -1,8 +1,64 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.2706.1000
+**Versão:** v.1.2025.2706.1610
 **Data:** 27/06/2025
+
+## 📚 Documentação
+
+Para documentação técnica detalhada, consulte a pasta **[README/](README/)** que contém:
+- [Índice da Documentação](README/README.md)
+- [Sistema de Manutenção de Lotes](README/README_MANUTENCAO_LOTES.md)
+
+---
+
+## v.1.2025.2706.1610 (27/06/2025)
+
+### Sistema de Manutenção Automática de Lotes
+
+**Script de Manutenção Implementado:**
+- **`manutencao_lotes.php`** - Script completo para limpeza automática de lotes antigos
+- **Execução Flexível:** Via linha de comando, web ou cron job
+- **Backup Automático:** Cria backup antes de qualquer remoção
+- **Logs Detalhados:** Sistema completo de logs para auditoria
+
+**Correções Técnicas:**
+- **Nome da Tabela:** Corrigido para usar `lotes_medicamentos` (estrutura real do banco)
+- **Colunas Corretas:** Ajustado para usar `lote`, `data_atualizacao`, `validade`
+- **Formato de Backup:** Corrigido nome da tabela de backup para formato válido MySQL
+- **Tratamento de Erros:** Melhorado sistema de tratamento de exceções
+
+**Integração com Docker:**
+- **Cron Job Automático:** Configurado no Dockerfile para execução mensal
+- **Serviço Cron:** Inicialização automática no container
+- **Editor Nano:** Adicionado ao Dockerfile para facilitar edições
+- **Logs Centralizados:** Arquivo de log em `/var/log/manutencao_lotes.log`
+
+**Organização da Documentação:**
+- **Pasta README/:** Criada estrutura organizada para documentação técnica
+- **README Principal:** Mantido na raiz para histórico de versões
+- **Índice de Documentação:** Criado para facilitar navegação
+- **Documentação Específica:** README detalhado para manutenção de lotes
+
+**Arquivos Modificados:**
+- `PHP/manutencao_lotes.php` - Script de manutenção implementado e corrigido
+- `DOCKER-FILES/dockerfile` - Cron job e nano adicionados
+- `DOCKER-FILES/start.sh` - Inicialização do serviço cron
+- `README/README.md` - Índice da documentação criado
+- `README/README_MANUTENCAO_LOTES.md` - Documentação técnica detalhada
+
+**Arquivos Removidos:**
+- `instalar_cron_manutencao.sh` - Não necessário (cron configurado no Docker)
+- `crontab_manutencao` - Não necessário (configurações no Dockerfile)
+
+**Impacto:**
+- Sistema de manutenção automática totalmente funcional
+- Documentação organizada e profissional
+- Correções técnicas para compatibilidade com estrutura real do banco
+- Integração completa com ambiente Docker
+- Facilidade de manutenção e monitoramento
+
+---
 
 ## v.1.2025.2706.1000 (27/06/2025)
 
@@ -35,6 +91,13 @@
 - **Detalhes de Lotes:** Interface para visualizar lotes disponíveis por medicamento
 - **Relatórios Aprimorados:** Sistema de relatórios atualizado para incluir informações de lotes
 
+**Sistema de Manutenção Automática de Lotes:**
+- **Script de Manutenção:** `manutencao_lotes.php` implementado para limpeza automática de lotes antigos
+- **Cron Job Mensal:** Configurado para executar automaticamente no 1º dia de cada mês
+- **Backup Automático:** Cria backup antes de qualquer remoção de lotes
+- **Logs Detalhados:** Sistema completo de logs para auditoria e monitoramento
+- **Configurações Flexíveis:** Parâmetros configuráveis para períodos de retenção
+
 **Arquivos Modificados:**
 - `PHP/dispensar.php` - Sistema principal de dispensação por lotes
 - `PHP/ajax_dispensar.php` - Dispensação individual por lotes
@@ -42,6 +105,9 @@
 - `PHP/funcoes_estoque.php` - Funções de cálculo de estoque corrigidas
 - `PHP/medicamentos.php` - Listagem atualizada (mostra estoque zero)
 - `PHP/ajax_lotes_medicamento.php` - API para consulta de lotes
+- `PHP/manutencao_lotes.php` - Script de manutenção automática
+- `DOCKER-FILES/dockerfile` - Configuração do cron job
+- `DOCKER-FILES/start.sh` - Inicialização do serviço cron
 
 **Arquivos de Teste Removidos:**
 - `verificar_corrigir_estoque.php` - Script de verificação e correção
@@ -58,6 +124,8 @@
 - Melhor gestão de validades e controle FIFO
 - Interface mais informativa e funcional
 - Eliminação de inconsistências de estoque
+- Manutenção automática do banco de dados
+- Otimização de performance e espaço em disco
 
 ---
 
