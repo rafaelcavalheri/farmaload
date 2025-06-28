@@ -1,5 +1,6 @@
 <?php
 include 'config.php';
+include 'funcoes_estoque.php';
 header('Content-Type: application/json');
 ob_start();
 
@@ -72,6 +73,16 @@ try {
             throw new Exception("Quantidade de extorno maior que a quantidade entregue.");
         }
 
+        // NOVA FUNCIONALIDADE: Extornar para os lotes (LIFO)
+        $lotes_utilizados = extornarParaLotes($pdo, $medicamento['medicamento_id'], $quantidade);
+        
+        // Registrar movimentação de entrada
+        $observacao_movimentacao = "Extorno para paciente ID: $paciente_id";
+        if (!empty($observacao)) {
+            $observacao_movimentacao .= " - " . $observacao;
+        }
+        registrarMovimentacaoEntrada($pdo, $medicamento['medicamento_id'], $quantidade, $observacao_movimentacao);
+
         // Registrar o extorno como transação negativa
         $stmt = $pdo->prepare("
             INSERT INTO transacoes (paciente_id, medicamento_id, quantidade, usuario_id, data, observacoes)
@@ -86,9 +97,21 @@ try {
         ]);
 
         $pdo->commit();
+        
+        // Preparar resposta com informações dos lotes utilizados
+        $lotes_info = [];
+        foreach ($lotes_utilizados as $lote) {
+            if ($lote['novo_lote']) {
+                $lotes_info[] = "Novo lote {$lote['lote_nome']}: {$lote['quantidade_extornada']} unidades";
+            } else {
+                $lotes_info[] = "Lote {$lote['lote_nome']}: +{$lote['quantidade_extornada']} unidades";
+            }
+        }
+        
         $resposta = [
             'success' => true,
-            'message' => "Extorno realizado com sucesso!"
+            'message' => "Extorno realizado com sucesso!",
+            'lotes_utilizados' => $lotes_info
         ];
     } catch (Exception $e) {
         $pdo->rollBack();

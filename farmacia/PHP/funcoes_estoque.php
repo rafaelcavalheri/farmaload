@@ -112,6 +112,99 @@ function dispensarDosLotes($pdo, $medicamento_id, $quantidade_dispensar) {
     return $lotes_utilizados;
 }
 
+// Nova função para extornar medicamentos para os lotes (LIFO - Last In, First Out)
+function extornarParaLotes($pdo, $medicamento_id, $quantidade_extornar) {
+    // Buscar lotes ordenados por validade (mais novos primeiro) e depois por ID (mais novos primeiro)
+    // Isso garante que o extorno vá para os lotes mais recentes primeiro
+    $stmt = $pdo->prepare("
+        SELECT id, lote, quantidade, validade 
+        FROM lotes_medicamentos 
+        WHERE medicamento_id = ? 
+        ORDER BY validade DESC, id DESC
+    ");
+    $stmt->execute([$medicamento_id]);
+    $lotes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+    
+    if (empty($lotes)) {
+        // Se não há lotes, criar um novo lote para o extorno
+        $lote_nome = 'EXT' . date('Ymd') . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
+        $validade_padrao = date('Y-m-d', strtotime('+1 year'));
+        
+        $stmt = $pdo->prepare("
+            INSERT INTO lotes_medicamentos (medicamento_id, lote, quantidade, validade)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([$medicamento_id, $lote_nome, $quantidade_extornar, $validade_padrao]);
+        
+        return [[
+            'lote_id' => $pdo->lastInsertId(),
+            'lote_nome' => $lote_nome,
+            'quantidade_extornada' => $quantidade_extornar,
+            'quantidade_anterior' => 0,
+            'quantidade_nova' => $quantidade_extornar,
+            'validade' => $validade_padrao,
+            'novo_lote' => true
+        ]];
+    }
+    
+    $quantidade_restante = $quantidade_extornar;
+    $lotes_utilizados = [];
+    
+    // Percorrer os lotes do mais novo para o mais antigo
+    foreach ($lotes as $lote) {
+        if ($quantidade_restante <= 0) break;
+        
+        $quantidade_atual_lote = (int)$lote['quantidade'];
+        $quantidade_adicionar = min($quantidade_restante, $quantidade_extornar);
+        
+        // Atualizar a quantidade do lote
+        $nova_quantidade = $quantidade_atual_lote + $quantidade_adicionar;
+        $stmt = $pdo->prepare("
+            UPDATE lotes_medicamentos 
+            SET quantidade = ? 
+            WHERE id = ?
+        ");
+        $stmt->execute([$nova_quantidade, $lote['id']]);
+        
+        // Registrar o lote utilizado
+        $lotes_utilizados[] = [
+            'lote_id' => $lote['id'],
+            'lote_nome' => $lote['lote'],
+            'quantidade_extornada' => $quantidade_adicionar,
+            'quantidade_anterior' => $quantidade_atual_lote,
+            'quantidade_nova' => $nova_quantidade,
+            'validade' => $lote['validade'],
+            'novo_lote' => false
+        ];
+        
+        $quantidade_restante -= $quantidade_adicionar;
+    }
+    
+    // Se ainda há quantidade para extornar, criar um novo lote
+    if ($quantidade_restante > 0) {
+        $lote_nome = 'EXT' . date('Ymd') . str_pad(rand(1, 999), 3, '0', STR_PAD_LEFT);
+        $validade_padrao = date('Y-m-d', strtotime('+1 year'));
+        
+        $stmt = $pdo->prepare("
+            INSERT INTO lotes_medicamentos (medicamento_id, lote, quantidade, validade)
+            VALUES (?, ?, ?, ?)
+        ");
+        $stmt->execute([$medicamento_id, $lote_nome, $quantidade_restante, $validade_padrao]);
+        
+        $lotes_utilizados[] = [
+            'lote_id' => $pdo->lastInsertId(),
+            'lote_nome' => $lote_nome,
+            'quantidade_extornada' => $quantidade_restante,
+            'quantidade_anterior' => 0,
+            'quantidade_nova' => $quantidade_restante,
+            'validade' => $validade_padrao,
+            'novo_lote' => true
+        ];
+    }
+    
+    return $lotes_utilizados;
+}
+
 // Função para registrar movimentação de saída dos lotes
 function registrarMovimentacaoSaida($pdo, $medicamento_id, $quantidade, $observacao = '') {
     // Calcular quantidade anterior
@@ -137,6 +230,41 @@ function registrarMovimentacaoSaida($pdo, $medicamento_id, $quantidade, $observa
             data,
             observacao
         ) VALUES (?, 'SAIDA', ?, ?, ?, NOW(), ?)
+    ");
+    $stmt->execute([
+        $medicamento_id,
+        $quantidade,
+        $quantidade_anterior,
+        $quantidade_nova,
+        $observacao
+    ]);
+}
+
+// Função para registrar movimentação de entrada (extorno) dos lotes
+function registrarMovimentacaoEntrada($pdo, $medicamento_id, $quantidade, $observacao = '') {
+    // Calcular quantidade anterior
+    $stmt = $pdo->prepare("
+        SELECT COALESCE(SUM(quantidade), 0) as quantidade_atual
+        FROM lotes_medicamentos 
+        WHERE medicamento_id = ?
+    ");
+    $stmt->execute([$medicamento_id]);
+    $quantidade_anterior = (int)$stmt->fetchColumn();
+    
+    // Calcular quantidade nova
+    $quantidade_nova = $quantidade_anterior + $quantidade;
+    
+    // Registrar movimentação
+    $stmt = $pdo->prepare("
+        INSERT INTO movimentacoes (
+            medicamento_id, 
+            tipo, 
+            quantidade, 
+            quantidade_anterior,
+            quantidade_nova,
+            data,
+            observacao
+        ) VALUES (?, 'ENTRADA', ?, ?, ?, NOW(), ?)
     ");
     $stmt->execute([
         $medicamento_id,
