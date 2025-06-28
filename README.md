@@ -1,14 +1,59 @@
 # FARMALOAD - Gerenciador de Farmacia Pública de Alto Custo
 
 
-**Versão:** v.1.2025.2706.1610
-**Data:** 27/06/2025
+**Versão:** v.1.2025.2806.1340
+**Data:** 28/06/2025
 
 ## 📚 Documentação
 
 Para documentação técnica detalhada, consulte a pasta **[README/](README/)** que contém:
 - [Índice da Documentação](README/README.md)
 - [Sistema de Manutenção de Lotes](README/README_MANUTENCAO_LOTES.md)
+
+---
+
+## v.1.2025.2806.1340 (28/06/2025)
+
+### Correção Crítica: Extorno de Medicamentos Atualiza Estoque e Lotes
+
+**Problema Identificado:**
+- Ao realizar extorno de medicamentos, o sistema apenas registrava uma transação negativa mas não atualizava as quantidades dos lotes nem o estoque total
+- Os lotes permaneciam com quantidades incorretas após extorno
+- O estoque total não era recalculado corretamente
+- Falta de rastreabilidade completa das operações de extorno
+
+**Solução Implementada:**
+- **Funções de Extorno:** Criadas novas funções em `funcoes_estoque.php` para gerenciar extorno de lotes:
+  - `extornarLotesMedicamento()` - Atualiza quantidades dos lotes usando método LIFO
+  - `registrarMovimentoEstoqueExtorno()` - Registra movimento de estoque para extorno
+- **Método LIFO:** Implementado Last-In-First-Out para extorno, removendo primeiro dos lotes mais recentes
+- **Atualização de Estoque:** Sistema agora atualiza corretamente as quantidades dos lotes e recalcula estoque total
+- **Rastreabilidade:** Cada extorno registra detalhes dos lotes afetados e quantidades ajustadas
+
+**Melhorias nos Scripts de Extorno:**
+- **`ajax_extornar.php`:** Atualizado para usar as novas funções de extorno
+- **`ajax_extornar_transacao.php`:** Implementado extorno direto de transações específicas
+- **Validação Robusta:** Verificações de estoque disponível antes do extorno
+- **Transações Seguras:** Uso de transações SQL para garantir consistência dos dados
+
+**Funcionalidades Implementadas:**
+- **Extorno por Lotes:** Sistema identifica e atualiza os lotes corretos durante extorno
+- **Cálculo Automático:** Estoque total recalculado automaticamente após extorno
+- **Logs Detalhados:** Registro completo de todas as operações de extorno
+- **Interface Aprimorada:** Retorno de informações detalhadas sobre lotes afetados
+- **Compatibilidade:** Mantida compatibilidade com sistema existente
+
+**Arquivos Modificados:**
+- `PHP/funcoes_estoque.php` - Novas funções de extorno implementadas
+- `PHP/ajax_extornar.php` - Atualizado para usar novas funções
+- `PHP/ajax_extornar_transacao.php` - Implementado extorno direto de transações
+
+**Impacto:**
+- Extorno de medicamentos agora atualiza corretamente estoque e lotes
+- Rastreabilidade completa das operações de extorno
+- Sistema mais confiável e preciso no controle de estoque
+- Eliminação de inconsistências entre lotes e estoque total
+- Melhor auditoria e controle de transações
 
 ---
 
