@@ -82,6 +82,43 @@ if ($tipo_relatorio === 'dispensas') {
     } catch (PDOException $e) {
         die("Erro na consulta: " . $e->getMessage());
     }
+} elseif ($tipo_relatorio === 'extornos') {
+    // Construção dinâmica da query de extornos (transações com quantidade negativa)
+    $sql = "SELECT t.*, m.nome as medicamento_nome, u.nome as operador_nome, 
+                   p.nome as paciente_nome, p.cpf as paciente_cpf, p.telefone as paciente_telefone
+            FROM transacoes t
+            JOIN medicamentos m ON t.medicamento_id = m.id
+            JOIN usuarios u ON t.usuario_id = u.id
+            JOIN pacientes p ON t.paciente_id = p.id
+            WHERE t.quantidade < 0 
+            AND DATE(t.data) BETWEEN :data_inicio AND :data_fim";
+
+    $params = [
+        ':data_inicio' => $data_inicio->format('Y-m-d'),
+        ':data_fim' => $data_fim->format('Y-m-d')
+    ];
+
+    if (!empty($medicamento_id)) {
+        $sql .= " AND t.medicamento_id = :medicamento_id";
+        $params[':medicamento_id'] = $medicamento_id;
+    }
+    if (!empty($operador_id)) {
+        $sql .= " AND t.usuario_id = :operador_id";
+        $params[':operador_id'] = $operador_id;
+    }
+    if (!empty($paciente_id)) {
+        $sql .= " AND t.paciente_id = :paciente_id";
+        $params[':paciente_id'] = $paciente_id;
+    }
+    $sql .= " ORDER BY t.data DESC";
+
+    try {
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute($params);
+        $resultados_extornos = $stmt->fetchAll();
+    } catch (PDOException $e) {
+        die("Erro na consulta de extornos: " . $e->getMessage());
+    }
 } elseif ($tipo_relatorio === 'importacoes') {
     // Relatório de importações - sem filtro de data
     $sql = "SELECT li.*, u.nome as usuario_nome
@@ -253,6 +290,7 @@ if ($tipo_relatorio === 'dispensas') {
                         <label for="tipo_relatorio">Tipo de Relatório:</label>
                         <select id="tipo_relatorio" name="tipo_relatorio" onchange="toggleDateFields(this.value)">
                             <option value="dispensas" <?= $tipo_relatorio === 'dispensas' ? 'selected' : '' ?>>Dispensas de Medicamentos</option>
+                            <option value="extornos" <?= $tipo_relatorio === 'extornos' ? 'selected' : '' ?>>Extornos de Medicamentos</option>
                             <option value="pacientes" <?= $tipo_relatorio === 'pacientes' ? 'selected' : '' ?>>Situação dos Pacientes</option>
                             <option value="importacoes" <?= $tipo_relatorio === 'importacoes' ? 'selected' : '' ?>>Relatório de Importações</option>
                         </select>
@@ -288,6 +326,15 @@ if ($tipo_relatorio === 'dispensas') {
                     <?php endif; ?>
                     <?php if ($tipo_relatorio === 'importacoes' && !empty($resultados_importacoes)): ?>
                         <a href="exportar_relatorio.php?<?= http_build_query(array_merge($_GET, ['tipo_relatorio' => 'importacoes'])) ?>" 
+                           class="btn-secondary" target="_blank">
+                            <i class="fas fa-file-excel"></i> Exportar Excel
+                        </a>
+                        <button type="button" class="btn-secondary" onclick="window.print()">
+                            <i class="fas fa-print"></i> Imprimir
+                        </button>
+                    <?php endif; ?>
+                    <?php if ($tipo_relatorio === 'extornos' && !empty($resultados_extornos)): ?>
+                        <a href="exportar_relatorio.php?<?= http_build_query(array_merge($_GET, ['tipo_relatorio' => 'extornos'])) ?>" 
                            class="btn-secondary" target="_blank">
                             <i class="fas fa-file-excel"></i> Exportar Excel
                         </a>
@@ -398,6 +445,64 @@ if ($tipo_relatorio === 'dispensas') {
             <?php else: ?>
                 <div class="no-results">
                     Nenhum registro de importação encontrado com os filtros selecionados
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php elseif ($tipo_relatorio === 'extornos'): ?>
+        <div class="card">
+            <h3>Resultados (<?= count($resultados_extornos) ?> registros)</h3>
+            <?php if (!empty($resultados_extornos)): ?>
+                <div class="form-actions" style="margin-bottom: 15px;">
+                    <a href="exportar_relatorio.php?<?= http_build_query(array_merge($_GET, ['tipo_relatorio' => 'extornos'])) ?>" 
+                       class="btn-secondary" target="_blank">
+                        <i class="fas fa-file-excel"></i> Exportar Excel
+                    </a>
+                    <button type="button" class="btn-secondary" onclick="window.print()">
+                        <i class="fas fa-print"></i> Imprimir
+                    </button>
+                </div>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Data</th>
+                                <th>Medicamento</th>
+                                <th>Quantidade Extornada</th>
+                                <th>Operador</th>
+                                <th>Paciente</th>
+                                <th>CPF</th>
+                                <th>Telefone</th>
+                                <th>Observações</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach ($resultados_extornos as $extorno): ?>
+                                <tr>
+                                    <td><?= date('d/m/Y H:i', strtotime($extorno['data'])) ?></td>
+                                    <td><?= htmlspecialchars($extorno['medicamento_nome']) ?></td>
+                                    <td style="color: #dc3545; font-weight: bold;"><?= abs($extorno['quantidade']) ?></td>
+                                    <td><?= htmlspecialchars($extorno['operador_nome']) ?></td>
+                                    <td><?= htmlspecialchars($extorno['paciente_nome']) ?></td>
+                                    <td><?= htmlspecialchars($extorno['paciente_cpf']) ?></td>
+                                    <td><?= htmlspecialchars($extorno['paciente_telefone']) ?></td>
+                                    <td class="observacoes-cell">
+                                        <input type="text" class="observacoes-content" value="<?= htmlspecialchars(trim(preg_replace('/\s+/', ' ', $extorno['observacoes'] ?? ''))) ?>" readonly>
+                                        <span class="observacoes-print"><?= htmlspecialchars(trim(preg_replace('/\s+/', ' ', $extorno['observacoes'] ?? ''))) ?></span>
+                                        <?php 
+                                            $obs = $extorno['observacoes'] ?? '';
+                                            if (!empty($obs)):
+                                        ?>
+                                            <button class="btn-ver-mais" onclick="mostrarObservacoes(this)">Ver mais</button>
+                                        <?php endif; ?>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                </div>
+            <?php else: ?>
+                <div class="no-results">
+                    Nenhum extorno encontrado com os filtros selecionados
                 </div>
             <?php endif; ?>
         </div>
@@ -908,6 +1013,32 @@ if ($tipo_relatorio === 'dispensas') {
         // Filtros dinâmicos
         const filtrosDisponiveis = {
             dispensas: [
+                { id: 'medicamento_id', label: 'Medicamento', html: `
+                    <select id="medicamento_id" name="medicamento_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($medicamentos as $med): ?>
+                            <option value="<?= $med['id'] ?>" <?= $med['id'] == $medicamento_id ? 'selected' : '' ?>><?= htmlspecialchars($med['nome']) ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                ` },
+                { id: 'operador_id', label: 'Usuário', html: `
+                    <select id="operador_id" name="operador_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($operadores as $op): ?>
+                            <option value="<?= $op['id'] ?>" <?= $op['id'] == $operador_id ? 'selected' : '' ?>><?= htmlspecialchars($op['nome']) ?> (<?= ucfirst($op['perfil']) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
+                ` },
+                { id: 'paciente_id', label: 'Paciente', html: `
+                    <select id="paciente_id" name="paciente_id">
+                        <option value="">Todos</option>
+                        <?php foreach ($pacientes as $pac): ?>
+                            <option value="<?= $pac['id'] ?>" <?= $pac['id'] == $paciente_id ? 'selected' : '' ?>><?= htmlspecialchars($pac['nome']) ?> (<?= formatarCPF($pac['cpf']) ?>)</option>
+                        <?php endforeach; ?>
+                    </select>
+                ` }
+            ],
+            extornos: [
                 { id: 'medicamento_id', label: 'Medicamento', html: `
                     <select id="medicamento_id" name="medicamento_id">
                         <option value="">Todos</option>

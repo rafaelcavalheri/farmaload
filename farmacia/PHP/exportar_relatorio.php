@@ -62,6 +62,38 @@ if ($tipo_relatorio === 'dispensas') {
     }
 
     $sql .= " ORDER BY t.data DESC";
+} elseif ($tipo_relatorio === 'extornos') {
+    // Construção da query de extornos (transações com quantidade negativa)
+    $sql = "SELECT t.*, m.nome as medicamento_nome, u.nome as operador_nome, 
+                   p.nome as paciente_nome, p.cpf as paciente_cpf, p.telefone as paciente_telefone
+            FROM transacoes t
+            JOIN medicamentos m ON t.medicamento_id = m.id
+            JOIN usuarios u ON t.usuario_id = u.id
+            JOIN pacientes p ON t.paciente_id = p.id
+            WHERE t.quantidade < 0 
+            AND DATE(t.data) BETWEEN :data_inicio AND :data_fim";
+
+    $params = [
+        ':data_inicio' => $data_inicio->format('Y-m-d'),
+        ':data_fim' => $data_fim->format('Y-m-d')
+    ];
+
+    if (!empty($medicamento_id)) {
+        $sql .= " AND t.medicamento_id = :medicamento_id";
+        $params[':medicamento_id'] = $medicamento_id;
+    }
+
+    if (!empty($operador_id)) {
+        $sql .= " AND t.usuario_id = :operador_id";
+        $params[':operador_id'] = $operador_id;
+    }
+
+    if (!empty($paciente_id)) {
+        $sql .= " AND t.paciente_id = :paciente_id";
+        $params[':paciente_id'] = $paciente_id;
+    }
+
+    $sql .= " ORDER BY t.data DESC";
 } elseif ($tipo_relatorio === 'importacoes') {
     // Relatório de importações
     $sql = "SELECT li.*, u.nome as usuario_nome
@@ -168,6 +200,45 @@ if ($tipo_relatorio === 'dispensas') {
         $sheet->setCellValue('F' . $row, $dispensa['paciente_cpf']);
         $sheet->setCellValue('G' . $row, $dispensa['paciente_telefone']);
         $sheet->setCellValue('H' . $row, $dispensa['observacoes'] ?? '');
+        $row++;
+    }
+
+    // Ajustar largura das colunas
+    foreach (range('A', 'H') as $col) {
+        $sheet->getColumnDimension($col)->setAutoSize(true);
+    }
+} elseif ($tipo_relatorio === 'extornos') {
+    // Definir cabeçalhos para extornos
+    $sheet->setCellValue('A1', 'Data');
+    $sheet->setCellValue('B1', 'Medicamento');
+    $sheet->setCellValue('C1', 'Quantidade Extornada');
+    $sheet->setCellValue('D1', 'Operador');
+    $sheet->setCellValue('E1', 'Paciente');
+    $sheet->setCellValue('F1', 'CPF');
+    $sheet->setCellValue('G1', 'Telefone');
+    $sheet->setCellValue('H1', 'Observações');
+
+    // Estilo para o cabeçalho
+    $headerStyle = [
+        'font' => ['bold' => true],
+        'fill' => [
+            'fillType' => \PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID,
+            'startColor' => ['rgb' => 'E9ECEF']
+        ]
+    ];
+    $sheet->getStyle('A1:H1')->applyFromArray($headerStyle);
+
+    // Preencher dados
+    $row = 2;
+    foreach ($resultados as $extorno) {
+        $sheet->setCellValue('A' . $row, date('d/m/Y H:i', strtotime($extorno['data'])));
+        $sheet->setCellValue('B' . $row, $extorno['medicamento_nome']);
+        $sheet->setCellValue('C' . $row, abs($extorno['quantidade'])); // Usar valor absoluto
+        $sheet->setCellValue('D' . $row, $extorno['operador_nome']);
+        $sheet->setCellValue('E' . $row, $extorno['paciente_nome']);
+        $sheet->setCellValue('F' . $row, $extorno['paciente_cpf']);
+        $sheet->setCellValue('G' . $row, $extorno['paciente_telefone']);
+        $sheet->setCellValue('H' . $row, $extorno['observacoes'] ?? '');
         $row++;
     }
 

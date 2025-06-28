@@ -43,10 +43,34 @@ Para documentação técnica detalhada, consulte a pasta **[README/](README/)** 
 - **Interface Aprimorada:** Retorno de informações detalhadas sobre lotes afetados
 - **Compatibilidade:** Mantida compatibilidade com sistema existente
 
+### Nova Funcionalidade: Relatório de Extornos de Medicamentos
+
+**Implementação Completa do Sistema de Relatórios de Extornos:**
+- **Novo Tipo de Relatório:** Adicionado "Extornos de Medicamentos" no sistema de relatórios
+- **Consulta Especializada:** Query específica para buscar transações com quantidade negativa (extornos)
+- **Interface Dedicada:** Tabela específica para extornos com diferenciação visual das quantidades
+- **Filtros Completos:** Mesmos filtros das dispensas (medicamento, operador, paciente, período)
+
+**Características do Relatório:**
+- **Diferenciação Visual:** Quantidades extornadas aparecem em vermelho e negrito
+- **Dados Completos:** Data/hora, medicamento, quantidade, operador, paciente, CPF, telefone, observações
+- **Filtros Inteligentes:** Campos de data aparecem apenas para dispensas e extornos
+- **Exportação Excel:** Suporte completo para exportar relatório de extornos
+- **Impressão:** Botão de impressão funcional para extornos
+
+**Funcionalidades de Filtro:**
+- **Por Medicamento:** Filtro específico por medicamento extornado
+- **Por Operador:** Filtro por usuário que realizou o extorno
+- **Por Paciente:** Filtro por paciente que teve medicamento extornado
+- **Por Período:** Filtro por data de início e fim do extorno
+- **Filtros Dinâmicos:** Sistema de adição/remoção de filtros em tempo real
+
 **Arquivos Modificados:**
 - `PHP/funcoes_estoque.php` - Novas funções de extorno implementadas
 - `PHP/ajax_extornar.php` - Atualizado para usar novas funções
 - `PHP/ajax_extornar_transacao.php` - Implementado extorno direto de transações
+- `PHP/relatorios.php` - Adicionada lógica de consulta, interface e filtros para extornos
+- `PHP/exportar_relatorio.php` - Adicionado suporte para exportação de extornos
 
 **Impacto:**
 - Extorno de medicamentos agora atualiza corretamente estoque e lotes
@@ -54,6 +78,9 @@ Para documentação técnica detalhada, consulte a pasta **[README/](README/)** 
 - Sistema mais confiável e preciso no controle de estoque
 - Eliminação de inconsistências entre lotes e estoque total
 - Melhor auditoria e controle de transações
+- Novo relatório de extornos totalmente funcional e integrado
+- Interface profissional para análise de extornos
+- Exportação completa de dados para auditoria externa
 
 ---
 
