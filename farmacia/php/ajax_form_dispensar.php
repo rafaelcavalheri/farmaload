@@ -587,16 +587,7 @@ $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button type="button" class="close-modal" onclick="fecharModalObservacoes()">&times;</button>
         </div>
         
-        <!-- Dica de uso -->
-        <div class="observacoes-tip">
-            <i class="fas fa-info-circle"></i>
-            <strong>Dica:</strong> Clique em qualquer parte do card para selecionar/deselecionar a observação
-        </div>
-        
-        <!-- Contador de observações selecionadas -->
-        <div class="observacoes-counter">
-            <span id="observacoesSelecionadas">0</span> de <?= count($observacoes_padrao) ?> observações selecionadas
-        </div>
+
         
         <div class="observacoes-grid">
             <?php foreach ($observacoes_padrao as $obs): ?>
