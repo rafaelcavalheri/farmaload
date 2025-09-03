@@ -1,0 +1,193 @@
+<?php
+include 'config.php';
+include 'funcoes_estoque.php';
+header('Content-Type: application/json');
+ob_start(); // Prevenir output indesejado
+
+try {
+    verificarAutenticacao(['admin', 'operador']);
+
+    if (!isset($_SESSION['usuario']) || !isset($_SESSION['usuario']['id'])) {
+        throw new Exception('Sessão do usuário inválida. Por favor, faça login novamente.');
+    }
+
+    $usuario_id = (int)$_SESSION['usuario']['id'];
+
+    // Verificar parâmetros necessários
+    if (empty($_POST['medicamento_id']) || !is_numeric($_POST['medicamento_id'])) {
+        throw new Exception('ID do medicamento inválido');
+    }
+    if (empty($_POST['paciente_id']) || !is_numeric($_POST['paciente_id'])) {
+        throw new Exception('ID do paciente inválido');
+    }
+    if (!isset($_POST['quantidade']) || !is_numeric($_POST['quantidade']) || $_POST['quantidade'] <= 0) {
+        throw new Exception('Quantidade inválida');
+    }
+
+    $pm_id = (int)$_POST['medicamento_id']; // Este é na verdade o ID da relação paciente_medicamentos
+    $paciente_id = (int)$_POST['paciente_id'];
+    $quantidade = (int)$_POST['quantidade'];
+    $observacao = trim($_POST['observacao'] ?? '');
+
+    // Debug log
+    error_log("Nova observação recebida: " . $observacao);
+
+    $pdo->beginTransaction();
+
+    try {
+        // Verificar se a observação foi modificada e atualizar se necessário
+        $stmt = $pdo->prepare("SELECT observacao FROM pacientes WHERE id = ?");
+        $stmt->execute([$paciente_id]);
+        $paciente = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        // Debug log
+        error_log("Observação atual no banco: " . print_r($paciente['observacao'], true));
+
+        if ($paciente) {
+            $observacao_atual = trim($paciente['observacao'] ?? '');
+            // Debug log
+            error_log("Observação atual após trim: " . $observacao_atual);
+            error_log("Comparação: " . ($observacao_atual !== $observacao ? "diferente" : "igual"));
+
+            // Sempre atualizar a observação se for diferente
+            if ($observacao_atual !== $observacao) {
+                $stmt = $pdo->prepare("UPDATE pacientes SET observacao = ? WHERE id = ?");
+                $stmt->execute([$observacao, $paciente_id]);
+                // Debug log
+                error_log("Observação atualizada no banco para: " . $observacao);
+            }
+        }
+
+        // Verificar se o medicamento está vinculado ao paciente
+        $stmt = $pdo->prepare("
+            SELECT 
+                pm.id,
+                pm.medicamento_id,
+                pm.quantidade,
+                COALESCE(pm.quantidade_solicitada, pm.quantidade) as quantidade_solicitada,
+                COALESCE((
+                    SELECT SUM(quantidade) 
+                    FROM transacoes 
+                    WHERE medicamento_id = pm.medicamento_id 
+                    AND paciente_id = pm.paciente_id
+                ), 0) as quantidade_entregue
+            FROM paciente_medicamentos pm
+            JOIN medicamentos m ON m.id = pm.medicamento_id
+            WHERE pm.id = ? AND pm.paciente_id = ?
+        ");
+        $stmt->execute([$pm_id, $paciente_id]);
+        $medicamento = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$medicamento) {
+            throw new Exception("Medicamento não encontrado ou não vinculado ao paciente.");
+        }
+
+        // Verificar se foi dispensado há menos de 20 dias para notificação
+        $stmt = $pdo->prepare("
+            SELECT 
+                MAX(data) as ultima_dispensacao,
+                CASE 
+                    WHEN MAX(data) IS NOT NULL THEN DATEDIFF(NOW(), MAX(data))
+                    ELSE NULL
+                END as dias_desde_ultima
+            FROM transacoes 
+            WHERE medicamento_id = ? AND paciente_id = ?
+        ");
+        $stmt->execute([$medicamento['medicamento_id'], $paciente_id]);
+        $ultima_dispensacao = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        $aviso_dispensacao_recente = null;
+        if ($ultima_dispensacao['ultima_dispensacao'] && $ultima_dispensacao['dias_desde_ultima'] !== NULL && $ultima_dispensacao['dias_desde_ultima'] < 20) {
+            $aviso_dispensacao_recente = "Este medicamento foi dispensado há {$ultima_dispensacao['dias_desde_ultima']} dias.";
+            error_log("AVISO GERADO: " . $aviso_dispensacao_recente);
+        }
+        error_log("AVISO FINAL: " . ($aviso_dispensacao_recente ?? 'null'));
+        
+
+
+        // Calcular estoque atual usando a função correta
+        $estoque_atual = calcularEstoqueAtual($pdo, $medicamento['medicamento_id']);
+
+        // Calcular quantidade disponível
+        // LÓGICA FINAL: quantidade_disponivel = quantidade_solicitada
+        $quantidade_disponivel = (int)$medicamento['quantidade_solicitada'];
+
+        // Verificar se há quantidade suficiente
+        if ($quantidade > $estoque_atual) {
+            throw new Exception("Quantidade solicitada maior que o estoque disponível.");
+        }
+        if ($quantidade > $quantidade_disponivel) {
+            throw new Exception("Quantidade solicitada maior que a disponível para dispensação.");
+        }
+
+        // NOVA FUNCIONALIDADE: Dispensar dos lotes (FIFO)
+        $lotes_utilizados = dispensarDosLotes($pdo, $medicamento['medicamento_id'], $quantidade);
+        
+        // Registrar movimentação de saída
+        $observacao_movimentacao = "Dispensação para paciente ID: $paciente_id";
+        if (!empty($observacao)) {
+            $observacao_movimentacao .= " - " . $observacao;
+        }
+        registrarMovimentacaoSaida($pdo, $medicamento['medicamento_id'], $quantidade, $observacao_movimentacao);
+
+        // Inserir na tabela transações
+        $stmt = $pdo->prepare("
+            INSERT INTO transacoes (paciente_id, medicamento_id, quantidade, usuario_id, data, observacoes)
+            VALUES (?, ?, ?, ?, NOW(), ?)
+        ");
+        $stmt->execute([
+            $paciente_id,
+            $medicamento['medicamento_id'],
+            $quantidade,
+            $usuario_id,
+            $observacao
+        ]);
+
+        $pdo->commit();
+        
+        // Preparar resposta com informações dos lotes utilizados
+        $lotes_info = [];
+        foreach ($lotes_utilizados as $lote) {
+            $lotes_info[] = "Lote {$lote['lote_nome']}: {$lote['quantidade_utilizada']} unidades";
+        }
+        
+        $resposta = [
+            'success' => true,
+            'message' => "Medicamento dispensado com sucesso!",
+            'lotes_utilizados' => $lotes_info,
+            'aviso' => $aviso_dispensacao_recente
+        ];
+        
+        error_log("RESPOSTA FINAL: " . json_encode($resposta));
+
+    } catch (Exception $e) {
+        if ($pdo->inTransaction()) {
+            $pdo->rollBack();
+        }
+        $resposta = [
+            'success' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+
+    ob_end_clean();
+    echo json_encode($resposta);
+    exit;
+} catch (PDOException $e) {
+    if ($pdo->inTransaction()) $pdo->rollBack();
+    $resposta = [
+        'success' => false,
+        'message' => 'Erro no banco de dados: ' . $e->getMessage()
+    ];
+} catch (Exception $e) {
+    if ($pdo->inTransaction()) $pdo->rollBack();
+    $resposta = [
+        'success' => false,
+        'message' => $e->getMessage()
+    ];
+}
+
+ob_end_clean();
+echo json_encode($resposta);
+exit;
+?>

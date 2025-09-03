@@ -1,0 +1,37 @@
+/error.log
+*log
+
+# Arquivos de log
+*.log
+error.log
+debug.log
+import_debug.log
+debug_logs/
+logs/
+
+# Arquivos do sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de IDE/Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Arquivos temporários
+*.tmp
+*.temp
+
+# Backups e arquivos temporários dos scripts de atualização
+backup_farmacia_*/
+temp_farmacia_*/
+backup_*/
+temp_*/
+
+# Dependências do Composer
+farmacia/php/vendor/
+vendor/
+
+#Arquivos sensiveis
+.env

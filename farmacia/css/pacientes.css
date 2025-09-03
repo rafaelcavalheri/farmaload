@@ -1,0 +1,720 @@
+/* ========================================
+   ESTILOS ESPECÍFICOS - PÁGINA PACIENTES
+   ======================================== */
+
+/* Header Actions - Layout dos botões e busca */
+.header-actions {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.search-container {
+    flex: 1;
+    min-width: 300px;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+    min-width: 140px;
+    justify-content: center;
+    font-size: 0.95rem;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-primary i {
+    font-size: 1rem;
+}
+
+.btn-primary span {
+    white-space: nowrap;
+    display: inline-block;
+}
+
+/* ========================================
+   PAGINAÇÃO
+   ======================================== */
+.paginacao-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+}
+
+.paginacao-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.paginacao-controles {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.paginacao-limit {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.paginacao-limit select {
+    padding: 6px 10px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    background-color: white;
+    font-size: 14px;
+}
+
+.paginacao-numeros {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    flex-wrap: wrap;
+}
+
+.paginacao-numeros a,
+.paginacao-numeros span {
+    padding: 8px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #495057;
+    background-color: white;
+    transition: all 0.2s;
+    min-width: 40px;
+    text-align: center;
+    display: inline-block;
+}
+
+.paginacao-numeros a:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+}
+
+.paginacao-numeros .pagina-atual {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.paginacao-numeros .pagina-atual:hover {
+    background-color: var(--primary-dark);
+}
+
+.paginacao-numeros .desabilitado {
+    color: #6c757d;
+    background-color: #f8f9fa;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.paginacao-numeros .desabilitado:hover {
+    background-color: #f8f9fa;
+}
+
+/* ========================================
+   FILTRO ALFABÉTICO
+   ======================================== */
+.filtro-alfabetico {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.filtro-alfabetico a,
+.filtro-alfabetico span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #495057;
+    background-color: white;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.filtro-alfabetico a:hover {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.filtro-alfabetico .letra-ativa {
+    background-color: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
+.filtro-alfabetico .letra-ativa:hover {
+    background-color: var(--primary-dark);
+}
+
+.filtro-alfabetico .todas {
+    width: auto;
+    padding: 0 12px;
+    font-size: 13px;
+}
+
+
+
+.actions {
+    display: flex;
+    gap: 4px;
+    min-width: 160px;
+    width: 160px;
+}
+
+td.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    vertical-align: middle !important;
+}
+
+td.actions .btn-secondary {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+td.actions .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #6c757d;
+    color: #fff;
+}
+
+td.actions .btn-secondary:disabled:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+td.actions .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #6c757d;
+    color: #fff;
+}
+
+td.actions .btn-secondary:disabled:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    width: auto;
+    height: auto;
+}
+
+.action-buttons .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25em;
+    margin: 0;
+    padding: 8px 0;
+    border: none;
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+.action-buttons .btn-secondary i {
+    font-size: 1em;
+    line-height: 1;
+}
+
+/* ========================================
+   TABELA - ALTURA DAS LINHAS
+   ======================================== */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+table th,
+table td {
+    padding: 12px 8px;
+    vertical-align: middle;
+    border-bottom: 1px solid #dee2e6;
+}
+
+table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #495057;
+}
+
+/* Adicionar transição suave para todas as linhas */
+table tbody tr {
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+/* Sobrescrever o efeito zebra do CSS global para garantir hover consistente */
+table tbody tr:nth-child(odd),
+table tbody tr:nth-child(even) {
+    background-color: transparent;
+}
+
+table tbody tr:hover {
+    background-color: #e3f2fd !important;
+}
+
+/* Efeito especial para linhas inativas no hover */
+table tbody tr.inativo:hover {
+    background-color: #fff3cd !important;
+}
+
+/* Definir larguras máximas para colunas específicas */
+th:nth-child(1), td:nth-child(1) { max-width: 170px; } /* Nome */
+th:nth-child(2), td:nth-child(2) { width: 95px; } /* CPF */
+th:nth-child(3), td:nth-child(3) { width: 55px; } /* SIM */
+th:nth-child(4), td:nth-child(4) { width: 55px; } /* Idade */
+th:nth-child(5), td:nth-child(5) { width: 85px; } /* Nascimento */
+th:nth-child(6), td:nth-child(6) { width: 85px; } /* Medicamentos */
+th:nth-child(7), td:nth-child(7) { width: 90px; padding-right: 16px; } /* Última Coleta */
+th:nth-child(8), td:nth-child(8) { width: 60px; text-align: center; } /* Status */
+th:nth-child(9), td:nth-child(9) { width: 160px; } /* Ações */
+
+/* Estilo para status ativo/inativo */
+.status-ativo {
+    color: #28a745;
+    font-weight: 600;
+    text-align: center;
+}
+
+.status-inativo {
+    color: #dc3545;
+    font-weight: 600;
+    text-align: center;
+}
+
+/* Cabeçalhos ordenáveis */
+th.sortable {
+    cursor: pointer;
+    position: relative;
+    padding-right: 20px;
+}
+
+th.sortable:after {
+    content: '↕';
+    position: absolute;
+    right: 5px;
+    color: #999;
+}
+
+th.sortable.asc:after {
+    content: '↑';
+    color: #333;
+}
+
+th.sortable.desc:after {
+    content: '↓';
+    color: #333;
+}
+
+/* ========================================
+   MODAL DE DISPENSAÇÃO
+   ======================================== */
+.modal-dispensar {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content-dispensar {
+    background-color: #fff;
+    margin: 5% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 800px;
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-dispensar {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    color: var(--secondary-color);
+}
+
+.close-dispensar:hover {
+    color: var(--danger-color);
+}
+
+.medicamento-dispensar {
+    border: 1px solid var(--border-color);
+    padding: 15px;
+    margin-bottom: 15px;
+    border-radius: 4px;
+}
+
+.medicamento-dispensar h4 {
+    margin: 0 0 10px 0;
+    color: var(--primary-color);
+}
+
+.quantidade-dispensar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.quantidade-dispensar input {
+    width: 100px;
+}
+
+.btn-dispensar {
+    background-color: var(--success-color);
+    color: white;
+    padding: 5px 15px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn-dispensar:hover {
+    background-color: #219a52;
+}
+
+.btn-dispensar:disabled {
+    background-color: var(--secondary-color);
+    cursor: not-allowed;
+}
+
+.medicamento-info {
+    display: none;
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+}
+
+.medicamento-info ul {
+    margin: 0;
+    padding: 0;
+}
+
+.medicamento-info li {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.medicamento-info li:last-child {
+    border-bottom: none;
+}
+
+.btn-link {
+    background: none;
+    border: none;
+    color: #0d6efd;
+    cursor: pointer;
+    padding: 0;
+    font: inherit;
+    text-decoration: underline;
+}
+
+.btn-link:hover {
+    color: #0a58ca;
+}
+
+.status-renovacao {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.status-renovacao .badge {
+    padding: 5px 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+}
+
+.status-renovacao .badge.renovado {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-renovacao .data {
+    font-weight: normal;
+}
+
+/* ========================================
+   MODAL DE OBSERVAÇÕES
+   ======================================== */
+.observacao-container {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+}
+
+.observacao-textarea {
+    flex: 1;
+}
+
+.btn-add-observacao {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-add-observacao:hover {
+    background-color: #218838;
+}
+
+.btn-clear-observacao {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+}
+
+.btn-clear-observacao:hover {
+    background-color: #c82333;
+}
+
+.modal-observacoes {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+}
+
+.modal-observacoes-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 25px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 600px;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-observacoes-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 15px;
+}
+
+.modal-observacoes-header h3 {
+    margin: 0;
+    color: #495057;
+}
+
+.close-modal {
+    color: #aaa;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    background: none;
+    border: none;
+    padding: 0;
+}
+
+.close-modal:hover {
+    color: #000;
+}
+
+.observacoes-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 12px;
+    margin-bottom: 20px;
+}
+
+.observacao-checkbox {
+    display: flex;
+    align-items: center;
+    background-color: #fff;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 6px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.observacao-checkbox:hover {
+    border-color: #4a90e2;
+    background-color: #f8f9fa;
+}
+
+.observacao-checkbox input[type="checkbox"] {
+    margin-right: 12px;
+    transform: scale(1.1);
+}
+
+.observacao-checkbox label {
+    cursor: pointer;
+    flex-grow: 1;
+    color: #495057;
+    font-size: 0.9em;
+    line-height: 1.4;
+}
+
+.modal-observacoes-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    border-top: 1px solid #dee2e6;
+    padding-top: 15px;
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+@media (max-width: 768px) {
+    .header-actions {
+        flex-direction: column;
+    }
+    
+    .search-container {
+        width: 100%;
+    }
+    
+    .actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+    
+    .paginacao-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .paginacao-info {
+        justify-content: center;
+    }
+    
+    .paginacao-controles {
+        justify-content: center;
+    }
+    
+    .paginacao-numeros {
+        justify-content: center;
+    }
+    
+    /* Ajustar tabela para mobile */
+    table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    table th,
+    table td {
+        padding: 10px 6px;
+    }
+} 
+
+/* Hover destacado para botões de ação - Especificidade aumentada */
+.btn-primary:hover,
+.action-buttons .btn-secondary:hover,
+.btn-dispensar:hover,
+.btn-link:hover,
+.btn-add-observacao:hover,
+.btn-clear-observacao:hover {
+  box-shadow: 0 4px 16px rgba(44, 131, 195, 0.15), 0 1.5px 4px rgba(44, 131, 195, 0.10) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  text-decoration: none !important;
+  transition: all 0.18s cubic-bezier(.4,1.3,.6,1) !important;
+}
+
+/* Não aplicar hover destacado em botões desabilitados */
+.btn-primary:disabled:hover,
+.action-buttons .btn-secondary:disabled:hover,
+.btn-dispensar:disabled:hover,
+.btn-link:disabled:hover,
+.btn-add-observacao:disabled:hover,
+.btn-clear-observacao:disabled:hover {
+  box-shadow: none;
+  transform: none;
+  background-color: #6c757d;
+  color: #fff;
+  cursor: not-allowed;
+} 

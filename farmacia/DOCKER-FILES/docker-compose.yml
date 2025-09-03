@@ -1,0 +1,123 @@
+services:
+
+  web:
+
+    build:
+      context: ..
+      dockerfile: DOCKER-FILES/dockerfile
+      # Desabilitar BuildKit para compatibilidade com Windows
+      args:
+        BUILDKIT_INLINE_CACHE: 0
+      # Forçar uso do builder legado
+      no_cache: false
+
+    image: farmacia-web:latest
+
+    container_name: farmacia-web
+
+    ports:
+
+      - "${WEB_PORT}:80"
+
+    volumes:
+
+      - ../php:/var/www/html
+      - ../css:/var/www/html/css
+      - ../LOG:/var/www/html/logs
+      - ../images:/var/www/html/images
+      - php-sessions:/var/lib/php/sessions
+      - apache-logs:/var/log/apache2
+      - vendor-data:/var/www/html/vendor
+
+    environment:
+
+      - DB_HOST=${DB_HOST}
+
+      - DB_NAME=${DB_NAME}
+
+      - DB_USER=${DB_USER}
+
+      - DB_PASSWORD=${DB_PASSWORD}
+
+      - TZ=${TZ}
+
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+
+      - ENVIRONMENT=${ENVIRONMENT}
+
+    depends_on:
+
+      db:
+
+        condition: service_healthy
+
+    networks:
+
+      - farmacia-network
+
+    restart: unless-stopped
+
+
+  db:
+
+    image: mysql:8.0
+
+    container_name: farmacia-db
+
+    volumes:
+
+      - db_data:/var/lib/mysql
+
+      - ../DOCKER-FILES/init.sql:/docker-entrypoint-initdb.d/init.sql
+
+    environment:
+
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+
+      - MYSQL_USER=${MYSQL_USER}
+
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+
+      - TZ=${TZ}
+
+      - LANG=${LANG}
+
+    healthcheck:
+
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD}"]
+
+      interval: 10s
+
+      timeout: 20s
+
+      retries: 10
+
+    networks:
+
+      - farmacia-network
+
+    restart: unless-stopped
+
+
+volumes:
+
+  db_data:
+
+    driver: local
+
+  php-sessions:
+
+  apache-logs:
+
+  vendor-data:
+
+
+networks:
+
+  farmacia-network:
+
+    driver: bridge
+
+    attachable: true

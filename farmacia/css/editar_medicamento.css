@@ -1,0 +1,370 @@
+/* Layout principal da página */
+.edit-card {
+    width: 1200px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+    overflow: visible;
+    transition: border 0.3s ease;
+}
+
+/* Removido efeito de hover do div geral - mantido apenas nos campos editáveis e lotes */
+
+.edit-card h2 {
+    background: white;
+    color: #2c83c3;
+    margin: 0;
+    padding: 20px 30px;
+    font-size: 1.5em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Seção de informações básicas */
+.medicamento-info {
+    padding: 30px;
+    border-bottom: 2px solid #f0f0f0;
+    overflow: visible;
+    width: 100%;
+}
+
+.medicamento-info h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.info-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: end;
+    width: 100%;
+}
+
+.info-grid .field-group:first-child {
+    flex: 2;
+    min-width: 300px;
+}
+
+.info-grid .field-group:not(:first-child) {
+    flex: 1;
+    min-width: 200px;
+}
+
+/* Seção de lotes */
+.lotes-section {
+    padding: 30px;
+    background: #fafafa;
+    overflow: visible;
+    width: 100%;
+}
+
+.lotes-section h3 {
+    color: #333;
+    margin-bottom: 25px;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e0e0e0;
+}
+
+.lotes-container {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    width: 100%;
+    overflow: visible;
+}
+
+.lote-item {
+    background: white;
+    border: 2px solid #e8e8e8;
+    border-radius: 10px;
+    padding: 20px;
+    transition: all 0.3s ease;
+    position: relative;
+    width: 100%;
+    overflow: visible;
+    box-sizing: border-box;
+}
+
+.lote-item:hover {
+    border-color: #2c83c3;
+    box-shadow: 0 4px 15px rgba(44, 131, 195, 0.1);
+    transform: translateY(-2px);
+}
+
+.lote-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.lote-numero {
+    font-weight: bold;
+    color: #2c83c3;
+    font-size: 1.1em;
+}
+
+.lote-item .lote-fields {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 15px !important;
+    align-items: end !important;
+    width: 100% !important;
+}
+
+.lote-item .field-group:nth-child(1) {
+    flex: 1;
+    min-width: 150px;
+}
+
+.lote-item .field-group:nth-child(2) {
+    flex: 1;
+    min-width: 120px;
+}
+
+.lote-item .field-group:nth-child(3) {
+    flex: 1;
+    min-width: 180px;
+}
+
+.lote-item .field-group:nth-child(4) {
+    flex: 0 0 auto;
+    min-width: auto;
+}
+
+.lote-item .field-group,
+.medicamento-info .field-group {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    margin-bottom: 0 !important;
+}
+
+.lote-item .field-group label,
+.medicamento-info .field-group label {
+    font-weight: 600 !important;
+    color: #555 !important;
+    margin-bottom: 5px !important;
+    font-size: 0.9em !important;
+    display: block !important;
+}
+
+.lote-item .field-group input,
+.medicamento-info .field-group input,
+.medicamento-info .field-group select,
+.medicamento-info .field-group textarea {
+    padding: 8px 10px !important;
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 6px !important;
+    font-size: 0.9em !important;
+    transition: border-color 0.3s ease !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    background: white !important;
+}
+
+.lote-item .field-group input:focus,
+.medicamento-info .field-group input:focus,
+.medicamento-info .field-group select:focus,
+.medicamento-info .field-group textarea:focus {
+    outline: none !important;
+    border-color: #2c83c3 !important;
+    box-shadow: 0 0 0 3px rgba(44, 131, 195, 0.1) !important;
+    background: white !important;
+}
+
+/* Botões */
+.btn-save-lote {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    width: 150px;
+    height: 32px;
+    margin-left: auto;
+}
+
+.btn-save-lote:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+/* Seção de resumo */
+.resumo-section {
+    padding: 25px 30px;
+    background: #f1f3f5;
+    border-top: 2px solid #e0e0e0;
+}
+
+.resumo-grid {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 20px;
+    align-items: center;
+}
+
+.estoque-total {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+}
+
+.estoque-valor {
+    color: #555;
+    padding: 8px 16px;
+    font-weight: bold;
+    font-size: 1.1em;
+}
+
+.form-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-secondary:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+/* Responsividade */
+@media (max-width: 1024px) {
+    .lote-item .lote-fields {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .lote-item .field-group:nth-child(3),
+    .lote-item .field-group:nth-child(4) {
+        grid-column: 1 / -1 !important;
+        justify-self: stretch !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .info-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .lote-item .lote-fields {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    
+    .resumo-grid {
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+    }
+}
+
+/* Estilos para o botão + lote */
+.add-lote-section {
+    margin-top: 20px;
+    text-align: center;
+    padding: 20px 0;
+}
+
+.btn-add-lote {
+    background: #6c757d;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    font-size: 0.8em;
+    white-space: nowrap;
+    width: 150px;
+    height: 32px;
+}
+
+.btn-add-lote:hover {
+    background: #5a6268;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+/* Estilos para o botão de remover lote */
+.btn-remove-lote {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 6px 10px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.btn-remove-lote:hover {
+    background: #c82333;
+    transform: scale(1.05);
+}
+
+/* Estilos para novos lotes */
+.novo-lote {
+    border: 2px dashed #28a745;
+    background: rgba(40, 167, 69, 0.05);
+}
+
+.novo-lote .lote-header {
+    background: rgba(40, 167, 69, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.novo-lote .lote-numero {
+    color: #28a745;
+    font-weight: 600;
+}

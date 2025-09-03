@@ -1,0 +1,331 @@
+/* Estilos específicos da página editar_paciente.php extraídos do bloco <style> */
+
+/* Estilos para fieldsets - adicionar espaçamento interno */
+fieldset {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 25px;
+    background-color: #fafafa;
+    transition: border-color 0.3s ease;
+}
+
+/* Efeito de borda azul ao passar o mouse apenas nas seções de dados pessoais, contato e pessoas autorizadas */
+fieldset:nth-of-type(1):hover,
+fieldset:nth-of-type(2):hover,
+fieldset:nth-of-type(3):hover {
+    border-color: #007bff;
+}
+
+fieldset legend {
+    font-weight: 600;
+    color: #333;
+    padding: 0 10px;
+    margin-bottom: 15px;
+}
+
+/* Espaçamento adicional para labels e inputs dentro dos fieldsets */
+fieldset label {
+    display: block;
+    margin-bottom: 8px;
+    margin-top: 15px;
+    font-weight: 500;
+    color: #555;
+}
+
+fieldset label:first-of-type {
+    margin-top: 0;
+}
+
+fieldset input,
+fieldset select,
+fieldset textarea {
+    width: 100%;
+    max-width: 100%;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 5px;
+    font-size: 14px;
+    background-color: #fff;
+}
+
+fieldset input:focus,
+fieldset select:focus,
+fieldset textarea:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+}
+.autorizado-group {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    background-color: #f9f9f9;
+    transition: border-color 0.3s ease;
+}
+
+/* Efeito de borda azul ao passar o mouse em cada pessoa autorizada */
+.autorizado-group:hover {
+    border-color: #007bff;
+}
+.autorizado-campos {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+.campo-grupo {
+    display: flex;
+    flex-direction: column;
+}
+.field-info {
+    margin-bottom: 15px;
+    color: #666;
+    font-style: italic;
+}
+@media (max-width: 768px) {
+    .autorizado-campos {
+        grid-template-columns: 1fr;
+    }
+}
+.validade-group {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+.renovado-check {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.renovado-check input[type="checkbox"] {
+    width: auto;
+}
+.renovado-check label {
+    margin: 0;
+    font-weight: normal;
+}
+.medico-group {
+    margin-bottom: 15px;
+}
+.medico-group select {
+    width: 100%;
+}
+@media (max-width: 768px) {
+    .autorizado-campos {
+        grid-template-columns: 1fr;
+    }
+}
+.renovacao-group {
+    display: flex;
+    gap: 20px;
+    align-items: flex-end;
+}
+.checkbox-group {
+    margin-bottom: 0;
+}
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+}
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+.medicamento-body {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 15px;
+}
+.medicamento-body .campo-form:last-child {
+    grid-column: 1 / -1;
+}
+.medicamento-body .renovacao-group {
+    grid-column: 1 / -1;
+}
+.medicamento-body .campo-form:nth-child(4) {
+    grid-column: 1 / -1;
+}
+.medicamento-item {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    position: relative;
+    transition: border-color 0.3s ease;
+}
+
+/* Efeito de borda azul ao passar o mouse em cada medicamento */
+.medicamento-item:hover {
+    border-color: #007bff;
+}
+.medicamento-item:not(:last-child)::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(to right, transparent, #ddd, transparent);
+}
+.medicamento-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #eee;
+}
+.medicamento-header h4 {
+    margin: 0;
+    color: #333;
+    font-size: 1.1em;
+}
+.btn-remove {
+    background: none;
+    border: none;
+    color: #dc3545;
+    cursor: pointer;
+    padding: 5px;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    margin-left: auto;
+    flex-shrink: 0;
+}
+.btn-remove:hover {
+    background-color: #fff5f5;
+}
+
+/* Estilos para o campo quantidade disponível */
+.quantidade-disponivel {
+    background-color: #f8f9fa !important;
+    color: #6c757d !important;
+    border: 1px solid #dee2e6 !important;
+    cursor: not-allowed !important;
+    transition: all 0.3s ease;
+}
+
+.quantidade-disponivel:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    border-color: #dee2e6 !important;
+}
+
+.quantidade-disponivel.baixa {
+    background-color: #fff3cd !important;
+    color: #856404 !important;
+    border-color: #ffeaa7 !important;
+}
+
+.quantidade-disponivel.zero {
+    background-color: #f8d7da !important;
+    color: #721c24 !important;
+    border-color: #f5c6cb !important;
+}
+
+.campo-form small {
+    display: block;
+    margin-top: 2px;
+    color: #6c757d;
+    font-size: 0.8em;
+}
+
+.quantidade-disponivel-container {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.quantidade-disponivel-container i {
+    font-size: 0.9em;
+}
+
+/* Corrigir alinhamento dos campos de input */
+.medicamento-body input,
+.medicamento-body select,
+.medicamento-body textarea {
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+.campo-form input,
+.campo-form select,
+.campo-form textarea {
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+/* Garantir que todos os campos de formulário estejam alinhados à esquerda */
+main.container input,
+main.container select,
+main.container textarea {
+    margin: 0 !important;
+    text-align: left !important;
+}
+
+/* Exceção para botões que devem permanecer centralizados */
+main.container .btn:not(#btn-add-medicamento):not(.btn-submit):not(.btn-remove),
+main.container button[type="submit"]:not(#btn-add-medicamento):not(.btn-submit):not(.btn-remove),
+main.container button[type="button"]:not(#btn-add-medicamento):not(.btn-submit):not(.btn-remove) {
+    margin: 0 auto !important;
+    text-align: center !important;
+}
+
+/* Estilos dos botões no estilo do btn-save-lote */
+#btn-add-medicamento,
+.btn-submit {
+    background: #6c757d !important;
+    color: white !important;
+    border: none !important;
+    padding: 8px 12px !important;
+    border-radius: 6px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    transition: all 0.3s ease !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 4px !important;
+    font-size: 0.8em !important;
+    white-space: nowrap !important;
+    width: 150px !important;
+    height: 32px !important;
+    margin-left: 0 !important;
+    text-align: center !important;
+    margin: 0 !important;
+}
+
+#btn-add-medicamento:hover,
+.btn-submit:hover {
+    background: #5a6268 !important;
+    transform: translateY(-2px) !important;
+}
+
+/* Containers para alinhamento dos botões */
+.button-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding-left: 15px;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 15px;
+    margin-bottom: 15px;
+    padding-right: 15px;
+}
+
+.form-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    padding-right: 15px;
+    border-top: 1px solid #e9ecef;
+}

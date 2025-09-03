@@ -1,0 +1,35 @@
+.form-padrao {
+    max-width: 600px;
+    margin: 0 auto;
+}
+.campo-form {
+    margin-bottom: 15px;
+}
+.campo-form label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+.campo-form input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+.campo-form input:focus {
+    border-color: #4a90e2;
+    outline: none;
+    box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
+}
+.erro {
+    color: #dc3545;
+    font-size: 0.9em;
+    margin-top: 5px;
+    display: block;
+}
+.acoes-form {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 20px;
+} 

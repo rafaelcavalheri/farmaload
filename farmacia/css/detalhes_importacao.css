@@ -1,0 +1,145 @@
+.detalhes-header {
+    background: var(--primary-color);
+    color: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin-bottom: 2rem;
+}
+
+.detalhes-header h1 {
+    margin: 0 0 1rem 0;
+    font-size: 1.8rem;
+}
+
+.detalhes-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.detalhes-info-item {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.8rem;
+    border-radius: 4px;
+}
+
+.detalhes-info-item strong {
+    display: block;
+    margin-bottom: 0.3rem;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.detalhes-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    margin-bottom: 1.5rem;
+}
+
+.detalhes-section h2 {
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.detalhes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+.detalhes-table th,
+.detalhes-table td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.detalhes-table th {
+    background: #f8f9fa;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* Sobrescrever o efeito zebra do CSS global para garantir hover consistente */
+.detalhes-table tr:nth-child(odd),
+.detalhes-table tr:nth-child(even) {
+    background-color: transparent;
+}
+
+.detalhes-table tr {
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+.detalhes-table tr:hover {
+    background-color: #e3f2fd !important;
+}
+
+.tipo-medicamento {
+    background-color: #e8f5e8;
+}
+
+.tipo-paciente {
+    background-color: #f3e5f5;
+}
+
+.status-badge {
+    padding: 0.3rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-sucesso {
+    background: #d4edda;
+    color: #155724;
+}
+
+.status-erro {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.no-results {
+    text-align: center;
+    padding: 2rem;
+    color: #666;
+    font-style: italic;
+}
+
+.print-button {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.print-button:hover {
+    background: var(--primary-dark);
+}
+
+@media print {
+    .print-button {
+        display: none;
+    }
+    
+    .detalhes-header {
+        background: #333 !important;
+        color: white !important;
+    }
+} 

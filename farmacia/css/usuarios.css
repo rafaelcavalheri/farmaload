@@ -1,0 +1,281 @@
+/* Estilos específicos da página usuarios.php */
+
+/* ========================================
+   MODAIS
+   ======================================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 15% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+}
+
+.close {
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--danger-color);
+}
+
+/* ========================================
+   BOTÕES
+   ======================================== */
+.btn-reset {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    margin-right: 5px;
+    display: inline-block;
+}
+
+.btn-reset:hover {
+    background-color: var(--primary-dark);
+}
+
+.btn-delete {
+    background-color: var(--danger-color);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color, #6c757d);
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 8px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    cursor: pointer;
+    text-decoration: none;
+    font-size: 0.95em;
+    transition: background 0.2s;
+}
+
+.btn-secondary:hover {
+    background-color: var(--primary-color, #007bff);
+    color: #fff;
+}
+
+/* ========================================
+   BOTÕES DE AÇÃO DA TABELA
+   ======================================== */
+td.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    vertical-align: middle !important;
+}
+
+td.actions .btn-secondary {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+td.actions .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #6c757d;
+    color: #fff;
+}
+
+td.actions .btn-secondary:disabled:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    width: auto;
+    height: auto;
+}
+
+.action-buttons .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25em;
+    margin: 0;
+    padding: 8px 0;
+    border: none;
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+.action-buttons .btn-secondary i {
+    font-size: 1em;
+    line-height: 1;
+}
+
+/* ========================================
+   BOTÕES DO CABEÇALHO
+   ======================================== */
+.page-header .actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+/* ========================================
+   TEXTOS E UTILITÁRIOS
+   ======================================== */
+.text-muted {
+    color: var(--secondary-color, #888);
+}
+
+/* ========================================
+   FORMULÁRIOS
+   ======================================== */
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+    margin-top: 20px;
+}
+
+/* ========================================
+   TABELA
+   ======================================== */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table th,
+table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+}
+
+tr.inativo {
+    background-color: #f8f9fa;
+    color: #6c757d;
+}
+
+/* ========================================
+   HOVER DA TABELA
+   ======================================== */
+/* Sobrescrever o efeito zebra do CSS global para garantir hover consistente */
+table tbody tr:nth-child(odd),
+table tbody tr:nth-child(even) {
+    background-color: transparent;
+}
+
+table tbody tr {
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+table tbody tr:hover {
+    background-color: #e3f2fd !important;
+}
+
+/* Efeito especial para linhas inativas no hover */
+table tbody tr.inativo:hover {
+    background-color: #fff3cd !important;
+}
+
+/* ========================================
+   RESPONSIVIDADE
+   ======================================== */
+@media (max-width: 768px) {
+    .modal-content {
+        margin: 10% auto;
+        width: 95%;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+    
+    .action-buttons {
+        gap: 8px;
+    }
+} 
+
+/* Hover destacado para botões de ação */
+.btn-primary:hover,
+.action-buttons .btn-secondary:hover,
+td.actions .btn-secondary:hover {
+  box-shadow: 0 4px 16px rgba(44, 131, 195, 0.15), 0 1.5px 4px rgba(44, 131, 195, 0.10) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  text-decoration: none !important;
+  transition: all 0.18s cubic-bezier(.4,1.3,.6,1) !important;
+  background-color: var(--light-gray) !important;
+  color: var(--text-color) !important;
+  outline: none !important;
+}
+
+/* Remover outline dos botões de ação */
+.action-buttons .btn-secondary:focus,
+td.actions .btn-secondary:focus {
+  outline: none !important;
+}
+
+/* Não aplicar hover destacado em botões desabilitados */
+.btn-primary:disabled:hover,
+.action-buttons .btn-secondary:disabled:hover,
+td.actions .btn-secondary:disabled:hover {
+  box-shadow: none !important;
+  transform: none !important;
+  background-color: #6c757d !important;
+  color: #fff !important;
+  cursor: not-allowed !important;
+} 

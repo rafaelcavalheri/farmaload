@@ -1,0 +1,541 @@
+/* Estilos específicos da página medicamentos.php */
+
+/* ========================================
+   MODAIS
+   ======================================== */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.4);
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-width: 500px;
+    border-radius: 5px;
+}
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+.close:hover,
+.close:hover {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+.template-download {
+    margin-top: 20px;
+    padding-top: 10px;
+    border-top: 1px solid #eee;
+}
+.modal ul {
+    margin-bottom: 20px;
+    padding-left: 20px;
+}
+.modal .form-group {
+    margin-bottom: 20px;
+}
+.ultima-importacao {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    font-size: 0.9em;
+    color: #666;
+}
+.ultima-importacao i {
+    color: #0d6efd;
+    margin-right: 5px;
+}
+.ultima-importacao strong {
+    color: #333;
+}
+.btn-inativo {
+    background-color: #dc3545 !important;
+    border-color: #dc3545 !important;
+    color: white !important;
+}
+.btn-inativo:hover {
+    background-color: #bb2d3b !important;
+    border-color: #b02a37 !important;
+}
+
+/* Estilos para container da tabela */
+.table-container {
+    width: 100%;
+    overflow-x: auto;
+    margin: 0;
+    border-radius: 8px;
+    background: #fff;
+}
+
+table {
+    width: 100%;
+    min-width: 1200px;
+    border-collapse: collapse;
+    background-color: white;
+}
+
+
+
+th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    min-height: 50px;
+    vertical-align: middle;
+    padding: 8px 4px;
+}
+
+/* Sobrescrever o efeito zebra do CSS global para garantir hover consistente */
+tr:nth-child(odd),
+tr:nth-child(even) {
+    background-color: transparent;
+}
+
+tr:hover {
+    background-color: #e3f2fd !important;
+}
+
+/* Larguras específicas para cada coluna */
+th:nth-child(1), td:nth-child(1) { /* Nome */
+    min-width: 350px;
+    max-width: 400px;
+}
+
+th:nth-child(2), td:nth-child(2) { /* Quantidade */
+    min-width: 80px;
+    max-width: 100px;
+    text-align: center;
+}
+
+th:nth-child(3), td:nth-child(3) { /* Total Recebido */
+    min-width: 120px;
+    max-width: 150px;
+    text-align: center;
+    min-height: 60px;
+    vertical-align: middle;
+}
+
+th:nth-child(4), td:nth-child(4) { /* Código */
+    min-width: 120px;
+    max-width: 150px;
+}
+
+th:nth-child(5), td:nth-child(5) { /* Lote/Qtd/Validade */
+    min-width: 200px;
+    max-width: 250px;
+}
+
+th:nth-child(6), td:nth-child(6) { /* Apresentação */
+    min-width: 150px;
+    max-width: 200px;
+}
+
+th:nth-child(7), td:nth-child(7) { /* Ações */
+    min-width: 120px;
+    max-width: 140px;
+    text-align: center;
+}
+
+th.sortable {
+    cursor: pointer;
+    position: relative;
+    padding-right: 20px;
+}
+th.sortable:after {
+    content: '↕';
+    position: absolute;
+    right: 5px;
+    color: #999;
+}
+th.sortable.asc:after {
+    content: '↑';
+    color: #333;
+}
+th.sortable.desc:after {
+    content: '↓';
+    color: #333;
+}
+
+/* Estilos para ordenação */
+.ordenacao {
+    color: #333;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+}
+
+.ordenacao:hover {
+    color: #0d6efd;
+    text-decoration: none;
+}
+
+.ordenacao.ativa {
+    color: #0d6efd;
+}
+
+.ordenacao i {
+    font-size: 0.8em;
+}
+
+/* Estilos para o cabeçalho da coluna Total Recebido */
+.header-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    min-height: 50px;
+    justify-content: center;
+}
+
+.header-title {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    font-size: 0.95em;
+}
+
+.header-subtitle {
+    font-size: 0.75em;
+    color: #666;
+    font-weight: normal;
+    text-align: center;
+    line-height: 1.2;
+}
+
+/* Estilos para filtro alfabético */
+.filtro-alfabetico {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 0;
+    padding: 15px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.filtro-alfabetico a,
+.filtro-alfabetico span {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 35px;
+    height: 35px;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #495057;
+    background-color: white;
+    font-weight: 500;
+    font-size: 14px;
+    transition: all 0.2s;
+    text-transform: uppercase;
+}
+
+.filtro-alfabetico a:hover {
+    background-color: var(--primary-color, #0d6efd);
+    color: white;
+    border-color: var(--primary-color, #0d6efd);
+}
+
+.filtro-alfabetico .letra-ativa {
+    background-color: var(--primary-color, #0d6efd);
+    color: white;
+    border-color: var(--primary-color, #0d6efd);
+}
+
+.filtro-alfabetico .letra-ativa:hover {
+    background-color: var(--primary-dark, #0b5ed7);
+}
+
+.filtro-alfabetico .todas {
+    width: auto;
+    padding: 0 12px;
+    font-size: 13px;
+}
+
+/* Estilos para informações de paginação */
+.paginacao-info {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: center;
+    margin: 20px 0 0 0;
+    padding: 10px 0 10px 0;
+    border-bottom: 1px solid #dee2e6;
+    gap: 24px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.info-registros {
+    font-size: 0.9em;
+    color: #6c757d;
+}
+
+.seletor-limite {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.seletor-limite label {
+    font-size: 0.9em;
+    color: #6c757d;
+    margin: 0;
+}
+
+.seletor-limite select {
+    padding: 4px 8px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 0.9em;
+    background-color: white;
+}
+
+/* Estilos para paginação */
+.paginacao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.btn-pagina {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 8px 12px;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    color: #495057;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    min-width: 40px;
+    height: 40px;
+}
+
+.btn-pagina:hover {
+    background-color: #e9ecef;
+    border-color: #adb5bd;
+    color: #495057;
+    text-decoration: none;
+}
+
+.btn-pagina.ativo {
+    background-color: #0d6efd;
+    border-color: #0d6efd;
+    color: white;
+}
+
+.btn-pagina.ativo:hover {
+    background-color: #0b5ed7;
+    border-color: #0a58ca;
+    color: white;
+}
+
+.paginacao-ellipsis {
+    padding: 8px 12px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Estilos para formulário de busca */
+.search-container {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+    align-items: center;
+}
+
+.search-container input[type="text"] {
+    flex: 1;
+    max-width: 400px;
+    padding: 10px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+.search-container input[type="text"]:focus {
+    outline: none;
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.lotes-container {
+    position: relative;
+    min-height: 20px;
+}
+.lote-single, .lote-principal {
+    margin-bottom: 5px;
+}
+.lote-info {
+    font-size: 0.9em;
+    color: #666;
+}
+.btn-lotes-toggle {
+    background: none;
+    border: none;
+    color: #0d6efd;
+    cursor: pointer;
+    font-size: 0.85em;
+    padding: 2px 0;
+    text-decoration: underline;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 4px;
+    font-weight: 500;
+}
+.btn-lotes-toggle:hover {
+    color: #0a58ca;
+}
+.btn-lotes-toggle i {
+    font-size: 0.8em;
+    transition: transform 0.2s ease;
+}
+.lotes-adicionais {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #eee;
+    background-color: #f8f9fa;
+    padding: 8px;
+    border-radius: 4px;
+}
+.lote-adicional {
+    margin-bottom: 6px;
+    padding-left: 10px;
+    border-left: 2px solid #e9ecef;
+}
+.lote-adicional:last-child {
+    margin-bottom: 0;
+}
+.lote-single strong, .lote-principal strong {
+    color: #333;
+    font-weight: 600;
+}
+
+main.container {
+    max-width: 2000px;
+    margin: 0 auto;
+    padding: 24px 16px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+@media (max-width: 2100px) {
+    main.container {
+        max-width: 100vw;
+        padding: 8px;
+    }
+}
+
+/* ========================================
+   BOTÕES DE AÇÃO DA TABELA
+   ======================================== */
+td.actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    vertical-align: middle !important;
+}
+
+td.actions .btn-secondary {
+    margin: 0;
+    padding: 0;
+    border: none;
+}
+
+td.actions .btn-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: #6c757d;
+    color: #fff;
+}
+
+td.actions .btn-secondary:disabled:hover {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    width: auto;
+    height: auto;
+}
+
+.action-buttons .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25em;
+    margin: 0;
+    padding: 8px 0;
+    border: none;
+    height: auto !important;
+    min-height: 0 !important;
+}
+
+.action-buttons .btn-secondary i {
+    font-size: 1em;
+    line-height: 1;
+}
+
+/* ========================================
+   BOTÕES DO CABEÇALHO
+   ======================================== */
+.page-header .actions {
+    display: flex;
+    gap: 0.5rem;
+} 
+
+/* Hover destacado para botões de ação */
+.btn-primary:hover,
+.action-buttons .btn-secondary:hover,
+td.actions .btn-secondary:hover {
+  box-shadow: 0 4px 16px rgba(44, 131, 195, 0.15), 0 1.5px 4px rgba(44, 131, 195, 0.10) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  text-decoration: none !important;
+  transition: all 0.18s cubic-bezier(.4,1.3,.6,1) !important;
+}
+
+/* Não aplicar hover destacado em botões desabilitados */
+.btn-primary:disabled:hover,
+.action-buttons .btn-secondary:disabled:hover,
+td.actions .btn-secondary:disabled:hover {
+  box-shadow: none !important;
+  transform: none !important;
+  background-color: #6c757d !important;
+  color: #fff !important;
+  cursor: not-allowed !important;
+} 

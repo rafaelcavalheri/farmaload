@@ -1,0 +1,15 @@
+# Ignorar arquivos desnecessários no contexto de build
+*.log
+*.tmp
+*.cache
+.git/
+.gitignore
+README.md
+*.md
+.vscode/
+.idea/
+node_modules/
+vendor/
+*.sql
+*.bak
+*.backup 

@@ -1,0 +1,748 @@
+/* Estilos do Modal de Detalhes */
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.6); 
+}
+.modal-content {
+    background-color: #fefefe;
+    margin: 2% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 98%;
+    max-width: 800px;
+    max-height: 80vh;
+    overflow-y: auto;
+    border-radius: 8px;
+    position: relative;
+}
+.close {
+    color: #aaa;
+    position: absolute;
+    top: 10px;
+    right: 25px;
+    font-size: 28px;
+    font-weight: bold;
+}
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+#detalhesConteudo table {
+    font-size: 14px;
+}
+.modal-actions {
+    text-align: right;
+    margin-top: 20px;
+}
+.btn-detalhes {
+    background: #2c83c3 !important;
+    color: white !important;
+    padding: 6px 12px !important;
+    border: none !important;
+    border-radius: 4px !important;
+    cursor: pointer !important;
+    text-decoration: none !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    gap: 5px !important;
+    font-size: 0.9em !important;
+}
+.btn-detalhes:hover {
+    background: #1f6fb2 !important;
+    color: white !important;
+    text-decoration: none !important;
+}
+td .btn-detalhes {
+    display: inline-flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+}
+@media screen {
+    .btn-detalhes {
+        display: inline-flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+    }
+}
+.badge.renovado {
+    background-color: #28a745;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-size: 0.8em;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    line-height: 1.0;
+}
+.badge.renovado i {
+    font-size: 0.9em;
+}
+
+/* Ajuste específico para badges de status nas tabelas de relatórios */
+td .badge {
+    min-width: 40px;
+    max-width: 80px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 0.75em;
+    padding: 0.25rem 0.5rem;
+    line-height: 1.0;
+}
+
+/* Ajuste específico para o campo de seleção do tipo de relatório */
+#tipo_relatorio {
+    min-width: 300px !important;
+    max-width: 600px !important;
+    width: 100% !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    font-size: 0.95rem !important;
+    padding: 0.5rem 0.75rem !important;
+}
+
+/* Garantir que as opções do select sejam visíveis */
+#tipo_relatorio option {
+    white-space: normal !important;
+    word-wrap: break-word !important;
+    padding: 0.25rem 0.5rem !important;
+}
+
+/* Ajuste responsivo para o campo de seleção */
+@media (max-width: 768px) {
+    #tipo_relatorio {
+        min-width: 250px !important;
+        max-width: 100% !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #tipo_relatorio {
+        min-width: 200px !important;
+        max-width: 100% !important;
+    }
+}
+
+/* Estilos específicos para a tabela de pacientes */
+.tabela-pacientes th:nth-child(1), .tabela-pacientes td:nth-child(1) { width: 27%; } /* Nome */
+.tabela-pacientes th:nth-child(2), .tabela-pacientes td:nth-child(2) { width: 8%; }  /* CPF */
+.tabela-pacientes th:nth-child(3), .tabela-pacientes td:nth-child(3) { width: 8%; }  /* Telefone */
+.tabela-pacientes th:nth-child(4), .tabela-pacientes td:nth-child(4) { width: 27%; } /* Medicamento */
+.tabela-pacientes th:nth-child(5), .tabela-pacientes td:nth-child(5) { width: 8%; }  /* Data Renovação */
+.tabela-pacientes th:nth-child(6), .tabela-pacientes td:nth-child(6) { width: 6%; }  /* Status */
+.tabela-pacientes th:nth-child(7), .tabela-pacientes td:nth-child(7) { width: 8%; }  /* Renovação */
+
+/* Estilos específicos para cabeçalhos da tabela de pacientes */
+.tabela-pacientes th {
+    font-size: 0.9em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding-top: 0.04rem;
+    padding-bottom: 0.04rem;
+    padding-left: 4px;
+    padding-right: 4px;
+    line-height: 1.0;
+}
+
+/* Estilos específicos para a tabela de importações */
+.tabela-importacoes th:nth-child(1), .tabela-importacoes td:nth-child(1) { width: 8%; }  /* Data/Hora */
+.tabela-importacoes th:nth-child(2), .tabela-importacoes td:nth-child(2) { width: 15%; } /* Usuário */
+.tabela-importacoes th:nth-child(3), .tabela-importacoes td:nth-child(3) { width: 25%; } /* Arquivo */
+.tabela-importacoes th:nth-child(4), .tabela-importacoes td:nth-child(4) { width: 12%; } /* Quantidade de Registros */
+.tabela-importacoes th:nth-child(5), .tabela-importacoes td:nth-child(5) { width: 8%; }  /* Status */
+.tabela-importacoes th:nth-child(6), .tabela-importacoes td:nth-child(6) { width: 12%; } /* Ações */
+
+/* Bloco de impressão e ajustes de tabela */
+@media print {
+    /* Ocultar elementos desnecessários na impressão */
+    header, .page-header, .form-actions, .card:first-of-type, 
+    .btn-secondary, .btn-primary, .btn-detalhes, .btn-ver-mais,
+    .modal, .menu-adicionar-filtro, .filtro-extra-row,
+    .filtros-container, .filtro-row, .filtro-item,
+    .form-row, .form-group, label, select, input, #filtrosForm,
+    #filtrosDatas, #filtrosExtras, #btnAdicionarFiltro,
+    .filtro-alfabetico, .letra-ativa, .todas,
+    h1, .actions, .page-header h1 {
+        display: none !important;
+    }
+    
+    /* Ocultar card de filtros específico */
+    .card:first-of-type {
+        display: none !important;
+    }
+    
+    /* Título específico para impressão */
+    .print-title {
+        display: block !important;
+        text-align: center;
+        margin-bottom: 20px;
+        color: #000;
+        page-break-after: avoid;
+    }
+    
+    .print-title h2 {
+        font-size: 16px;
+        font-weight: bold;
+        margin: 0 0 10px 0;
+        color: #000;
+    }
+    
+    .print-title p {
+        font-size: 12px;
+        margin: 5px 0;
+        color: #333;
+    }
+    
+    /* Ocultar título da tela na impressão */
+    .card h3, h3 {
+        display: none !important;
+    }
+    
+    /* Ocultar títulos específicos de resultados */
+    h3:first-of-type {
+        display: none !important;
+    }
+    
+    /* Ocultar título específico do card de resultados */
+    .card:not(:first-of-type) h3 {
+        display: none !important;
+    }
+    
+    .container {
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        max-width: none !important;
+    }
+    .table-responsive {
+        width: 100% !important;
+        overflow: visible !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    table {
+        width: 100% !important;
+        min-width: auto !important;
+        max-width: none !important;
+        table-layout: auto !important;
+        font-size: 8px !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    th, td {
+        padding: 2px 4px !important;
+        white-space: normal !important;
+        word-break: break-word !important;
+        page-break-inside: avoid !important;
+    }
+    /* Melhorar visualização das observações na impressão */
+    td.observacao, th.observacao {
+        min-width: 150px !important;
+        max-width: none !important;
+        width: auto !important;
+        word-break: break-word !important;
+        white-space: pre-line !important;
+        padding: 4px 8px !important;
+        font-size: 9px !important;
+        line-height: 1.3 !important;
+    }
+    
+    /* Ocultar botões e elementos interativos na impressão */
+    .observacoes-content, .btn-ver-mais, .btn-detalhes, .btn-secondary { 
+        display: none !important; 
+    }
+    
+    /* Mostrar texto completo das observações na impressão */
+    .observacao-texto {
+        display: block !important;
+        white-space: pre-line !important;
+        font-size: 9px !important;
+        line-height: 1.3 !important;
+        padding: 2px 0 !important;
+    }
+    
+    .observacao-texto span {
+        display: block !important;
+        white-space: pre-line !important;
+        word-break: break-word !important;
+        font-size: 9px !important;
+        line-height: 1.3 !important;
+    }
+    
+    /* Melhorar espaçamento geral na impressão */
+    th, td {
+        padding: 3px 6px !important;
+        font-size: 9px !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Ajustar larguras específicas para impressão */
+    th:nth-child(1), td:nth-child(1) { width: 12%; } /* Data */
+    th:nth-child(2), td:nth-child(2) { width: 20%; } /* Medicamento */
+    th:nth-child(3), td:nth-child(3) { width: 5%; }  /* Quantidade */
+    th:nth-child(4), td:nth-child(4) { width: 13%; } /* Operador */
+    th:nth-child(5), td:nth-child(5) { width: 18%; } /* Paciente */
+    th:nth-child(6), td:nth-child(6) { width: 12%; } /* CPF */
+    th:nth-child(7), td:nth-child(7) { width: 20%; } /* Observações */
+    
+    /* Mostrar versão de impressão das observações */
+    .observacao-print {
+        display: block !important;
+        white-space: pre-line !important;
+        word-break: break-word !important;
+        font-size: 9px !important;
+        line-height: 1.3 !important;
+        padding: 2px 0 !important;
+        color: #000 !important;
+    }
+    
+    /* Ocultar versão da tela na impressão */
+    .observacao-texto {
+        display: none !important;
+    }
+    @page {
+        size: landscape;
+        margin: 0.5cm;
+    }
+}
+.container {
+    max-width: 95% !important;
+    margin: 2rem auto !important;
+    padding: 20px !important;
+}
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    margin: 0;
+    padding: 0;
+}
+table {
+    width: 100%;
+    min-width: 1200px;
+    table-layout: fixed;
+    font-size: 13px;
+}
+th, td {
+    padding-top: 0.04rem;
+    padding-bottom: 0.04rem;
+    padding-left: 8px;
+    padding-right: 8px;
+    text-align: left;
+    vertical-align: middle;
+    word-wrap: break-word;
+    line-height: 1.0;
+}
+
+/* ========================================
+   HOVER DA TABELA
+   ======================================== */
+/* Sobrescrever o efeito zebra do CSS global para garantir hover consistente */
+table tbody tr:nth-child(odd),
+table tbody tr:nth-child(even) {
+    background-color: transparent;
+}
+
+table tbody tr {
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+}
+
+table tbody tr:hover {
+    background-color: #e3f2fd !important;
+}
+th:nth-child(1), td:nth-child(1) { width: 10%; } /* Data */
+th:nth-child(2), td:nth-child(2) { width: 18%; } /* Medicamento */
+th:nth-child(3), td:nth-child(3) { width: 4%; }  /* Quantidade */
+th:nth-child(4), td:nth-child(4) { width: 12%; } /* Operador */
+th:nth-child(5), td:nth-child(5) { width: 16%; } /* Paciente */
+th:nth-child(6), td:nth-child(6) { width: 10%; } /* CPF */
+th:nth-child(7), td:nth-child(7) { width: 30%; } /* Observações */
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 15px;
+    flex-wrap: wrap;
+}
+.form-actions .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 8px 16px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+.form-actions .btn-secondary:hover {
+    background-color: #e9ecef;
+}
+.form-actions .btn-secondary i {
+    font-size: 1.1em;
+}
+.filtro-extra-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    padding: 12px;
+    background: #f8f9fa;
+    border-radius: 6px;
+    border: 1px solid #e9ecef;
+    transition: all 0.2s ease;
+}
+.filtro-extra-row:hover {
+    background: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+.btn-remover-filtro {
+    background: #fff;
+    color: #dc3545;
+    border: 1px solid #dc3545;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-size: 0.85em;
+    cursor: pointer;
+    align-self: center;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.15s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    font-weight: 500;
+    min-width: 32px;
+    justify-content: center;
+}
+.btn-remover-filtro:hover {
+    background: #dc3545;
+    color: #fff;
+    border-color: #dc3545;
+}
+.btn-remover-filtro::before {
+    content: "×";
+    font-size: 1.2em;
+    font-weight: 600;
+    line-height: 1;
+}
+.menu-adicionar-filtro {
+    min-width: 200px;
+    background: #fff;
+    border: 1px solid #dee2e6;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    padding: 8px 0;
+    z-index: 1001;
+}
+.menu-adicionar-filtro div {
+    padding: 10px 16px;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+}
+.menu-adicionar-filtro div:hover {
+    background: #f8f9fa;
+} 
+
+/* Permitir quebra de linha nas observações */
+.observacoes-cell {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  min-width: 250px !important;
+  max-width: 500px !important;
+  padding: 4px !important;
+}
+
+.observacoes-content {
+  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  word-wrap: break-word !important;
+  word-break: break-word !important;
+  flex: 1 !important;
+  min-width: 0 !important;
+  min-width: 200px !important;
+  max-width: 400px !important;
+  width: 100% !important;
+  font-size: 0.9rem !important;
+  padding: 4px 8px !important;
+  border: 1px solid #e9ecef !important;
+  border-radius: 4px !important;
+  background-color: #f8f9fa !important;
+  color: #495057 !important;
+  transition: all 0.2s ease !important;
+}
+
+.observacoes-content:hover {
+  background-color: #e9ecef !important;
+  border-color: #ced4da !important;
+}
+
+.observacoes-content:focus {
+  background-color: #fff !important;
+  border-color: #007bff !important;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25) !important;
+}
+
+.btn-ver-mais {
+  background: none !important;
+  border: none !important;
+  color: #007bff !important;
+  cursor: pointer !important;
+  padding: 2px 5px !important;
+  font-size: 0.9em !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+.btn-ver-mais:hover {
+  text-decoration: underline !important;
+}
+
+/* Hover destacado para botões de ação */
+.btn-primary:hover,
+.btn-secondary:hover,
+.btn-detalhes:hover,
+.btn-ver-mais:hover,
+.form-actions .btn-secondary:hover {
+  box-shadow: 0 4px 16px rgba(44, 131, 195, 0.15), 0 1.5px 4px rgba(44, 131, 195, 0.10) !important;
+  transform: translateY(-2px) scale(1.03) !important;
+  text-decoration: none !important;
+  transition: all 0.18s cubic-bezier(.4,1.3,.6,1) !important;
+}
+
+/* Não aplicar hover destacado em botões desabilitados */
+.btn-primary:disabled:hover,
+.btn-secondary:disabled:hover,
+.btn-detalhes:disabled:hover,
+.btn-ver-mais:disabled:hover,
+.form-actions .btn-secondary:disabled:hover {
+  box-shadow: none !important;
+  transform: none !important;
+  background-color: #6c757d !important;
+  color: #fff !important;
+  cursor: not-allowed !important;
+} 
+
+/* Ajuste responsivo para o campo de observações */
+@media (max-width: 1200px) {
+  .observacoes-content {
+    min-width: 150px !important;
+    max-width: 300px !important;
+    font-size: 0.85rem !important;
+  }
+  
+  .observacoes-cell {
+    min-width: 200px !important;
+    max-width: 400px !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .observacoes-content {
+    min-width: 120px !important;
+    max-width: 250px !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .observacoes-cell {
+    min-width: 150px !important;
+    max-width: 300px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .observacoes-content {
+    min-width: 100px !important;
+    max-width: 200px !important;
+    font-size: 0.75rem !important;
+  }
+  
+  .observacoes-cell {
+    min-width: 120px !important;
+    max-width: 250px !important;
+  }
+} 
+
+/* Modal específico para observações */
+#modalObservacoes {
+    display: none; 
+    position: fixed; 
+    z-index: 1000; 
+    left: 0;
+    top: 0;
+    width: 100%; 
+    height: 100%; 
+    overflow: auto; 
+    background-color: rgba(0,0,0,0.6); 
+}
+
+#modalObservacoes .modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 95%;
+    max-width: 450px;
+    height: 40vh;
+    overflow: hidden;
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    box-sizing: border-box;
+}
+
+#modalObservacoes h3 {
+    margin: 0 !important;
+    color: #333;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
+    flex-shrink: 0;
+    height: auto;
+}
+
+/* Div de observações no modal - ocupa todo o espaço disponível */
+#modalObservacoes .observacoes-content {
+    flex: 1 !important;
+    width: 100% !important;
+    min-height: 0 !important;
+    height: calc(100% - 60px) !important;
+    padding: 15px !important;
+    border: 1px solid #e9ecef !important;
+    border-radius: 6px !important;
+    background-color: #f8f9fa !important;
+    color: #495057 !important;
+    font-size: 1rem !important;
+    line-height: 1.6 !important;
+    white-space: pre-wrap !important;
+    word-wrap: break-word !important;
+    overflow-y: auto !important;
+    resize: none !important;
+    font-family: inherit !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
+    display: block !important;
+    position: relative !important;
+    min-height: 400px !important;
+}
+
+/* Garantir que o conteúdo ocupe toda a altura */
+#modalObservacoes .observacoes-content:empty::after {
+    content: '';
+    display: block;
+    height: 100%;
+    min-height: 100%;
+}
+
+/* Forçar altura mínima para o conteúdo */
+#modalObservacoes .observacoes-content:not(:empty) {
+    min-height: 400px !important;
+}
+
+.close-modal {
+    color: #aaa;
+    position: absolute;
+    top: 15px;
+    right: 25px;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.close-modal:hover,
+.close-modal:focus {
+    color: black;
+    text-decoration: none;
+} 
+
+/* Ajuste responsivo para o modal de observações */
+@media (max-width: 768px) {
+    #modalObservacoes .modal-content {
+        width: 98% !important;
+        margin: 20% auto !important;
+        padding: 15px !important;
+        height: 95vh !important;
+        gap: 10px !important;
+    }
+    
+    #modalObservacoes .observacoes-content {
+        min-height: 0 !important;
+        height: calc(100% - 50px) !important;
+        padding: 10px !important;
+        font-size: 0.9rem !important;
+        min-height: 300px !important;
+    }
+    
+    #modalObservacoes h3 {
+        font-size: 1.3rem !important;
+        margin: 0 !important;
+        padding-bottom: 8px !important;
+        height: auto !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #modalObservacoes .modal-content {
+        width: 100% !important;
+        margin: 25% auto !important;
+        padding: 10px !important;
+        height: 100vh !important;
+        gap: 8px !important;
+        border-radius: 0 !important;
+    }
+    
+    #modalObservacoes .observacoes-content {
+        min-height: 0 !important;
+        height: calc(100% - 40px) !important;
+        padding: 8px !important;
+        font-size: 0.85rem !important;
+        min-height: 250px !important;
+    }
+    
+    #modalObservacoes h3 {
+        font-size: 1.2rem !important;
+        margin: 0 !important;
+        padding-bottom: 6px !important;
+        height: auto !important;
+    }
+} 
+
+/* Botão de observação com fundo branco */
+.btn-observacao {
+  background: #fff !important;
+  border: 1px solid #e9ecef !important;
+  color: #495057 !important;
+  border-radius: 4px !important;
+  padding: 4px 8px !important;
+  font-size: 1em !important;
+  cursor: pointer !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  transition: box-shadow 0.18s cubic-bezier(.4,1.3,.6,1), border-color 0.18s cubic-bezier(.4,1.3,.6,1) !important;
+}
+.btn-observacao:hover {
+  border-color: #007bff !important;
+  box-shadow: 0 4px 16px rgba(44,131,195,0.10), 0 1.5px 4px rgba(44,131,195,0.08) !important;
+  color: #007bff !important;
+} 
