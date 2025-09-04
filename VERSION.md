@@ -1,19 +1,21 @@
 # 📋 Histórico de Versões - FARMALOAD
 
-## 🆕 Versão Atual: v.1.2025.0309.1200
+## 🆕 Versão Atual: v.1.2025.0409.1200
 
 ### ✅ Correções e Melhorias Implementadas
 
-#### 1. Observações na Dispensação (Página Pacientes)
-- **Cards Clicáveis**: Seleção por clique em qualquer parte do card, com destaque visual ao selecionar
-- **Execução de Scripts via AJAX**: Após carregar o formulário de dispensar, scripts embutidos são executados para registrar os handlers corretamente
-- **Concatenação por Vírgula**: Observações adicionadas são separadas por vírgula e espaço, em vez de quebra de linha
+#### 1. Observações Padrão na Dispensação (ajax_form_dispensar)
+- Removidos textos informativos da seleção (dica e contador)
+- CSS extraído para arquivo dedicado `farmacia/css/ajax_form_dispensar.css`
+- Inclusão de `<link rel="stylesheet" href="css/ajax_form_dispensar.css">` no PHP
+- Modal passa a abrir sempre limpo (sem seleções persistidas)
+- Removida persistência em `sessionStorage` para evitar vazamento de seleções entre pacientes
 
-- **Arquivos Modificados**:
+- Arquivos modificados:
   - `farmacia/php/ajax_form_dispensar.php`
-  - `farmacia/php/pacientes.php`
+  - `farmacia/css/ajax_form_dispensar.css` (novo)
 
-- **Impacto**: Usabilidade mais ágil e clara na seleção e adição de observações durante a dispensação
+- Impacto: UX mais limpa; sem confusão por seleções anteriores; manutenção facilitada pelo CSS externo
 
 ---
 
