@@ -60,507 +60,8 @@ $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 ?>
 
-<style>
-.observacao-box {
-    margin: 15px 0;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 4px;
-    max-width: 100%;
-}
-.observacao-header {
-    margin-bottom: 15px;
-}
-.observacao-padrao-container {
-    margin-bottom: 15px;
-}
-.observacao-padrao-container label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #495057;
-}
-.observacao-padrao-select {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
-    font-family: inherit;
-    font-size: inherit;
-    margin-bottom: 10px;
-}
-.observacao-padrao-select:focus {
-    border-color: #4a90e2;
-    outline: none;
-    box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
-}
-.observacao-textarea-container {
-    margin-bottom: 10px;
-}
-.observacao-textarea-container label {
-    display: block;
-    margin-bottom: 5px;
-    font-weight: bold;
-    color: #495057;
-}
-.observacao-editor {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    background-color: #fff;
-    font-family: inherit;
-    font-size: inherit;
-    resize: vertical;
-    margin-top: 5px;
-}
-.observacao-editor:focus {
-    border-color: #4a90e2;
-    outline: none;
-    box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
-}
-
-/* Estilo para feedback visual quando observações são adicionadas */
-.observacao-textarea.observacao-adicionada {
-    border-color: #28a745;
-    background-color: #f8fff9;
-    box-shadow: 0 0 8px rgba(40, 167, 69, 0.3);
-    transition: all 0.3s ease;
-}
-
-.medicamento-dispensar {
-    background: white;
-    padding: 15px;
-    margin-bottom: 15px;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-    max-width: 100%;
-}
-.medicamento-dispensar h4 {
-    margin: 0 0 10px 0;
-    color: #333;
-    font-size: 1.1em;
-}
-.status-renovacao {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 10px;
-    align-items: center;
-}
-.badge.renovado {
-    background-color: #ffc107;
-    color: #000;
-    padding: 4px 8px;
-    border-radius: 4px;
-    font-size: 0.9em;
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-}
-.data {
-    color: #666;
-    font-size: 0.9em;
-}
-.quantidade-info-horizontal {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    margin-bottom: 15px;
-    padding: 15px;
-    background-color: #f8f9fa;
-    border-radius: 4px;
-    align-items: center;
-    justify-content: space-between;
-}
-.quantidade-info-horizontal .info-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 1em;
-    white-space: nowrap;
-    min-width: 150px;
-}
-.quantidade-info-horizontal .info-item i {
-    color: #495057;
-    width: 16px;
-}
-.quantidade-input-container {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    margin-top: 10px;
-}
-.quantidade-input {
-    width: 120px;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 1em;
-}
-.quantidade-input:focus {
-    border-color: #4a90e2;
-    outline: none;
-    box-shadow: 0 0 3px rgba(74, 144, 226, 0.3);
-}
-.btn-dispensar {
-    background-color: #28a745;
-    color: white;
-    padding: 8px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 1em;
-    min-width: 120px;
-    justify-content: center;
-}
-.btn-dispensar:hover {
-    background-color: #218838;
-}
-.btn-dispensar:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-}
-.dispensar-varios-container {
-    margin-top: 20px;
-    text-align: center;
-    padding: 15px;
-    border-top: 1px solid #e9ecef;
-}
-.btn-dispensar-varios {
-    background-color: #28a745;
-    color: white;
-    padding: 12px 24px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1.1em;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    min-width: 250px;
-    justify-content: center;
-}
-.btn-dispensar-varios:hover {
-    background-color: #218838;
-}
-.btn-dispensar-varios i {
-    font-size: 1.1em;
-}
-.observacao-container {
-    position: relative;
-    display: flex;
-    align-items: flex-start;
-    gap: 10px;
-}
-.observacao-textarea {
-    flex: 1;
-}
-.btn-add-observacao {
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-    flex-shrink: 0;
-    margin-top: 5px;
-}
-.btn-add-observacao:hover {
-    background-color: #218838;
-}
-.btn-clear-observacao {
-    background-color: #dc3545;
-    color: white;
-    border: none;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    font-size: 16px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.2s;
-    flex-shrink: 0;
-    margin-top: 5px;
-}
-.btn-clear-observacao:hover {
-    background-color: #c82333;
-}
-.modal-observacoes {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0,0,0,0.5);
-}
-.modal-observacoes-content {
-    background-color: #fefefe;
-    margin: 5% auto;
-    padding: 25px;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 600px;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-.modal-observacoes-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-    border-bottom: 1px solid #dee2e6;
-    padding-bottom: 15px;
-}
-.modal-observacoes-header h3 {
-    margin: 0;
-    color: #495057;
-}
-.close-modal {
-    color: #aaa;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    background: none;
-    border: none;
-    padding: 0;
-}
-.close-modal:hover {
-    color: #000;
-}
-.observacoes-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 12px;
-    margin-bottom: 20px;
-}
-.observacao-card {
-    background-color: #fff;
-    padding: 15px;
-    border: 2px solid #e9ecef;
-    border-radius: 8px;
-    transition: all 0.3s ease;
-    cursor: pointer;
-    position: relative;
-    overflow: hidden;
-}
-.observacao-card:hover {
-    border-color: #4a90e2;
-    background-color: #f8f9fa;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-}
-.observacao-card.selecionado {
-    border-color: #28a745;
-    background-color: #d4edda;
-    box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
-}
-.observacao-card.selecionado::before {
-    content: '✓';
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    background-color: #28a745;
-    color: white;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 14px;
-}
-.observacao-card label {
-    cursor: pointer;
-    color: #495057;
-    font-size: 0.95em;
-    line-height: 1.4;
-    margin: 0;
-    display: block;
-    user-select: none;
-}
-.observacao-card input[type="checkbox"] {
-    display: none;
-}
-
-/* Estilos adicionais para melhorar a experiência */
-.observacao-card:focus {
-    outline: 2px solid #4a90e2;
-    outline-offset: 2px;
-}
-
-.observacao-card:active {
-    transform: translateY(0);
-    transition: transform 0.1s ease;
-}
-
-/* Indicador visual de que o card é clicável */
-.observacao-card::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0;
-    height: 3px;
-    background-color: #4a90e2;
-    transition: width 0.3s ease;
-}
-
-.observacao-card:hover::after {
-    width: 100%;
-}
-
-.observacao-card.selecionado::after {
-    background-color: #28a745;
-    width: 100%;
-}
-
-/* Melhorar a responsividade dos cards */
-@media (max-width: 768px) {
-    .observacoes-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-    
-    .observacao-card {
-        padding: 12px;
-    }
-}
-
-/* Estilos para o contador de observações */
-.observacoes-counter {
-    background-color: #e3f2fd;
-    border: 1px solid #bbdefb;
-    border-radius: 6px;
-    padding: 10px 15px;
-    margin-bottom: 20px;
-    text-align: center;
-    font-size: 0.95em;
-    color: #1976d2;
-}
-
-.observacoes-counter span {
-    font-weight: bold;
-    color: #1565c0;
-}
-
-/* Estilos para o tooltip informativo */
-.observacoes-tip {
-    background-color: #e7f3ff;
-    border: 1px solid #b3d9ff;
-    border-radius: 6px;
-    padding: 12px 15px;
-    margin-bottom: 20px;
-    font-size: 0.9em;
-    color: #0066cc;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.observacoes-tip i {
-    color: #0066cc;
-    font-size: 1.1em;
-}
-
-.observacoes-tip strong {
-    color: #004499;
-}
-
-.modal-observacoes-footer {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    border-top: 1px solid #dee2e6;
-    padding-top: 15px;
-}
-.btn-selecionar-observacoes {
-    background-color: #4a90e2;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-.btn-selecionar-observacoes:hover {
-    background-color: #357abd;
-}
-.btn-cancelar {
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-}
-.btn-cancelar:hover {
-    background-color: #5a6268;
-}
-
-.observacao-buttons {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-/* Estilos para a exibição das observações dos medicamentos */
-.observacoes-medicamento {
-    margin: 10px 0;
-    padding: 10px;
-    background-color: #f8f9fa;
-    border: 1px solid #e9ecef;
-    border-radius: 4px;
-}
-
-.observacoes-medicamento strong {
-    color: #495057;
-    font-size: 0.9em;
-    margin-bottom: 5px;
-    display: block;
-}
-
-.observacoes-medicamento .observacoes-content {
-    font-size: 0.85em;
-    line-height: 1.3;
-    color: #495057;
-    background-color: #fff;
-    padding: 6px 8px;
-    border-radius: 4px;
-    border-left: 3px solid #007bff;
-    cursor: help;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
-}
-
-.observacoes-medicamento .observacoes-content:hover {
-    background-color: #e3f2fd;
-    border-left-color: #0056b3;
-}
-
-.observacoes-more {
-    color: #007bff;
-    font-weight: bold;
-}
-</style>
+<!-- Estilos específicos desta página estão em /css/ajax_form_dispensar.css -->
+<link rel="stylesheet" href="css/ajax_form_dispensar.css">
 
 <!-- Novo sistema de observação com botão e modal -->
 <div class="form-group">
@@ -580,7 +81,7 @@ $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </div>
 
 <!-- Modal de Observações (escondido por padrão) -->
-<div id="modalObservacoes" class="modal-observacoes">
+<div id="modalObservacoes" class="modal-observacoes" data-paciente-id="<?= (int)$paciente_id ?>">
     <div class="modal-observacoes-content">
         <div class="modal-observacoes-header">
             <h3><i class="fas fa-list"></i> Selecionar Observações Padrão</h3>
@@ -685,50 +186,26 @@ $medicamentos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 <script>
 // Definir funções globalmente para evitar erros de referência
+function getCurrentPacienteId() {
+    const el = document.getElementById('modalObservacoes');
+    if (!el) return 0;
+    const raw = el.getAttribute('data-paciente-id') || '0';
+    const parsed = parseInt(raw, 10);
+    return Number.isNaN(parsed) ? 0 : parsed;
+}
 window.abrirModalObservacoes = function() {
     document.getElementById('modalObservacoes').style.display = 'block';
+    // Sempre começar sem seleções anteriores
+    limparSelecoesCards();
     // Adicionar event listeners aos cards
     adicionarEventListenersCards();
-    // Restaurar estado anterior se existir
-    restaurarEstadoObservacoes();
 };
 
 window.fecharModalObservacoes = function() {
-    // Salvar estado atual antes de fechar
-    salvarEstadoObservacoes();
     document.getElementById('modalObservacoes').style.display = 'none';
 };
 
-// Função para salvar o estado das observações selecionadas
-function salvarEstadoObservacoes() {
-    const checkboxes = document.querySelectorAll('.observacao-card input[type="checkbox"]');
-    const estado = Array.from(checkboxes).map(cb => ({
-        id: cb.id,
-        checked: cb.checked
-    }));
-    sessionStorage.setItem('observacoesEstado', JSON.stringify(estado));
-}
-
-// Função para restaurar o estado das observações selecionadas
-function restaurarEstadoObservacoes() {
-    const estadoSalvo = sessionStorage.getItem('observacoesEstado');
-    if (estadoSalvo) {
-        const estado = JSON.parse(estadoSalvo);
-        estado.forEach(item => {
-            const checkbox = document.getElementById(item.id);
-            if (checkbox) {
-                checkbox.checked = item.checked;
-                const card = checkbox.closest('.observacao-card');
-                if (item.checked) {
-                    card.classList.add('selecionado');
-                } else {
-                    card.classList.remove('selecionado');
-                }
-            }
-        });
-        atualizarContadorObservacoes();
-    }
-}
+// Removido: persistência de estado por paciente. O modal sempre abre limpo.
 
 // Função para adicionar event listeners aos cards de observação
 function adicionarEventListenersCards() {
@@ -767,7 +244,9 @@ function atualizarContadorObservacoes() {
     const contador = document.getElementById('observacoesSelecionadas');
     const total = document.querySelectorAll('.observacao-card input[type="checkbox"]').length;
     
-    contador.textContent = checkboxes.length;
+    if (contador) {
+        contador.textContent = checkboxes.length;
+    }
     
     // Mudar a cor do contador baseado na quantidade selecionada
     const counterElement = document.querySelector('.observacoes-counter');
@@ -854,7 +333,7 @@ function limparSelecoesCards() {
     atualizarContadorObservacoes();
     
     // Limpar estado salvo
-    sessionStorage.removeItem('observacoesEstado');
+    sessionStorage.removeItem(`observacoesEstado_${getCurrentPacienteId()}`);
 }
 
 // Função para limpar observações do textarea
