@@ -33,6 +33,16 @@ try {
             throw new Exception('Esta transação já foi extornada.');
         }
 
+        // VERIFICAÇÃO DE LIMITE DE 3 DIAS PARA EXTORNO
+        $data_transacao = new DateTime($transacao['data']);
+        $agora = new DateTime();
+        $diferenca = $agora->diff($data_transacao);
+        $dias_passados = $diferenca->days;
+        
+        if ($dias_passados > 3) {
+            throw new Exception("Não é possível realizar extorno. O prazo máximo de 3 dias após a dispensação foi ultrapassado. Transação realizada em: " . $data_transacao->format('d/m/Y H:i'));
+        }
+
         // NOVA FUNCIONALIDADE: Extornar para os lotes (LIFO)
         $lotes_utilizados = extornarParaLotes($pdo, $transacao['medicamento_id'], $transacao['quantidade']);
         
@@ -74,4 +84,4 @@ try {
     }
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => $e->getMessage()]);
-} 
+}

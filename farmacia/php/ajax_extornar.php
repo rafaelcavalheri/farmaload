@@ -73,6 +73,29 @@ try {
             throw new Exception("Quantidade de extorno maior que a quantidade entregue.");
         }
 
+        // VERIFICAÇÃO DE LIMITE DE 3 DIAS PARA EXTORNO
+        // Buscar a transação mais recente de dispensação para este medicamento e paciente
+        $stmt = $pdo->prepare("
+            SELECT MAX(data) as ultima_dispensacao
+            FROM transacoes 
+            WHERE medicamento_id = ? 
+            AND paciente_id = ? 
+            AND quantidade > 0
+        ");
+        $stmt->execute([$medicamento['medicamento_id'], $paciente_id]);
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if ($resultado && $resultado['ultima_dispensacao']) {
+            $ultima_dispensacao = new DateTime($resultado['ultima_dispensacao']);
+            $agora = new DateTime();
+            $diferenca = $agora->diff($ultima_dispensacao);
+            $dias_passados = $diferenca->days;
+            
+            if ($dias_passados > 3) {
+                throw new Exception("Não é possível realizar extorno. O prazo máximo de 3 dias após a dispensação foi ultrapassado. Última dispensação: " . $ultima_dispensacao->format('d/m/Y H:i'));
+            }
+        }
+
         // NOVA FUNCIONALIDADE: Extornar para os lotes (LIFO)
         $lotes_utilizados = extornarParaLotes($pdo, $medicamento['medicamento_id'], $quantidade);
         
@@ -140,4 +163,4 @@ try {
 
 ob_end_clean();
 echo json_encode($resposta);
-exit; 
+exit;

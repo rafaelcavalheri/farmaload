@@ -1,11 +1,11 @@
 /* Estilos específicos da página editar_paciente.php extraídos do bloco <style> */
 
-/* Estilos para fieldsets - adicionar espaçamento interno */
+/* Estilos para fieldsets - reduzir espaçamento interno */
 fieldset {
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 25px;
+    padding: 8px; /* Reduzido de 12px para 8px */
+    margin-bottom: 10px; /* Reduzido de 15px para 10px */
     background-color: #fafafa;
     transition: border-color 0.3s ease;
 }
@@ -20,17 +20,19 @@ fieldset:nth-of-type(3):hover {
 fieldset legend {
     font-weight: 600;
     color: #333;
-    padding: 0 10px;
-    margin-bottom: 15px;
+    padding: 0 6px; /* Reduzido de 8px para 6px */
+    margin-bottom: 6px; /* Reduzido de 8px para 6px */
+    font-size: 0.95em; /* Ligeiramente menor */
 }
 
-/* Espaçamento adicional para labels e inputs dentro dos fieldsets */
+/* Espaçamento reduzido para labels e inputs dentro dos fieldsets */
 fieldset label {
     display: block;
-    margin-bottom: 8px;
-    margin-top: 15px;
+    margin-bottom: 3px; /* Reduzido de 4px para 3px */
+    margin-top: 6px; /* Reduzido de 8px para 6px */
     font-weight: 500;
     color: #555;
+    font-size: 0.9em; /* Ligeiramente menor */
 }
 
 fieldset label:first-of-type {
@@ -42,11 +44,11 @@ fieldset select,
 fieldset textarea {
     width: 100%;
     max-width: 100%;
-    padding: 10px 15px;
+    padding: 5px 8px; /* Reduzido de 6px 10px para 5px 8px */
     border: 1px solid #ddd;
     border-radius: 4px;
-    margin-bottom: 5px;
-    font-size: 14px;
+    margin-bottom: 2px; /* Reduzido de 3px para 2px */
+    font-size: 13px; /* Reduzido de 14px para 13px */
     background-color: #fff;
 }
 
@@ -55,107 +57,134 @@ fieldset select:focus,
 fieldset textarea:focus {
     border-color: #4a90e2;
     outline: none;
-    box-shadow: 0 0 5px rgba(74, 144, 226, 0.3);
+    box-shadow: 0 0 3px rgba(74, 144, 226, 0.3); /* Reduzido de 5px para 3px */
 }
+
+/* Remover o contorno azul dos inputs dentro dos grupos de pessoas autorizadas */
+.autorizado-group input:focus {
+    border-color: #ddd;
+    box-shadow: none;
+}
+
+/* Remover efeito de hover dos inputs individuais dentro dos grupos autorizados */
+.autorizado-group input:hover {
+    border-color: #ddd !important;
+    box-shadow: none !important;
+}
+
 .autorizado-group {
-    margin-bottom: 15px;
-    padding: 10px;
+    margin-bottom: 3px; /* Reduzido de 5px para 3px */
+    padding: 6px; /* Reduzido de 8px para 6px */
     border: 1px solid #ddd;
     border-radius: 4px;
     background-color: #f9f9f9;
     transition: border-color 0.3s ease;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px; /* Reduzido de 10px para 8px */
 }
 
 /* Efeito de borda azul ao passar o mouse em cada pessoa autorizada */
 .autorizado-group:hover {
     border-color: #007bff;
 }
-.autorizado-campos {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-.campo-grupo {
+
+.autorizado-group > div {
     display: flex;
     flex-direction: column;
 }
+
 .field-info {
-    margin-bottom: 15px;
+    margin-bottom: 8px; /* Reduzido de 15px para 8px */
     color: #666;
     font-style: italic;
+    font-size: 0.85em; /* Ligeiramente menor */
 }
+
 @media (max-width: 768px) {
-    .autorizado-campos {
+    .autorizado-group {
         grid-template-columns: 1fr;
     }
 }
+
 .validade-group {
     display: flex;
     align-items: center;
-    gap: 15px;
+    gap: 10px; /* Reduzido de 15px para 10px */
 }
+
 .renovado-check {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px; /* Reduzido de 5px para 4px */
 }
+
 .renovado-check input[type="checkbox"] {
     width: auto;
 }
+
 .renovado-check label {
     margin: 0;
     font-weight: normal;
+    font-size: 0.9em; /* Ligeiramente menor */
 }
+
 .medico-group {
-    margin-bottom: 15px;
+    margin-bottom: 10px; /* Reduzido de 15px para 10px */
 }
+
 .medico-group select {
     width: 100%;
 }
-@media (max-width: 768px) {
-    .autorizado-campos {
-        grid-template-columns: 1fr;
-    }
-}
+
 .renovacao-group {
     display: flex;
-    gap: 20px;
+    gap: 15px; /* Reduzido de 20px para 15px */
     align-items: flex-end;
 }
+
 .checkbox-group {
     margin-bottom: 0;
 }
+
 .checkbox-label {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px; /* Reduzido de 8px para 6px */
     cursor: pointer;
+    font-size: 0.9em; /* Ligeiramente menor */
 }
+
 .checkbox-label input[type="checkbox"] {
     width: auto;
     margin: 0;
 }
+
 .medicamento-body {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
+    gap: 10px; /* Reduzido de 15px para 10px */
 }
+
 .medicamento-body .campo-form:last-child {
     grid-column: 1 / -1;
 }
+
 .medicamento-body .renovacao-group {
     grid-column: 1 / -1;
 }
+
 .medicamento-body .campo-form:nth-child(4) {
     grid-column: 1 / -1;
 }
+
 .medicamento-item {
     background: #fff;
     border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    border-radius: 6px; /* Reduzido de 8px para 6px */
+    padding: 8px; /* Reduzido de 12px para 8px */
+    margin-bottom: 8px; /* Reduzido de 12px para 8px */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05); /* Reduzido de 2px 4px para 1px 3px */
     position: relative;
     transition: border-color 0.3s ease;
 }
@@ -164,39 +193,44 @@ fieldset textarea:focus {
 .medicamento-item:hover {
     border-color: #007bff;
 }
+
 .medicamento-item:not(:last-child)::after {
     content: '';
     position: absolute;
-    bottom: -10px;
+    bottom: -6px; /* Reduzido de -10px para -6px */
     left: 0;
     right: 0;
     height: 1px;
     background: linear-gradient(to right, transparent, #ddd, transparent);
 }
+
 .medicamento-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 20px;
-    padding-bottom: 10px;
+    margin-bottom: 10px; /* Reduzido de 20px para 10px */
+    padding-bottom: 6px; /* Reduzido de 10px para 6px */
     border-bottom: 1px solid #eee;
 }
+
 .medicamento-header h4 {
     margin: 0;
     color: #333;
-    font-size: 1.1em;
+    font-size: 1em; /* Reduzido de 1.1em para 1em */
 }
+
 .btn-remove {
     background: none;
     border: none;
     color: #dc3545;
     cursor: pointer;
-    padding: 5px;
+    padding: 4px; /* Reduzido de 5px para 4px */
     border-radius: 4px;
     transition: background-color 0.2s;
     margin-left: auto;
     flex-shrink: 0;
 }
+
 .btn-remove:hover {
     background-color: #fff5f5;
 }
@@ -230,19 +264,19 @@ fieldset textarea:focus {
 
 .campo-form small {
     display: block;
-    margin-top: 2px;
+    margin-top: 1px; /* Reduzido de 2px para 1px */
     color: #6c757d;
-    font-size: 0.8em;
+    font-size: 0.75em; /* Reduzido de 0.8em para 0.75em */
 }
 
 .quantidade-disponivel-container {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px; /* Reduzido de 5px para 4px */
 }
 
 .quantidade-disponivel-container i {
-    font-size: 0.9em;
+    font-size: 0.85em; /* Reduzido de 0.9em para 0.85em */
 }
 
 /* Corrigir alinhamento dos campos de input */
@@ -276,25 +310,25 @@ main.container button[type="button"]:not(#btn-add-medicamento):not(.btn-submit):
     text-align: center !important;
 }
 
-/* Estilos dos botões no estilo do btn-save-lote */
+/* Estilos dos botões no estilo do btn-save-lote - compactos */
 #btn-add-medicamento,
 .btn-submit {
     background: #6c757d !important;
     color: white !important;
     border: none !important;
-    padding: 8px 12px !important;
-    border-radius: 6px !important;
+    padding: 6px 10px !important; /* Reduzido de 8px 12px para 6px 10px */
+    border-radius: 4px !important; /* Reduzido de 6px para 4px */
     font-weight: 600 !important;
     cursor: pointer !important;
     transition: all 0.3s ease !important;
     display: inline-flex !important;
     align-items: center !important;
     justify-content: center !important;
-    gap: 4px !important;
-    font-size: 0.8em !important;
+    gap: 3px !important; /* Reduzido de 4px para 3px */
+    font-size: 0.75em !important; /* Reduzido de 0.8em para 0.75em */
     white-space: nowrap !important;
-    width: 150px !important;
-    height: 32px !important;
+    width: 130px !important; /* Reduzido de 150px para 130px */
+    height: 28px !important; /* Reduzido de 32px para 28px */
     margin-left: 0 !important;
     text-align: center !important;
     margin: 0 !important;
@@ -303,29 +337,130 @@ main.container button[type="button"]:not(#btn-add-medicamento):not(.btn-submit):
 #btn-add-medicamento:hover,
 .btn-submit:hover {
     background: #5a6268 !important;
-    transform: translateY(-2px) !important;
+    transform: translateY(-1px) !important; /* Reduzido de -2px para -1px */
 }
 
-/* Containers para alinhamento dos botões */
+/* Containers para alinhamento dos botões - espaçamento reduzido */
 .button-container {
     display: flex;
     justify-content: flex-start;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    padding-left: 15px;
+    margin-top: 8px; /* Reduzido de 15px para 8px */
+    margin-bottom: 8px; /* Reduzido de 15px para 8px */
+    padding-left: 12px; /* Reduzido de 15px para 12px */
 }
 
 .form-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 15px;
-    margin-bottom: 15px;
-    padding-right: 15px;
+    margin-top: 15px; /* Reduzido de 30px para 15px */
+    margin-bottom: 8px; /* Reduzido de 15px para 8px */
+    padding-top: 12px; /* Reduzido de 20px para 12px */
+    padding-right: 12px; /* Reduzido de 15px para 12px */
+    border-top: 1px solid #e9ecef;
 }
 
-.form-actions {
-    margin-top: 30px;
-    padding-top: 20px;
-    padding-right: 15px;
-    border-top: 1px solid #e9ecef;
+/* Otimização adicional para campos de formulário */
+.campo-form {
+    margin-bottom: 8px; /* Reduzido para compactar */
+}
+
+.campo-form label {
+    margin-bottom: 3px; /* Reduzido */
+    margin-top: 6px; /* Reduzido */
+}
+
+/* Compactar textarea */
+fieldset textarea {
+    min-height: 60px; /* Altura mínima reduzida */
+    resize: vertical;
+}
+
+/* Reduzir espaçamento do container principal */
+main.container {
+    padding: 15px; /* Reduzido se necessário */
+}
+
+/* Título da página mais compacto */
+main.container h2 {
+    margin-bottom: 15px; /* Reduzido */
+    font-size: 1.4em; /* Ligeiramente menor */
+}
+
+/* Alertas mais compactos */
+.alert {
+    padding: 8px 12px; /* Reduzido */
+    margin-bottom: 10px; /* Reduzido */
+    font-size: 0.9em; /* Ligeiramente menor */
+}
+
+/* Novos layouts de grid para otimizar espaço horizontal */
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 8px;
+}
+
+.form-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+
+/* Responsividade para grids */
+@media (max-width: 768px) {
+    .form-grid-2,
+    .form-grid-3 {
+        grid-template-columns: 1fr;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 1024px) and (min-width: 769px) {
+    .form-grid-3 {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+/* Ajustes para campos dentro dos grids */
+.form-grid-2 .campo-form,
+.form-grid-3 .campo-form {
+    margin-bottom: 0;
+}
+
+.form-grid-2 .campo-form label,
+.form-grid-3 .campo-form label {
+    margin-top: 0;
+}
+
+/* Otimização adicional para campos únicos */
+.campo-form:not(.form-grid-2 .campo-form):not(.form-grid-3 .campo-form) {
+    margin-bottom: 8px;
+}
+
+/* Melhorar aproveitamento vertical em telas menores */
+@media (max-height: 800px) {
+    fieldset {
+        padding: 10px;
+        margin-bottom: 12px;
+    }
+    
+    fieldset legend {
+        margin-bottom: 6px;
+        font-size: 0.9em;
+    }
+    
+    .campo-form label {
+        margin-bottom: 2px;
+        margin-top: 6px;
+        font-size: 0.85em;
+    }
+    
+    fieldset input,
+    fieldset select,
+    fieldset textarea {
+        padding: 5px 8px;
+        font-size: 12px;
+    }
 }

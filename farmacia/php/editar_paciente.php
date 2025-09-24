@@ -393,76 +393,96 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="hidden" name="csrf_token" value="<?= gerarTokenCsrf() ?>" />
 
         <fieldset>
-            <legend>Dados Pessoais</legend>
+        <legend>Dados Pessoais</legend>
+        
+        <div class="form-grid-2">
+            <div class="campo-form">
+                <label for="nome">Nome Completo *</label>
+                <input type="text" id="nome" name="nome" required value="<?= htmlspecialchars($valores['nome'] ?? $paciente['nome'] ?? '') ?>" />
+                <?php if (isset($erros['nome'])): ?><small class="erro"><?= $erros['nome'] ?></small><?php endif; ?>
+            </div>
+        
+            <div class="campo-form">
+                <label for="codigo_paciente">Código do Paciente</label>
+                <input type="text" id="codigo_paciente" name="codigo_paciente" value="<?= htmlspecialchars($valores['codigo_paciente'] ?? $paciente['codigo_paciente'] ?? '') ?>" />
+                <?php if (isset($erros['codigo_paciente'])): ?><small class="erro"><?= $erros['codigo_paciente'] ?></small><?php endif; ?>
+            </div>
+        </div>
+        
+        <div class="form-grid-2">
+            <div class="campo-form">
+                <label for="cpf">CPF *</label>
+                <input type="text" id="cpf" name="cpf" maxlength="14" required value="<?= htmlspecialchars($valores['cpf'] ?? $paciente['cpf'] ?? '') ?>" />
+                <?php if (isset($erros['cpf'])): ?><small class="erro"><?= $erros['cpf'] ?></small><?php endif; ?>
+            </div>
+        
+            <div class="campo-form">
+                <label for="nascimento">Data de Nascimento *</label>
+                <input type="date" id="nascimento" name="nascimento" max="<?= date('Y-m-d') ?>" required value="<?= htmlspecialchars($valores['nascimento'] ?? $paciente['nascimento'] ?? '') ?>" />
+                <?php if (isset($erros['nascimento'])): ?><small class="erro"><?= $erros['nascimento'] ?></small><?php endif; ?>
+            </div>
+        </div>
+    </fieldset>
 
-            <label for="nome">Nome Completo *</label>
-            <input type="text" id="nome" name="nome" required value="<?= htmlspecialchars($valores['nome'] ?? $paciente['nome'] ?? '') ?>" />
-            <?php if (isset($erros['nome'])): ?><small class="erro"><?= $erros['nome'] ?></small><?php endif; ?>
+    <fieldset>
+        <legend>Contato e Observações</legend>
 
-            <label for="codigo_paciente">Código do Paciente</label>
-            <input type="text" id="codigo_paciente" name="codigo_paciente" value="<?= htmlspecialchars($valores['codigo_paciente'] ?? $paciente['codigo_paciente'] ?? '') ?>" />
-            <?php if (isset($erros['codigo_paciente'])): ?><small class="erro"><?= $erros['codigo_paciente'] ?></small><?php endif; ?>
+        <div class="form-grid-3">
+            <div class="campo-form">
+                <label for="telefone">Telefone *</label>
+                <input type="tel" id="telefone" name="telefone" maxlength="15" required value="<?= htmlspecialchars($valores['telefone'] ?? $paciente['telefone'] ?? '') ?>" />
+                <?php if (isset($erros['telefone'])): ?><small class="erro"><?= $erros['telefone'] ?></small><?php endif; ?>
+            </div>
 
-            <label for="cpf">CPF *</label>
-            <input type="text" id="cpf" name="cpf" maxlength="14" required value="<?= htmlspecialchars($valores['cpf'] ?? $paciente['cpf'] ?? '') ?>" />
-            <?php if (isset($erros['cpf'])): ?><small class="erro"><?= $erros['cpf'] ?></small><?php endif; ?>
+            <div class="campo-form">
+                <label for="telefone2">Telefone 2</label>
+                <input type="tel" id="telefone2" name="telefone2" maxlength="15" value="<?= htmlspecialchars($valores['telefone2'] ?? $paciente['telefone2'] ?? '') ?>" />
+                <?php if (isset($erros['telefone2'])): ?><small class="erro"><?= $erros['telefone2'] ?></small><?php endif; ?>
+            </div>
 
-            <label for="nascimento">Data de Nascimento *</label>
-            <input type="date" id="nascimento" name="nascimento" max="<?= date('Y-m-d') ?>" required value="<?= htmlspecialchars($valores['nascimento'] ?? $paciente['nascimento'] ?? '') ?>" />
-            <?php if (isset($erros['nascimento'])): ?><small class="erro"><?= $erros['nascimento'] ?></small><?php endif; ?>
-        </fieldset>
+            <div class="campo-form">
+                <label for="sim">Número do SIM</label>
+                <input type="text" id="sim" name="sim" value="<?= htmlspecialchars($valores['sim'] ?? $paciente['sim'] ?? '') ?>" />
+            </div>
+        </div>
 
-        <fieldset>
-            <legend>Contato e Observações</legend>
-
-            <label for="telefone">Telefone *</label>
-            <input type="tel" id="telefone" name="telefone" maxlength="15" required value="<?= htmlspecialchars($valores['telefone'] ?? $paciente['telefone'] ?? '') ?>" />
-            <?php if (isset($erros['telefone'])): ?><small class="erro"><?= $erros['telefone'] ?></small><?php endif; ?>
-
-            <label for="telefone2">Telefone 2</label>
-            <input type="tel" id="telefone2" name="telefone2" maxlength="15" value="<?= htmlspecialchars($valores['telefone2'] ?? $paciente['telefone2'] ?? '') ?>" />
-            <?php if (isset($erros['telefone2'])): ?><small class="erro"><?= $erros['telefone2'] ?></small><?php endif; ?>
-
-            <label for="sim">Número do SIM</label>
-            <input type="text" id="sim" name="sim" value="<?= htmlspecialchars($valores['sim'] ?? $paciente['sim'] ?? '') ?>" />
-
+        <div class="campo-form">
             <label for="observacao">Observações</label>
             <textarea id="observacao" name="observacao"><?= htmlspecialchars($valores['observacao'] ?? $paciente['observacao'] ?? '') ?></textarea>
-        </fieldset>
+        </div>
+    </fieldset>
 
-        <fieldset>
-            <legend>Pessoas Autorizadas</legend>
-            <p class="field-info">Cadastre até 3 pessoas autorizadas a retirar medicamentos</p>
-            
-            <?php for ($i = 0; $i < 3; $i++): ?>
-                <div class="autorizado-group">
-                    <div class="autorizado-campos">
-                        <div class="campo-grupo">
-                            <label for="autorizado_nome_<?= $i ?>">Nome da Pessoa Autorizada <?= $i + 1 ?></label>
-                            <input type="text" 
-                                   id="autorizado_nome_<?= $i ?>" 
-                                   name="autorizado_nome[]" 
-                                   value="<?= htmlspecialchars($valores['autorizados'][$i]['nome'] ?? $autorizados[$i]['nome'] ?? '') ?>" />
-                            <?php if (isset($erros["autorizado_nome_$i"])): ?>
-                                <small class="erro"><?= $erros["autorizado_nome_$i"] ?></small>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <div class="campo-grupo">
-                            <label for="autorizado_cpf_<?= $i ?>">CPF da Pessoa Autorizada <?= $i + 1 ?></label>
-                            <input type="text" 
-                                   id="autorizado_cpf_<?= $i ?>" 
-                                   name="autorizado_cpf[]" 
-                                   class="cpf-mask"
-                                   maxlength="14" 
-                                   value="<?= htmlspecialchars($valores['autorizados'][$i]['cpf'] ?? $autorizados[$i]['cpf'] ?? '') ?>" />
-                            <?php if (isset($erros["autorizado_cpf_$i"])): ?>
-                                <small class="erro"><?= $erros["autorizado_cpf_$i"] ?></small>
-                            <?php endif; ?>
-                        </div>
-                    </div>
+    <fieldset>
+        <legend>Pessoas Autorizadas</legend>
+        <p class="field-info">Cadastre até 3 pessoas autorizadas a retirar medicamentos</p>
+        
+        <?php for ($i = 0; $i < 3; $i++): ?>
+            <div class="autorizado-group">
+                <div>
+                    <label for="autorizado_nome_<?= $i ?>">Nome da Pessoa Autorizada <?= $i + 1 ?></label>
+                    <input type="text" 
+                           id="autorizado_nome_<?= $i ?>" 
+                           name="autorizado_nome[]" 
+                           value="<?= htmlspecialchars($valores['autorizados'][$i]['nome'] ?? $autorizados[$i]['nome'] ?? '') ?>" />
+                    <?php if (isset($erros["autorizado_nome_$i"])): ?>
+                        <small class="erro"><?= $erros["autorizado_nome_$i"] ?></small>
+                    <?php endif; ?>
                 </div>
-            <?php endfor; ?>
+                
+                <div>
+                    <label for="autorizado_cpf_<?= $i ?>">CPF da Pessoa Autorizada <?= $i + 1 ?></label>
+                    <input type="text" 
+                           id="autorizado_cpf_<?= $i ?>" 
+                           name="autorizado_cpf[]" 
+                           class="cpf-mask"
+                           maxlength="14" 
+                           value="<?= htmlspecialchars($valores['autorizados'][$i]['cpf'] ?? $autorizados[$i]['cpf'] ?? '') ?>" />
+                    <?php if (isset($erros["autorizado_cpf_$i"])): ?>
+                        <small class="erro"><?= $erros["autorizado_cpf_$i"] ?></small>
+                    <?php endif; ?>
+                </div>
+            </div>
+        <?php endfor; ?>
         </fieldset>
 
         <fieldset>

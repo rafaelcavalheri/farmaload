@@ -1,6 +1,35 @@
 # 📋 Histórico de Versões - FARMALOAD
 
-## 🆕 Versão Atual: v.1.2025.0409.1200
+## 🆕 Versão: v.1.2025.2409.1200
+
+### ✅ Correções e Melhorias Implementadas
+
+#### 1. Adicionado campo Operador na pagina detalhes_paciente que mostra o responsável pela movimentação
+em Histórico de Transações de Medicamentos.
+- **Arquivos modificados**:
+  - `farmacia/detalhes_paciente.php` - Mostra o responsável pela movimentação
+
+#### 2. Otimização de Layout - Página Editar Paciente
+- **Simplificação da estrutura HTML**: Removidos divs desnecessários na seção "Pessoas Autorizadas"
+- **Otimização de espaçamentos**: Reduzidos paddings e margins em toda a página para melhor aproveitamento vertical
+- **Melhorias visuais**: Removidos contornos azuis indesejados nos campos individuais de pessoas autorizadas
+- **Arquivos modificados**:
+  - `farmacia/editar_paciente.php` - Simplificação da estrutura HTML
+  - `farmacia/css/editar_paciente.css` - Otimização de espaçamentos e estilos
+- **Resultado**: Página mais compacta com menos necessidade de scroll, mantendo usabilidade e responsividade
+- **Impacto**: Melhor experiência do usuário com visualização otimizada dos dados do paciente
+
+#### 3. Implementação de Limite de Tempo para Extorno de Medicamentos
+- **Nova funcionalidade**: Limite máximo de 3 dias para realizar extorno de medicamentos
+- **Validação automática**: Sistema verifica automaticamente se o prazo foi ultrapassado
+- **Mensagens informativas**: Alertas claros indicando o motivo do bloqueio e data da dispensação
+- **Arquivos modificados**:
+  - `farmacia/php/ajax_extornar.php` - Verificação de limite para extornos gerais
+  - `farmacia/php/ajax_extornar_transacao.php` - Verificação de limite para extornos de transações específicas
+- **Resultado**: Controle rigoroso de extornos com prazo definido de 3 dias
+- **Impacto**: Maior segurança e controle nas operações de extorno, evitando extornos tardios
+
+## 🆕 Versão: v.1.2025.0409.1200
 
 ### ✅ Correções e Melhorias Implementadas
 

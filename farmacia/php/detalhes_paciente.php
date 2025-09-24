@@ -31,9 +31,10 @@ try {
 
     // Carregar histórico de retiradas de medicamentos (transações)
     $stmtHistorico = $pdo->prepare(
-        "SELECT t.id, m.nome AS medicamento, t.quantidade, t.data, t.observacoes 
+        "SELECT t.id, m.nome AS medicamento, t.quantidade, t.data, t.observacoes, u.nome AS operador
         FROM transacoes t 
         JOIN medicamentos m ON t.medicamento_id = m.id 
+        JOIN usuarios u ON t.usuario_id = u.id
         WHERE t.paciente_id = ? 
         ORDER BY t.data DESC"
     );
@@ -369,6 +370,7 @@ try {
                             <th>Tipo</th>
                             <th>Quantidade</th>
                             <th>Data</th>
+                            <th>Operador</th>
                             <th>Ações</th>
                             <th>Observações</th>
                         </tr>
@@ -386,6 +388,7 @@ try {
                                 </td>
                                 <td><?= abs($registro['quantidade']) ?></td>
                                 <td><?= date('d/m/Y H:i', strtotime($registro['data'])) ?></td>
+                                <td><?= sanitizar($registro['operador']) ?></td>
                                 <td class="acoes">
                                     <?php if ($registro['quantidade'] > 0): ?>
                                         <button onclick="extornarTransacao(<?= $registro['id'] ?>, '<?= htmlspecialchars($registro['medicamento'], ENT_QUOTES) ?>', <?= $registro['quantidade'] ?>)" class="btn-extornar"><i class="fas fa-undo"></i> Extornar</button>
