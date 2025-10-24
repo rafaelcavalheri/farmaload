@@ -18,10 +18,6 @@
 #### 3. Conversores RELINI — deduplicação por código confirmada
 - Fluxos RELINI priorizam `codigo_paciente`; quando ausente, geram automaticamente e mantêm mapeamento por nome e código.
 
-#### 4. Infra — reset do banco para validação
-- Banco MySQL do container zerado e recriado; `init.sql` reexecutado em volume novo.
-- Comandos: `docker-compose down -v` e `docker-compose up -d`.
-
 - Resultado: Relatório “Pacientes Importados” desambigua nomes duplicados e exibe códigos.
 - Impacto: Maior rastreabilidade e consistência com a lista em `pacientes.php`.
 
