@@ -22,11 +22,7 @@
 - Impacto: Maior rastreabilidade e consistência com a lista em `pacientes.php`.
 
 #### 4. Correções de Dados — rollback e limpeza de lotes 'LOT%'
-- Removidos 3.583 lotes inválidos com prefixo 'LOT%' cadastrados entre '2025-10-24 13:50:00' e '2025-10-24 14:10:00', com validação pós-rollback confirmada.
-- Remoção global de 4.342 lotes 'LOT%' (27.748 unidades) após backup completo em `backup_lotes_global_20251024`; confirmado que não restaram lotes com esse prefixo.
-- Limpeza específica do medicamento `MED01814` (“AGULHA P/ APLICAÇÃO DE INSULINA C/ CANETA 4MM”): 85 lotes 'LOT%' removidos após backup em `backup_lotes_MED01814_20251024`; lotes válidos mantidos (ex.: `K2306812D`, `K2207501C`).
-- Movimentações históricas preservadas; logs de importação podem ter o status atualizado para `ROLLBACK` quando aplicável.
-- Próximos passos documentados: reimportação com layout validado, teste controlado (≈10 linhas) para confirmar mapeamentos de lote, validade e total.
+
 
 ## 🆕 Versão: v.1.2025.2409.1200
 
