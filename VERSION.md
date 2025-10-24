@@ -1,5 +1,30 @@
 # 📋 Histórico de Versões - FARMALOAD
 
+## 🆕 Versão: v.1.2025.2410.1200
+
+### ✅ Correções e Melhorias Implementadas
+
+#### 1. Relatório de Importação — inclusão do código do paciente
+- Observações passam a exibir "Código: <CODIGO>, Paciente importado da linha X".
+- Arquivos modificados:
+  - `farmacia/php/processar_importacao_automatica.php` — função `registrarDetalhesImportacao`.
+
+#### 2. Importação de pacientes — evitar mesclagem por nome quando há código
+- Busca por paciente existente por nome só ocorre quando nenhum `codigo_paciente` é fornecido.
+- Pacientes homônimos com códigos distintos são cadastrados separadamente.
+- Arquivos modificados:
+  - `farmacia/php/processar_importacao_automatica.php` — ajuste da lógica de identificação e fallback.
+
+#### 3. Conversores RELINI — deduplicação por código confirmada
+- Fluxos RELINI priorizam `codigo_paciente`; quando ausente, geram automaticamente e mantêm mapeamento por nome e código.
+
+#### 4. Infra — reset do banco para validação
+- Banco MySQL do container zerado e recriado; `init.sql` reexecutado em volume novo.
+- Comandos: `docker-compose down -v` e `docker-compose up -d`.
+
+- Resultado: Relatório “Pacientes Importados” desambigua nomes duplicados e exibe códigos.
+- Impacto: Maior rastreabilidade e consistência com a lista em `pacientes.php`.
+
 ## 🆕 Versão: v.1.2025.2409.1200
 
 ### ✅ Correções e Melhorias Implementadas

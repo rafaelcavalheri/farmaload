@@ -457,20 +457,20 @@ function converterFormatoLivre_Modificado($spreadsheet) {
             if (strlen($nomePaciente) > 3 && !is_numeric($nomePaciente) && 
                 strpos(strtolower((string)$nomePaciente), 'total') === false) {
                 
-                // Adicionar paciente à lista de pacientes
-                $pacienteJaExiste = false;
-                foreach ($pacientes as $paciente) {
-                    if ($paciente['nome'] === $nomePaciente) {
-                        $pacienteJaExiste = true;
+                // Adicionar paciente à lista de pacientes (permitir homônimos; log duplicidade por nome)
+                $duplicado = false;
+                foreach ($pacientes as $p) {
+                    if (($p['nome'] ?? '') === $nomePaciente) {
+                        $duplicado = true;
                         break;
                     }
                 }
-                
-                if (!$pacienteJaExiste) {
-                    $pacientes[] = [
-                        'nome' => $nomePaciente,
-                        'linha' => $row
-                    ];
+                $pacientes[] = [
+                    'nome' => $nomePaciente,
+                    'linha' => $row
+                ];
+                if ($duplicado && $logFile) {
+                    fwrite($logFile, "AVISO: Nome de paciente duplicado no arquivo: $nomePaciente (linha $row)\n");
                 }
                 
                 // Cria associação entre paciente e medicamento usando o lote e validade atuais
@@ -624,7 +624,7 @@ function registrarDetalhesImportacao($pdo, $logImportacaoId, $dados) {
                 $stmt->execute([
                     $logImportacaoId,
                     $paciente['nome'],
-                    'Paciente importado da linha ' . ($paciente['linha'] ?? 'N/A')
+                    'Código: ' . (!empty($paciente['codigo']) ? $paciente['codigo'] : 'N/A') . ', Paciente importado da linha ' . ($paciente['linha'] ?? 'N/A')
                 ]);
             }
         }
@@ -663,10 +663,20 @@ function importarDados($dados) {
             }
             
             foreach ($dados['pacientes'] as $paciente) {
-                // Verificar se o paciente já existe pelo nome
-                $stmt = $pdo->prepare("SELECT id FROM pacientes WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?))");
-                $stmt->execute([$paciente['nome']]);
-                $pacienteExistente = $stmt->fetch();
+                // Resolver paciente por codigo_paciente quando disponível; fallback para nome
+                $pacienteExistente = null;
+                $codigoImportado = isset($paciente['codigo']) ? trim($paciente['codigo']) : null;
+                if (!empty($codigoImportado)) {
+                    $stmt = $pdo->prepare("SELECT id FROM pacientes WHERE codigo_paciente = ?");
+                    $stmt->execute([$codigoImportado]);
+                    $pacienteExistente = $stmt->fetch();
+                }
+                // Só fazer fallback por nome quando NÃO há código informado
+                if (!$pacienteExistente && empty($codigoImportado)) {
+                    $stmt = $pdo->prepare("SELECT id FROM pacientes WHERE LOWER(TRIM(nome)) = LOWER(TRIM(?))");
+                    $stmt->execute([trim($paciente['nome'])]);
+                    $pacienteExistente = $stmt->fetch();
+                }
                 
                 if (!$pacienteExistente) {
                     // Gerar CPF temporário único
@@ -722,7 +732,11 @@ function importarDados($dados) {
                         if ($logFile) {
                             fwrite($logFile, "Paciente inserido com ID: " . $novoId . "\n");
                         }
+                        // Mapear por nome e por código gerado para suportar associações sem código
                         $pacientesProcessados[$nomePaciente] = $novoId;
+                        if (!empty($codigoPaciente)) {
+                            $pacientesProcessados[$codigoPaciente] = $novoId;
+                        }
                     } catch (Exception $e) {
                         if ($logFile) {
                             fwrite($logFile, "ERRO ao inserir paciente: " . $e->getMessage() . "\n");
@@ -800,7 +814,13 @@ function importarDados($dados) {
                         $stmt->execute([$novoCodigoPaciente, $pacienteExistente['id']]);
                     }
                     
-                    $pacientesProcessados[$paciente['nome']] = $pacienteExistente['id'];
+                    // Mapear por nome e por código (do arquivo ou atualizado)
+                    $pacientesProcessados[trim($paciente['nome'])] = $pacienteExistente['id'];
+                    if (!empty($novoCodigoPaciente)) {
+                        $pacientesProcessados[$novoCodigoPaciente] = $pacienteExistente['id'];
+                    } elseif (!empty($codigoPaciente)) {
+                        $pacientesProcessados[$codigoPaciente] = $pacienteExistente['id'];
+                    }
                 }
             }
         }
@@ -977,7 +997,8 @@ function importarDados($dados) {
         // $logImportacaoId = $pdo->lastInsertId();
         // registrarDetalhesImportacao($pdo, $logImportacaoId, $dados);
 
-        return count($pacientesProcessados);
+        // Retornar número de pacientes únicos processados (evita dupla contagem por nome e código)
+        return count(array_unique($pacientesProcessados));
     } catch (Exception $e) {
         $pdo->rollBack();
         if ($logFile) {
@@ -1211,15 +1232,20 @@ function processarAssociacoes($dados, $pdo, $pacientesProcessados, $logFile) {
     }
 
     foreach ($associacoes as $associacao) {
+        // Resolver chave do paciente por codigo_paciente quando disponível; fallback para nome
+        $chaveAssoc = isset($associacao['codigo_paciente']) && !empty($associacao['codigo_paciente'])
+            ? trim($associacao['codigo_paciente'])
+            : trim($associacao['paciente']);
+        
         // Verificar se o paciente foi processado
-        if (!isset($pacientesProcessados[$associacao['paciente']])) {
+        if (!isset($pacientesProcessados[$chaveAssoc])) {
             if ($logFile) {
-                fwrite($logFile, "AVISO: Paciente '" . $associacao['paciente'] . "' não encontrado para associação. Linha: " . $associacao['linha'] . "\n");
+                fwrite($logFile, "AVISO: Paciente não encontrado para associação. Nome: '" . ($associacao['paciente'] ?? '') . "' | Código: '" . ($associacao['codigo_paciente'] ?? '') . "' | Linha: " . ($associacao['linha'] ?? 'N/A') . "\n");
             }
             continue;
         }
         
-        $pacienteId = $pacientesProcessados[$associacao['paciente']];
+        $pacienteId = $pacientesProcessados[$chaveAssoc];
         
         // Buscar o medicamento pelo nome
         $stmt = $pdo->prepare("
@@ -1375,14 +1401,19 @@ function importarReliniFim($spreadsheet) {
 
         if ($paciente && $medicamentoAtual && is_numeric($quantidade) && $quantidade > 0) {
             // Padronizar pacientes como array ['nome'=>..., 'codigo'=>..., 'linha'=>..., 'validade'=>...]
-            $nomesExistentes = array_column($pacientes, 'nome');
-            if (!in_array($paciente, $nomesExistentes)) {
+            $chaveNovoPaciente = !empty($codPaciente) ? $codPaciente : $paciente;
+            $chavesExistentes = array_map(function($p) { return !empty($p['codigo']) ? $p['codigo'] : $p['nome']; }, $pacientes);
+            if (!in_array($chaveNovoPaciente, $chavesExistentes, true)) {
                 $pacientes[] = [
                     'nome'  => $paciente,
                     'codigo' => $codPaciente,
                     'linha' => $row,
                     'validade' => $validade_paciente
                 ];
+            } else {
+                if ($logFile) {
+                    fwrite($logFile, "AVISO: Paciente duplicado na planilha. Nome: $paciente | Código: $codPaciente | Linha: $row\n");
+                }
             }
 
             // Verificar se já existe um medicamento com o mesmo nome e lote
@@ -1522,14 +1553,19 @@ function importarReliniInicio($spreadsheet) {
 
         if ($paciente && $medicamentoAtual && is_numeric($quantidade) && $quantidade > 0) {
             // Padronizar pacientes como array ['nome'=>..., 'codigo'=>..., 'linha'=>..., 'validade'=>...]
-            $nomesExistentes = array_column($pacientes, 'nome');
-            if (!in_array($paciente, $nomesExistentes)) {
+            $chaveNovoPaciente = !empty($codPaciente) ? $codPaciente : $paciente;
+            $chavesExistentes = array_map(function($p) { return !empty($p['codigo']) ? $p['codigo'] : $p['nome']; }, $pacientes);
+            if (!in_array($chaveNovoPaciente, $chavesExistentes, true)) {
                 $pacientes[] = [
                     'nome'  => $paciente,
                     'codigo' => $codPaciente,
                     'linha' => $row,
                     'validade' => $validade_paciente
                 ];
+            } else {
+                if ($logFile) {
+                    fwrite($logFile, "AVISO: Paciente duplicado na planilha. Nome: $paciente | Código: $codPaciente | Linha: $row\n");
+                }
             }
 
             $chave = $medicamentoAtual . '|' . $loteAtual;
