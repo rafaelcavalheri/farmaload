@@ -1313,10 +1313,10 @@ function mapearValidadesMedicamentos($spreadsheet) {
     $lastRow = $worksheet->getHighestRow();
     
     for ($row = 2; $row <= $lastRow; $row++) {
-        // NOVA ESTRUTURA: A=CD_PACIENTE, B=NM_MEDICAMENTO, C=CD_LOTE, D=DT_VALIDADE_LOTE, E=NM_PACIENTE, F=Total
-        $nome = $worksheet->getCell('B' . $row)->getValue(); // NM_MEDICAMENTO (coluna B)
-        $lote = $worksheet->getCell('C' . $row)->getValue(); // CD_LOTE (coluna C)
-        $validade = $worksheet->getCell('D' . $row)->getValue(); // DT_VALIDADE_LOTE (coluna D)
+        // ESTRUTURA CORRETA: A=NM_MEDICAMENTO, B=CD_LOTE, C=DT_VALIDADE_LOTE, D=NM_PACIENTE, E=Total
+        $nome = $worksheet->getCell('A' . $row)->getValue(); // NM_MEDICAMENTO (coluna A)
+        $lote = $worksheet->getCell('B' . $row)->getValue(); // CD_LOTE (coluna B)
+        $validade = $worksheet->getCell('C' . $row)->getValue(); // DT_VALIDADE_LOTE (coluna C)
         
         // Padronizar nome para evitar problemas de busca
         if ($nome !== null) {
