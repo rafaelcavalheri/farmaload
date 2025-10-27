@@ -650,6 +650,4 @@ em Histórico de Transações de Medicamentos.
 
 **📋 Histórico completo de todas as versões do FARMALOAD**
 
-*Última atualização: 08/01/2025*
-
 </div>
