@@ -1,5 +1,21 @@
 # 📋 Histórico de Versões - FARMALOAD
 
+## 🆕 Versão: v.1.2025.2710.1200
+
+### ✅ Correções e Melhorias Implementadas
+
+#### 1. Importação de Dados — modos seletivos
+- Nova funcionalidade: seletor de Modo de Importação com 3 opções (Completa, Somente medicamentos, Somente pacientes).
+- Backend passa a respeitar `modo_importacao` (POST) e filtrar `medicamentos`, `pacientes` e `associacoes` conforme o modo antes de `importarDados`.
+- Mensagens de sucesso e modal atualizados conforme o modo escolhido.
+- Logs de importação: `quantidade_registros` contabiliza pacientes no modo "somente_pacientes" e medicamentos nos demais.
+- Impacto: possibilita correções de estoque ou atualização de vínculos sem interferência cruzada.
+
+- Arquivos modificados:
+  - `farmacia/php/gerenciar_dados.php` — seletor de modo e ajuste de mensagem do modal.
+  - `farmacia/php/processar_importacao_automatica.php` — leitura da flag `modo_importacao`, filtragem dos dados, ajuste de logs e mensagens.
+
+
 ## 🆕 Versão: v.1.2025.2410.1200
 
 ### ✅ Correções e Melhorias Implementadas

@@ -251,6 +251,15 @@ if (isset($_POST['import']) && isset($_FILES['arquivo'])) {
                         <label for="arquivo">Arquivo Excel:</label>
                         <input type="file" id="arquivo" name="arquivo" accept=".xlsx,.xls" required>
                     </div>
+                    <div class="form-group">
+                        <label for="modo_importacao">Modo de Importação:</label>
+                        <select id="modo_importacao" name="modo_importacao">
+                            <option value="completa">Completa (pacientes + medicamentos)</option>
+                            <option value="somente_medicamentos">Somente medicamentos (estoque)</option>
+                            <option value="somente_pacientes">Somente pacientes (+ vínculos)</option>
+                        </select>
+                        <small class="help-text">Use para corrigir estoque ou atualizar vínculos sem alterar estoque.</small>
+                    </div>
                     <div class="button-group">
                         <button type="submit" name="import" class="btn-primary">
                             <i class="fas fa-file-import"></i> Importar Dados
@@ -345,7 +354,14 @@ if (isset($_POST['import']) && isset($_FILES['arquivo'])) {
 
         // Manipulador para o formulário de importação
         document.getElementById('importForm').addEventListener('submit', function(e) {
-            showLoadingModal('Por favor, aguarde enquanto os dados estão sendo importados...');
+            var modo = document.getElementById('modo_importacao') ? document.getElementById('modo_importacao').value : 'completa';
+            var msg = 'Por favor, aguarde enquanto os dados estão sendo importados...';
+            if (modo === 'somente_medicamentos') {
+                msg = 'Importando somente medicamentos do estoque...';
+            } else if (modo === 'somente_pacientes') {
+                msg = 'Importando somente pacientes e seus vínculos...';
+            }
+            showLoadingModal(msg);
             // Permitir que o formulário seja enviado normalmente
             return true;
         });
@@ -371,4 +387,4 @@ if (isset($_POST['import']) && isset($_FILES['arquivo'])) {
         }
     </script>
 </body>
-</html> 
+</html>

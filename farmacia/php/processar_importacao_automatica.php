@@ -1789,8 +1789,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
             $dados = converterFormatoLivre_Modificado($spreadsheet);
         }
 
+        // Ler modo de importação do formulário (default: completa)
+        $modoImportacao = isset($_POST['modo_importacao']) ? $_POST['modo_importacao'] : 'completa';
+        if ($logFile) {
+            fwrite($logFile, "Modo de importação selecionado: " . $modoImportacao . "\n");
+        }
+
+        // Filtrar os dados conforme o modo escolhido
+        if ($modoImportacao === 'somente_medicamentos') {
+            $dados['pacientes'] = [];
+            $dados['associacoes'] = [];
+            if ($logFile) { fwrite($logFile, "Filtro aplicado: importar somente medicamentos (estoque)\n"); }
+        } elseif ($modoImportacao === 'somente_pacientes') {
+            $dados['medicamentos'] = [];
+            if ($logFile) { fwrite($logFile, "Filtro aplicado: importar somente pacientes (+ vínculos)\n"); }
+        }
+
         // Importar os dados
         $pacientesCount = importarDados($dados);
+        
+        // Determinar quantidade de registros para o log, conforme modo
+        $quantidadeRegistros = ($modoImportacao === 'somente_pacientes')
+            ? $pacientesCount
+            : (isset($dados['medicamentos']) ? count($dados['medicamentos']) : 0);
         
         // Registrar o log da importação
         $stmt = $pdo->prepare("INSERT INTO logs_importacao (usuario_id, usuario_nome, data_hora, arquivo_nome, quantidade_registros, status) VALUES (?, ?, NOW(), ?, ?, ?)");
@@ -1798,7 +1819,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
             $_SESSION['usuario']['id'],
             $_SESSION['usuario']['nome'],
             $_FILES['arquivo']['name'],
-            count($dados['medicamentos']),
+            $quantidadeRegistros,
             'SUCESSO'
         ]);
         
@@ -1806,10 +1827,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['arquivo'])) {
         $logImportacaoId = $pdo->lastInsertId();
         registrarDetalhesImportacao($pdo, $logImportacaoId, $dados);
         
-        // Preparar mensagem de sucesso
-        $mensagem = count($dados['medicamentos']) . " medicamentos importados com sucesso!";
-        if ($pacientesCount > 0) {
-            $mensagem .= " " . $pacientesCount . " pacientes também foram importados.";
+        // Preparar mensagem de sucesso conforme modo
+        if ($modoImportacao === 'somente_medicamentos') {
+            $mensagem = $quantidadeRegistros . " medicamentos importados com sucesso!";
+        } elseif ($modoImportacao === 'somente_pacientes') {
+            $mensagem = $pacientesCount . " pacientes importados com sucesso!";
+        } else {
+            $mensagem = (isset($dados['medicamentos']) ? count($dados['medicamentos']) : 0) . " medicamentos importados com sucesso!";
+            if ($pacientesCount > 0) {
+                $mensagem .= " " . $pacientesCount . " pacientes também foram importados.";
+            }
         }
         
         if ($spreadsheet->sheetNameExists('RELINI_FIM')) {
