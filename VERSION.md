@@ -636,63 +636,6 @@ em Histórico de Transações de Medicamentos.
 
 ---
 
-## 📊 Resumo de Funcionalidades por Versão
-
-| Versão | Data | Principais Funcionalidades |
-|--------|------|---------------------------|
-| v.1.2025.0108.1600 | 08/01/2025 | Observações, Modal, Remoção página dispensar |
-| v.1.2025.3107.1600 | 31/07/2025 | Código do paciente, Importação atualizada |
-| v.1.2025.1707.1600 | 17/07/2025 | Download direto APK, Proteção de segurança |
-| v.1.2025.1707.1200 | 17/07/2025 | Redirecionamento móvel, Detecção de dispositivos |
-| v.1.2025.1607.1600 | 16/07/2025 | Melhorias relatórios, Impressão otimizada |
-| v.1.2025.1607.1200 | 16/07/2025 | Filtros de data, Dropdown ampliado |
-| v.1.2025.1507.1600 | 15/07/2025 | Relatório ajuste estoque, Informações usuário |
-| v.1.2025.1507.1200 | 15/07/2025 | Correção agenda, Relatório ajuste estoque |
-| v.1.2025.1407.1200 | 14/07/2025 | Dashboard moderna, Carregamento automático |
-| v.1.2025.1107.1200 | 11/07/2025 | Melhorias segurança, JWT forte |
-| v.1.2025.1007.1600 | 10/07/2025 | Navegação meses, Correção interface |
-| v.1.2025.1007.1200 | 10/07/2025 | Bloqueio agenda, Abas horários |
-| v.1.2025.0807.1600 | 08/07/2025 | Indicador numérico, Bloqueio datas passadas |
-| v.1.2025.0807.1200 | 08/07/2025 | Relatório agendamentos, Encaixe automático |
-| v.1.2025.0707.1600 | 07/07/2025 | Sistema agenda completo |
-| v.1.2025.0707.1200 | 07/07/2025 | Correção campo renovado |
-| v.1.2025.0707.1300 | 07/07/2025 | Correção conflito IDs |
-| v.1.2025.0707.1200 | 07/07/2025 | Campo telefone 2 |
-| v.1.2025.0607.1200 | 06/07/2025 | Correção autenticação |
-| v.1.2025.0407.1200 | 04/07/2025 | Correção conflito médicos/instituições |
-| v.1.2025.0407.0820 | 04/07/2025 | Notificação dispensa recente |
-| v.1.2025.0307.1900 | 03/07/2025 | Bloqueio dispensa duplicada (removido) |
-| v.1.2025.0307.1500 | 03/07/2025 | Melhorias layout |
-| v.1.2025.0307.0815 | 03/07/2025 | Padronização tabelas |
-| v.1.2025.0207.1500 | 02/07/2025 | Padronização visual |
-| v.1.2025.0207.1200 | 02/07/2025 | Melhorias medicamentos/médicos |
-| v.1.2025.0207.0900 | 02/07/2025 | Modularização CSS |
-| v.1.2025.0107.1355 | 01/07/2025 | Filtro alfabético |
-| v.1.2025.0107.1345 | 01/07/2025 | Sistema paginação |
-| v.1.2025.0107.1200 | 01/07/2025 | Filtro renovação |
-| v.1.2025.0107.1100 | 01/07/2025 | Status renovação |
-| v.1.2025.3006.1420 | 30/06/2025 | Preservação quantidade solicitada |
-
----
-
-## 🔄 Próximas Versões
-
-### Planejado para v.1.2025.0208.1600
-- [ ] Sistema de notificações push
-- [ ] API REST completa
-- [ ] Integração com sistemas externos
-- [ ] Dashboard analytics avançado
-- [ ] Backup automático em nuvem
-
-### Planejado para v.1.2025.0308.1600
-- [ ] Aplicativo iOS
-- [ ] Sistema de auditoria avançado
-- [ ] Relatórios customizáveis
-- [ ] Integração com prontuário eletrônico
-- [ ] Sistema de alertas inteligentes
-
----
-
 ## 📝 Notas de Desenvolvimento
 
 ### Convenções de Versionamento
@@ -700,18 +643,6 @@ em Histórico de Transações de Medicamentos.
 - **Exemplo**: v.1.2025.0108.1600 = 08/01/2025 às 16:00
 - **Compatibilidade**: Versões mantêm compatibilidade com dados anteriores
 - **Migração**: Scripts automáticos para atualização de banco
-
-### Processo de Release
-1. **Desenvolvimento**: Funcionalidades desenvolvidas em branch separada
-2. **Testes**: Testes unitários e de integração
-3. **Review**: Code review e validação
-4. **Deploy**: Deploy em ambiente de produção
-5. **Documentação**: Atualização desta documentação
-
-### Suporte a Versões
-- **Versão Atual**: Suporte completo
-- **Versão Anterior**: Suporte por 6 meses
-- **Versões Antigas**: Sem suporte oficial
 
 ---
 
